@@ -15,11 +15,13 @@ function createWindow(): void {
     },
   });
 
-  win.loadFile(path.join(__dirname, '..', 'dist', 'cashier', 'browser', 'index.html'));
-
-  // Open DevTools in development
   if (!app.isPackaged) {
+    // DEV → Load Angular dev server
+    win.loadURL('http://localhost:4200');
     win.webContents.openDevTools();
+  } else {
+    // PROD → Load built files
+    win.loadFile(path.join(__dirname, '..', 'dist', 'cashier', 'browser', 'index.html'));
   }
 }
 
