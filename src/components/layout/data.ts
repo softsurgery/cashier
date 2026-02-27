@@ -6,95 +6,70 @@ export const data = {
   },
   navMain: [
     {
-      title: 'Acceuil',
-      url: '.',
+      title: 'Accueil',
+      url: '/accueil',
       icon: 'lucideBot',
       isActive: true,
-      items: [
-        {
-          title: 'New Workflow',
-          url: 'playground/new-workflow',
-        },
-        {
-          title: 'Saved Workflows',
-          url: 'playground/saved-workflows',
-        },
-      ],
     },
     {
-      title: 'Documentation',
-      url: '.',
-      icon: 'lucideBookOpen',
-      items: [
-        {
-          title: 'Introduction',
-          url: '.',
-        },
-        {
-          title: 'Get Started',
-          url: '.',
-        },
-        {
-          title: 'Tutorials',
-          url: '.',
-        },
-        {
-          title: 'Changelog',
-          url: '.',
-        },
-      ],
+      title: 'Caisse',
+      url: '/caisse',
+      icon: 'lucideWallet',
+      isActive: false,
     },
     {
-      title: 'Settings',
-      url: '.',
-      icon: 'lucideSettings2',
-      items: [
-        {
-          title: 'General',
-          url: '.',
-        },
-        {
-          title: 'Team',
-          url: '.',
-        },
-        {
-          title: 'Billing',
-          url: '.',
-        },
-        {
-          title: 'Limits',
-          url: '.',
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: 'Support',
-      url: '.',
-      icon: 'lucideLifeBuoy',
+      title: 'Commandes',
+      url: '/commandes',
+      icon: 'lucideShoppingCart',
+      isActive: false,
     },
     {
-      title: 'Feedback',
-      url: '.',
-      icon: 'lucideSend',
+      title: 'Tables',
+      url: '/tables',
+      icon: 'lucideGrid',
+      isActive: false,
     },
-  ],
-  projects: [
-    // {
-    //   name: "Design Engineering",
-    //   url: ".",
-    //   icon: "lucideFrame",
-    // },
-    // {
-    //   name: "Sales & Marketing",
-    //   url: ".",
-    //   icon: "lucideChartPie",
-    // },
-    // {
-    //   name: "Travel",
-    //   url: ".",
-    //   icon: "lucideMap",
-    // },
+    {
+      title: 'Produits',
+      url: '/produits',
+      icon: 'lucidePackage',
+      isActive: false,
+    },
+    {
+      title: 'Familles',
+      url: '/familles',
+      icon: 'lucideFolderTree',
+      isActive: false,
+    },
+    {
+      title: 'Consulter Z',
+      url: '/consulter-z',
+      icon: 'lucideFileText',
+      isActive: false,
+    },
+    {
+      title: 'Utilisateurs',
+      url: '/utilisateurs',
+      icon: 'lucideUsers',
+      isActive: false,
+    },
+    {
+      title: 'Statistique',
+      url: '/statistique',
+      icon: 'lucideBarChart',
+      isActive: false,
+    },
+    {
+      title: 'Stocks',
+      url: '/stocks',
+      icon: 'lucideBox',
+      isActive: false,
+    },
+    {
+      title: 'Nigrok',
+      url: '/nigrok',
+      icon: 'lucideSettings',
+      isActive: false,
+    },
   ],
 };
