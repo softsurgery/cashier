@@ -72,4 +72,16 @@ export const data = {
       isActive: false,
     },
   ],
+  navSecondary: [
+    {
+      title: 'Support',
+      url: '.',
+      icon: 'lucideLifeBuoy',
+    },
+    {
+      title: 'Feedback',
+      url: '.',
+      icon: 'lucideSend',
+    },
+  ],
 };
