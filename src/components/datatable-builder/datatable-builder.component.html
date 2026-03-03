@@ -1,0 +1,6 @@
+<app-datatable-builder-common *ngIf="isCommon()" [dataTableObject]="dataTableObject" [datas]="datas"
+    [totalRecords]="totalRecords" [loading]="loading">
+</app-datatable-builder-common>
+<app-datatable-builder-editable *ngIf="isEditable()" [dataTableObject]="dataTableObject" [datas]="datas"
+    [loading]="loading">
+</app-datatable-builder-editable>
