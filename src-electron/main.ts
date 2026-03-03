@@ -1,5 +1,8 @@
+import 'reflect-metadata';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
+import { registerTableHandlers } from './ipc';
+import { initializeDatabase } from './shared/database/database';
 
 // IPC Handlers
 ipcMain.handle('ping', () => 'pong');
@@ -25,7 +28,11 @@ function createWindow(): void {
   }
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(async () => {
+  await initializeDatabase();
+  registerTableHandlers();
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

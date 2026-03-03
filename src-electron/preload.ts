@@ -15,4 +15,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   /** Send a ping and get a pong from main process */
   ping: (): Promise<string> => ipcRenderer.invoke('ping'),
+
+  // ── Table CRUD ──────────────────────────────────────────────
+  table: {
+    getAll: () => ipcRenderer.invoke('table:getAll'),
+    getById: (id: number) => ipcRenderer.invoke('table:getById', id),
+    create: (data: { name: string; capacity?: number; status?: string }) =>
+      ipcRenderer.invoke('table:create', data),
+    update: (id: number, data: Partial<{ name: string; capacity: number; status: string }>) =>
+      ipcRenderer.invoke('table:update', id, data),
+    delete: (id: number) => ipcRenderer.invoke('table:delete', id),
+  },
 });
