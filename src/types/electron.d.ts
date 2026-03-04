@@ -3,24 +3,26 @@
  * This allows the Angular app to use `window.electronAPI` with full type safety.
  */
 
-export interface TableRecord {
-  id: number;
-  name: string;
-  capacity: number;
-  status: 'available' | 'occupied' | 'reserved';
-  createdAt: string;
-  updatedAt: string;
-}
+import { CreateOrderDto, ResponseOrderDto, UpdateOrderDto } from './order.types';
+import { ResponseTableDto } from './table.types';
 
 export interface TableAPI {
-  getAll(): Promise<TableRecord[]>;
-  getById(id: number): Promise<TableRecord | null>;
-  create(data: { name: string; capacity?: number; status?: string }): Promise<TableRecord>;
+  findAll(query?: any): Promise<ResponseTableDto[]>;
+  findOneById(id: number): Promise<ResponseTableDto | null>;
+  create(data: { name: string; capacity?: number; status?: string }): Promise<ResponseTableDto>;
   update(
     id: number,
     data: Partial<{ name: string; capacity: number; status: string }>,
-  ): Promise<TableRecord | null>;
-  delete(id: number): Promise<boolean>;
+  ): Promise<ResponseTableDto | null>;
+  delete(id: number): Promise<ResponseTableDto>;
+}
+
+export interface OrderAPI {
+  findAll(query?: any): Promise<ResponseOrderDto[]>;
+  findOneById(id: number): Promise<ResponseOrderDto | null>;
+  create(data: CreateOrderDto): Promise<ResponseOrderDto>;
+  update(id: number, data: Partial<UpdateOrderDto>): Promise<ResponseOrderDto | null>;
+  delete(id: number): Promise<ResponseOrderDto>;
 }
 
 export interface ElectronAPI {
@@ -36,6 +38,8 @@ export interface ElectronAPI {
   ping(): Promise<string>;
   /** Table CRUD operations */
   table: TableAPI;
+  /** Order CRUD operations */
+  order: OrderAPI;
 }
 
 declare global {

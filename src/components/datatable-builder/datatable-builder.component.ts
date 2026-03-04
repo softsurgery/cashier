@@ -1,18 +1,20 @@
-import { Component, computed, Input } from "@angular/core";
-import { DataTableVariant, DynamicDataTable } from "./datatable-builder.types";
-import { DatatableBuilderCommonComponent } from "./datatable-builder-common/datatable-builder-common.component";
-import { DatatableBuilderEditableComponent } from "./datatable-builder-editable/datatable-builder-editable.component";
+import { Component, computed, Input } from '@angular/core';
+import { DataTableVariant, DynamicDataTable } from './datatable-builder.types';
+import { DatatableBuilderCommonComponent } from './datatable-builder-common/datatable-builder-common.component';
+import { DatatableBuilderEditableComponent } from './datatable-builder-editable/datatable-builder-editable.component';
+import { CommonModule } from '@angular/common';
+import { Observable, of } from 'rxjs';
 
 @Component({
-  selector: "app-datatable-builder",
-  templateUrl: "./datatable-builder.component.html",
-  styleUrls: ["./datatable-builder.component.css"],
-  imports: [DatatableBuilderCommonComponent, DatatableBuilderEditableComponent],
+  selector: 'app-datatable-builder',
+  templateUrl: './datatable-builder.component.html',
+  styleUrls: ['./datatable-builder.component.css'],
+  imports: [CommonModule, DatatableBuilderCommonComponent, DatatableBuilderEditableComponent],
 })
 export class DatatableBuilderComponent {
   @Input() dataTableObject?: DynamicDataTable;
 
-  @Input() datas: any[] = [];
+  @Input() datas: Observable<any[]> = of([]);
   @Input() totalRecords = 0;
   @Input() loading = false;
 

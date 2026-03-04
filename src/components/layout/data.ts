@@ -19,7 +19,7 @@ export const data = {
     },
     {
       title: 'Commandes',
-      url: '/commandes',
+      url: '/orders',
       icon: 'lucideShoppingCart',
       isActive: false,
     },

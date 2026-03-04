@@ -9,7 +9,7 @@ export function registerOrderHandlers(): void {
   const service = new OrderService();
 
   // Get all orders
-  ipcMain.handle('order:findAll', (_event, query: FindManyOptions<OrderEntity>) => {
+  ipcMain.handle('order:findAll', async (_event, query: FindManyOptions<OrderEntity>) => {
     return service.findAll(query);
   });
 
