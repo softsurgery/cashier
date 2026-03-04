@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
-import { TableStatus } from '../modules/table/entities/table.entity';
 import { TableService } from '../modules/table/service/table.service';
+import { TableStatus } from '../modules/table/enums/table-status.enum';
 
 export function registerTableHandlers(): void {
   const service = new TableService();

@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import { app } from 'electron';
 import * as path from 'path';
 import { TableEntity } from '../../modules/table/entities/table.entity';
+import { OrderEntity } from '../../modules/order/entities/order.entity';
 
 let dataSource: DataSource | null = null;
 
@@ -15,7 +16,7 @@ export async function initializeDatabase(): Promise<DataSource> {
   dataSource = new DataSource({
     type: 'better-sqlite3',
     database: dbPath,
-    entities: [TableEntity],
+    entities: [TableEntity, OrderEntity],
     synchronize: true,
     logging: !app.isPackaged,
   });

@@ -1,20 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { EntityHelper } from '../../../shared/database/entities/entity-helper';
-
-export enum TableStatus {
-  AVAILABLE = 'available',
-  OCCUPIED = 'occupied',
-  RESERVED = 'reserved',
-}
+import { OrderEntity } from '../../order/entities/order.entity';
+import { TableStatus } from '../enums/table-status.enum';
 
 @Entity('tables')
 export class TableEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @Column({ type: 'varchar', length: 50 })
-  name!: string;
+  name: string;
 
-  @Column({ type: 'varchar', default: TableStatus.AVAILABLE })
-  status!: TableStatus;
+  @Column({ enum: TableStatus, default: TableStatus.AVAILABLE })
+  status: TableStatus;
+
+  @OneToMany(() => OrderEntity, (order) => order.table)
+  orders: OrderEntity[];
 }
