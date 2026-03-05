@@ -27,8 +27,13 @@ export class OrderComponent implements OnInit {
   }
 
   loadOrders() {
-    this.orderService.findAll({}).subscribe((orders) => {
-      this.data.next(orders);
-    });
+    this.orderService
+      .findAll({
+        take: 10,
+        skip: 0,
+      })
+      .subscribe((orders) => {
+        this.data.next(orders);
+      });
   }
 }

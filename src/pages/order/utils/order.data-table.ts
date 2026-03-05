@@ -6,6 +6,7 @@ import {
 import { ResponseOrderDto } from '../../../types';
 import { TableHeadSortButton } from '../../../components/datatable-builder/datatable-builder-common/sort-header-button';
 import { DatatableBuilderActionDropdownComponent } from '../../../components/datatable-builder/core/datatable-builder-action-dropdown/datatable-builder-action-dropdown.component';
+import { checkboxColumnDef } from '../../../components/datatable-builder/utils/datatable-builder-select';
 
 interface OrderDataTableProps {}
 
@@ -16,6 +17,7 @@ export const getOrderDataTableObject =
       plural: 'Orders',
       variant: DataTableVariant.COMMON,
       columns: [
+        checkboxColumnDef,
         {
           accessorKey: 'id',
           id: 'id',
