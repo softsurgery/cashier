@@ -1,11 +1,12 @@
-import { Signal } from "@angular/core";
-import { Observable } from "rxjs";
+import { Signal } from '@angular/core';
+import { ColumnDef } from '@tanstack/angular-table';
+import { Observable } from 'rxjs';
 
 export interface DynamicDataTable<T = any> {
   //common
   singular: string;
   plural: string;
-  columns: DynamicDataTableColumn[];
+  columns: ColumnDef<T>[];
   variant?: DataTableVariant;
   rowActions?: DataTableRowActions;
   rowActionsFn?: (...args: any[]) => DataTableRowActions;
@@ -33,8 +34,8 @@ export interface DataTableServerQuery {
   sortBy: Signal<string>;
   setSortBy: (sortBy: string) => void;
 
-  sortOrder: Signal<"asc" | "desc" | undefined>;
-  setSortOrder: (order: "asc" | "desc" | undefined) => void;
+  sortOrder: Signal<'asc' | 'desc' | undefined>;
+  setSortOrder: (order: 'asc' | 'desc' | undefined) => void;
 
   search: Signal<string>;
   setSearch: (search: string) => void;
@@ -60,24 +61,9 @@ interface RenderAsReturnType {
   class?: string;
 }
 
-export interface DynamicDataTableColumn<T = any> {
-  //default
-  label?: string;
-  accessorKey: string;
-  renderAs?: (value: any, row?: any) => RenderAsReturnType;
-  hidden?: boolean;
-  variant?: DataTableColumnVariant;
-  orientation?: "center" | "start" | "end";
-  //custom
-  class?: string;
-  headerClass?: string;
-  enableSorting?: boolean;
-  props?: T;
-}
-
 export enum DataTableVariant {
-  COMMON = "common",
-  EDITABLE = "editable",
+  COMMON = 'common',
+  EDITABLE = 'editable',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -94,14 +80,7 @@ export interface DataTableColumnBadgeProps {
   innerClass?: string;
   getSeverity: (
     value: any,
-  ) =>
-    | "primary"
-    | "secondary"
-    | "success"
-    | "info"
-    | "warn"
-    | "danger"
-    | "contrast";
+  ) => 'primary' | 'secondary' | 'success' | 'info' | 'warn' | 'danger' | 'contrast';
 }
 
 export interface DataTableColumnSwitchProps {
@@ -123,12 +102,12 @@ export interface DataTableColumnLinkProps {
 }
 
 export enum DataTableColumnVariant {
-  TEXT = "text",
-  DATE = "date",
-  CURRENCY = "currency",
-  BADGE = "badge",
-  IMAGE = "image",
-  SWITCH = "switch",
-  COLOR = "color",
-  LINK = "link",
+  TEXT = 'text',
+  DATE = 'date',
+  CURRENCY = 'currency',
+  BADGE = 'badge',
+  IMAGE = 'image',
+  SWITCH = 'switch',
+  COLOR = 'color',
+  LINK = 'link',
 }

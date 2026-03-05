@@ -14,7 +14,7 @@ import { Observable, of } from 'rxjs';
 export class DatatableBuilderComponent {
   @Input() dataTableObject?: DynamicDataTable;
 
-  @Input() datas: Observable<any[]> = of([]);
+  @Input() data: Observable<any[]> = of([]);
   @Input() totalRecords = 0;
   @Input() loading = false;
 
