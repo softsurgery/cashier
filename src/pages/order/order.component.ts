@@ -18,7 +18,7 @@ import { getOrderDataTableObject } from './utils/order.data-table';
 })
 export class OrderComponent implements OnInit {
   orderService = inject(OrderService);
-  datas = new BehaviorSubject<ResponseOrderDto[]>([]);
+  data = new BehaviorSubject<ResponseOrderDto[]>([]);
 
   dataTableObject: DynamicDataTable<ResponseOrderDto> = getOrderDataTableObject({});
 
@@ -28,7 +28,7 @@ export class OrderComponent implements OnInit {
 
   loadOrders() {
     this.orderService.findAll({}).subscribe((orders) => {
-      this.datas.next(orders);
+      this.data.next(orders);
     });
   }
 }
