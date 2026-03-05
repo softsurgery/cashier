@@ -36,7 +36,7 @@ export class AbstractCrudService<T extends ObjectLiteral> {
 
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto: {
-        page: Number(query.skip) / Number(query.take) + 1 || 1,
+        page: Number(query.skip),
         take: Number(query.take),
       },
       itemCount: count,
