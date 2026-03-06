@@ -1,5 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { CreateProductFamilyDto } from './modules/product-family/dtos/create-product-family.dto';
+import { CreateProductDto } from './modules/product/dtos/create-product.dto';
+import { UpdateProductDto } from './modules/product/dtos/update-product.dto';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   /** Returns platform info from the main process */
@@ -49,8 +51,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   product: {
     findAll: (query: any) => ipcRenderer.invoke('product:findAll', query),
     findOneById: (id: number) => ipcRenderer.invoke('product:findOneById', id),
-    create: (data: CreateProductFamilyDto) => ipcRenderer.invoke('product:create', data),
-    update: (id: number, data: Partial<{ name: string; description: string }>) =>
+    create: (data: CreateProductDto) => ipcRenderer.invoke('product:create', data),
+    update: (id: number, data: Partial<UpdateProductDto>) =>
       ipcRenderer.invoke('product:update', id, data),
     delete: (id: number) => ipcRenderer.invoke('product:delete', id),
   },

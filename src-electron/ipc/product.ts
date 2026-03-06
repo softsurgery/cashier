@@ -1,8 +1,9 @@
 import { ipcMain } from 'electron';
 import { FindManyOptions } from 'typeorm';
-import { CreateProductFamilyDto } from '../modules/product-family/dtos/create-product-family.dto';
-import { UpdateProductFamilyDto } from '../modules/product-family/dtos/update-product-family.dto';
+
 import { ProductService } from '../modules/product/services/product.service';
+import { CreateProductDto } from '../modules/product/dtos/create-product.dto';
+import { UpdateProductDto } from '../modules/product/dtos/update-product.dto';
 
 export function registerProductHandlers(): void {
   const service = new ProductService();
@@ -17,12 +18,12 @@ export function registerProductHandlers(): void {
   });
 
   // Create a new product for a product
-  ipcMain.handle('product:create', async (_event, data: CreateProductFamilyDto) => {
+  ipcMain.handle('product:create', async (_event, data: CreateProductDto) => {
     return service.save(data);
   });
 
   // Update an existing product
-  ipcMain.handle('product:update', async (_event, id: number, data: UpdateProductFamilyDto) => {
+  ipcMain.handle('product:update', async (_event, id: number, data: UpdateProductDto) => {
     return service.update(id, data);
   });
 

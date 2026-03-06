@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
-import { registerTableHandlers, registerOrderHandlers, registerProductFamilyHandlers } from './ipc';
+import { registerTableHandlers, registerOrderHandlers, registerProductFamilyHandlers, registerProductHandlers } from './ipc';
 import { initializeDatabase } from './shared/database/database';
 
 // IPC Handlers
@@ -33,6 +33,7 @@ app.whenReady().then(async () => {
   registerTableHandlers();
   registerOrderHandlers();
   registerProductFamilyHandlers();
+  registerProductHandlers();
   createWindow();
 });
 

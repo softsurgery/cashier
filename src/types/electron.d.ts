@@ -4,6 +4,8 @@
  */
 
 import { CreateOrderDto, ResponseOrderDto, UpdateOrderDto } from './order.types';
+import { ResponseProductDto, UpdateProductDto } from './product';
+import { ResponseProductFamilyDto } from './product.family';
 import { ResponseTableDto } from './table.types';
 
 export interface TableAPI {
@@ -36,6 +38,14 @@ export interface ProductFamilyAPI {
   delete(id: number): Promise<ResponseProductFamilyDto>;
 }
 
+export interface ProductAPI {
+  findAll(query?: any): Promise<ResponseProductDto[]>;
+  findOneById(id: number): Promise<ResponseProductDto | null>;
+  create(data: CreateProductDto): Promise<ResponseProductDto>;
+  update(id: number, data: Partial<UpdateProductDto>): Promise<ResponseProductDto | null>;
+  delete(id: number): Promise<ResponseProductDto>;
+}
+
 export interface ElectronAPI {
   /** Returns the OS platform (e.g., 'linux', 'win32', 'darwin') */
   getPlatform(): string;
@@ -53,7 +63,8 @@ export interface ElectronAPI {
   order: OrderAPI;
   /** Product Family CRUD operations */
   productFamily: ProductFamilyAPI;
-  
+  /** Product CRUD operations */
+  product: ProductAPI;
 }
 
 declare global {
