@@ -1,0 +1,15 @@
+<hlm-dialog-content class="sm:max-w-[425px]">
+  <hlm-dialog-header>
+    <h3 hlmDialogTitle>{{ dialogContext.title }}</h3>
+    <p hlmDialogDescription>{{ dialogContext.description }}</p>
+  </hlm-dialog-header>
+
+  <hlm-dialog-footer>
+    <button hlmBtn variant="outline" (click)="cancel()">
+      {{ dialogContext.cancelText }}
+    </button>
+    <button hlmBtn type="submit" (click)="confirm()">
+      {{ dialogContext.confirmText }}
+    </button>
+  </hlm-dialog-footer>
+</hlm-dialog-content>
