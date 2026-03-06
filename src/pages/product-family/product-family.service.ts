@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import { ResponseProductFamilyDto } from '../../types/product.family';
+import type { FindManyOptions } from 'typeorm';
+import { ResponseProductFamilyDto } from '../../types';
 
 @Injectable({
   providedIn: 'root',
@@ -8,8 +9,9 @@ import { ResponseProductFamilyDto } from '../../types/product.family';
 export class ProductFamilyService {
   constructor() {}
 
-  findAll(query: any): Observable<ResponseProductFamilyDto[]> {
-    console.log(query);
+  findAll(
+    query: FindManyOptions<ResponseProductFamilyDto>,
+  ): Observable<ResponseProductFamilyDto[]> {
     return from(window.electronAPI!.productFamily.findAll(query));
   }
 }
