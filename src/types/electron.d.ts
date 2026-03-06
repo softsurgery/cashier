@@ -25,6 +25,17 @@ export interface OrderAPI {
   delete(id: number): Promise<ResponseOrderDto>;
 }
 
+export interface ProductFamilyAPI {
+  findAll(query?: any): Promise<ResponseProductFamilyDto[]>;
+  findOneById(id: number): Promise<ResponseProductFamilyDto | null>;
+  create(data: CreateProductFamilyDto): Promise<ResponseProductFamilyDto>;
+  update(
+    id: number,
+    data: Partial<UpdateProductFamilyDto>,
+  ): Promise<ResponseProductFamilyDto | null>;
+  delete(id: number): Promise<ResponseProductFamilyDto>;
+}
+
 export interface ElectronAPI {
   /** Returns the OS platform (e.g., 'linux', 'win32', 'darwin') */
   getPlatform(): string;
@@ -40,6 +51,9 @@ export interface ElectronAPI {
   table: TableAPI;
   /** Order CRUD operations */
   order: OrderAPI;
+  /** Product Family CRUD operations */
+  productFamily: ProductFamilyAPI;
+  
 }
 
 declare global {
