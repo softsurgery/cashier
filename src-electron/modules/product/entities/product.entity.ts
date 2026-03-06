@@ -12,6 +12,9 @@ export class ProductEntity extends EntityHelper {
   @Column({ type: 'varchar', length: 200 })
   description!: string;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  price!: number;
+
   @ManyToOne(() => ProductFamilyEntity)
   @JoinColumn({ name: 'productFamilyId' })
   productFamily: ProductFamilyEntity;
