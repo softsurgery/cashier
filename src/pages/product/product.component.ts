@@ -31,6 +31,7 @@ export class ProductComponent implements OnInit {
       .findAll({
         take: 10,
         skip: 0,
+        relations: ['productFamily'],
       })
       .subscribe((products) => {
         this.data.next(products);

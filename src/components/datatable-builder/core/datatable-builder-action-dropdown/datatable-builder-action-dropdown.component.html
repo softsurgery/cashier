@@ -1,16 +1,15 @@
 <div class="flex justify-end">
-    <button hlmBtn variant="ghost" class="h-8 w-8 p-0" [hlmDropdownMenuTrigger]="ActionDropDownMenu">
-        <span class="sr-only">Open menu</span>
-        <ng-icon hlm size="sm" name="lucideEllipsis" />
-    </button>
+  <button hlmBtn variant="ghost" class="h-8 w-8 p-0" [hlmDropdownMenuTrigger]="ActionDropDownMenu">
+    <span class="sr-only">Open menu</span>
+    <ng-icon hlm size="sm" name="lucideEllipsis" />
+  </button>
 
-    <ng-template #ActionDropDownMenu>
-        <hlm-dropdown-menu>
-            <hlm-dropdown-menu-label class="font-bold">Actions</hlm-dropdown-menu-label>
-            <button hlmDropdownMenuItem (click)="copyPaymentId()">Copy payment ID</button>
-            <hlm-dropdown-menu-separator />
-            <button hlmDropdownMenuItem>View customer</button>
-            <button hlmDropdownMenuItem>View payment details</button>
-        </hlm-dropdown-menu>
-    </ng-template>
+  <ng-template #ActionDropDownMenu>
+    <hlm-dropdown-menu>
+      <hlm-dropdown-menu-label class="font-bold">Actions</hlm-dropdown-menu-label>
+      <hlm-dropdown-menu-separator />
+      <button hlmDropdownMenuItem>Update</button>
+      <button hlmDropdownMenuItem>Delete</button>
+    </hlm-dropdown-menu>
+  </ng-template>
 </div>

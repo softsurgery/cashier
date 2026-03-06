@@ -41,7 +41,16 @@ export const getProductDataTableObject =
             flexRenderComponent(TableHeadSortButton, {
               inputs: { header: 'Price' },
             }),
-          cell: (info) => `<div>$${info.getValue<number>()?.toFixed(2) ?? '0.00'}</div>`,
+          cell: (info) => `<div>د.ت ${info.getValue<number>()?.toFixed(2) ?? '0.00'}</div>`,
+        },
+        {
+          accessorFn: (row) => row.productFamily?.name,
+          id: 'productFamily',
+          header: () =>
+            flexRenderComponent(TableHeadSortButton, {
+              inputs: { header: 'Product Family' },
+            }),
+          cell: (info) => `<div>${info.getValue<string>() ?? ''}</div>`,
         },
         {
           id: 'actions',
