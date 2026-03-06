@@ -3,6 +3,7 @@ import { app } from 'electron';
 import * as path from 'path';
 import { TableEntity } from '../../modules/table/entities/table.entity';
 import { OrderEntity } from '../../modules/order/entities/order.entity';
+import { ProductFamilyEntity } from '../../modules/product-family/entities/product-family.entity';
 
 let dataSource: DataSource | null = null;
 
@@ -16,7 +17,7 @@ export async function initializeDatabase(): Promise<DataSource> {
   dataSource = new DataSource({
     type: 'better-sqlite3',
     database: dbPath,
-    entities: [TableEntity, OrderEntity],
+    entities: [TableEntity, OrderEntity, ProductFamilyEntity],
     synchronize: true,
     logging: !app.isPackaged,
   });
