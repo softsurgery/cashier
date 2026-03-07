@@ -36,7 +36,7 @@ export const getProductFamilyDataTableObject =
           id: 'description',
           header: 'Description',
           enableSorting: false,
-          cell: (info) => `<div class="text-muted">${info.getValue<string>() ?? ''}</div>`,
+          cell: (info) => `<div>${info.getValue<string>() ?? ''}</div>`,
         },
       ],
     };
