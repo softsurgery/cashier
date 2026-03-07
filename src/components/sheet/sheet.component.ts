@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
+import { SheetContentBridgeDirective } from './sheet-content-bridge.directive';
 import { SheetAction, SheetObject } from './types';
 
 @Component({
@@ -11,7 +12,7 @@ import { SheetAction, SheetObject } from './types';
   standalone: true,
   templateUrl: './sheet.component.html',
   styleUrl: './sheet.component.css',
-  imports: [HlmSheetImports, HlmButtonImports, NgComponentOutlet],
+  imports: [HlmSheetImports, HlmButtonImports, NgComponentOutlet, SheetContentBridgeDirective],
 })
 export class SheetComponent {
   private readonly sheetRef = inject(BrnDialogRef);
