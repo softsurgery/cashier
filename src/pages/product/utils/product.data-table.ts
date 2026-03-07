@@ -4,7 +4,6 @@ import {
   DynamicDataTable,
 } from '../../../components/datatable-builder/datatable-builder.types';
 import { TableHeadSortButton } from '../../../components/datatable-builder/datatable-builder-common/sort-header-button';
-import { DatatableBuilderActionDropdownComponent } from '../../../components/datatable-builder/core/datatable-builder-action-dropdown/datatable-builder-action-dropdown.component';
 import { checkboxColumnDef } from '../../../components/datatable-builder/utils/datatable-builder-select';
 import { ResponseProductDto } from '../../../types';
 
@@ -16,6 +15,10 @@ export const getProductDataTableObject =
       singular: 'Product',
       plural: 'Products',
       variant: DataTableVariant.COMMON,
+      rowActions: {
+        editAction: { label: 'Update', action: (row) => console.log('Update', row) },
+        deleteAction: { label: 'Delete', action: (row) => console.log('Delete', row) },
+      },
       columns: [
         checkboxColumnDef,
         {
@@ -51,11 +54,6 @@ export const getProductDataTableObject =
               inputs: { header: 'Product Family' },
             }),
           cell: (info) => `<div>${info.getValue<string>() ?? ''}</div>`,
-        },
-        {
-          id: 'actions',
-          enableHiding: false,
-          cell: () => flexRenderComponent(DatatableBuilderActionDropdownComponent),
         },
       ],
     };

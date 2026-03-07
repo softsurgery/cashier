@@ -4,10 +4,7 @@ import { ResponseOrderDto } from '../../types';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { OrderService } from './order.service';
-import {
-  DataTableVariant,
-  DynamicDataTable,
-} from '../../components/datatable-builder/datatable-builder.types';
+import { DynamicDataTable } from '../../components/datatable-builder/datatable-builder.types';
 import { getOrderDataTableObject } from './utils/order.data-table';
 
 @Component({

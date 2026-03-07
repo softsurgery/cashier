@@ -21,6 +21,7 @@ import {
   ColumnFiltersState,
   createAngularTable,
   FlexRenderDirective,
+  flexRenderComponent,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -30,6 +31,7 @@ import {
   Table,
   VisibilityState,
 } from '@tanstack/angular-table';
+import { DatatableBuilderActionDropdownComponent } from '../core/datatable-builder-action-dropdown/datatable-builder-action-dropdown.component';
 
 @Component({
   selector: 'app-datatable-builder-common',
@@ -99,6 +101,26 @@ export class DatatableBuilderCommonComponent implements OnInit {
     });
 
     this._columns = this.dataTableObject?.columns || [];
+
+    // Auto-append actions column if rowActions or rowActionsFn is defined
+    if (this.dataTableObject?.rowActions || this.dataTableObject?.rowActionsFn) {
+      const hasActionsColumn = this._columns.some((col) => col.id === 'actions');
+      if (!hasActionsColumn) {
+        const rowActions = this.dataTableObject.rowActions;
+        const rowActionsFn = this.dataTableObject.rowActionsFn;
+        this._columns = [
+          ...this._columns,
+          {
+            id: 'actions',
+            enableHiding: false,
+            cell: () =>
+              flexRenderComponent(DatatableBuilderActionDropdownComponent, {
+                inputs: { rowActions, rowActionsFn },
+              }),
+          },
+        ];
+      }
+    }
     // Create table
     this._table = createAngularTable(() => ({
       data: this._data(),
