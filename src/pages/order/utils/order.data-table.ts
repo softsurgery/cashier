@@ -15,6 +15,7 @@ export const getOrderDataTableObject =
       singular: 'Order',
       plural: 'Orders',
       variant: DataTableVariant.COMMON,
+      createAction: { label: 'Create Order', action: () => console.log('Create Order') },
       rowActions: {
         editAction: { label: 'Update', action: (row) => console.log('Update', row) },
         deleteAction: { label: 'Delete', action: (row) => console.log('Delete', row) },

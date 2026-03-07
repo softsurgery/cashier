@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { OrderService } from './order.service';
 import { DynamicDataTable } from '../../components/datatable-builder/datatable-builder.types';
 import { getOrderDataTableObject } from './utils/order.data-table';
+import { OrderRepository } from '@/stores/order-state/order-state.repository';
 
 @Component({
   selector: 'app-order',
@@ -15,6 +16,8 @@ import { getOrderDataTableObject } from './utils/order.data-table';
 })
 export class OrderComponent implements OnInit {
   orderService = inject(OrderService);
+  orderRepository = inject(OrderRepository);
+
   data = new BehaviorSubject<ResponseOrderDto[]>([]);
 
   dataTableObject: DynamicDataTable<ResponseOrderDto> = getOrderDataTableObject({});

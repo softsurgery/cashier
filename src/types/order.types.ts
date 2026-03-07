@@ -17,7 +17,7 @@ export interface ResponseOrderDto extends DatabaseEntity {
 }
 
 export interface CreateOrderDto {
-  tableId: number;
+  tableId?: number;
 }
 
 export interface UpdateOrderDto extends Partial<CreateOrderDto> {
