@@ -1,11 +1,12 @@
-import { DynamicField, FieldVariant } from "../form-builder.types";
+import { DynamicField, FieldVariant } from '../form-builder.types';
 
 export const getFieldBuilderObjectFactory = (): DynamicField => {
   return {
-    label: "",
+    id: crypto.randomUUID(),
+    label: '',
     variant: FieldVariant.EMPTY,
-    description: "",
-    class: "",
+    description: '',
+    class: '',
     isRequired: false,
     isHidden: true,
     props: {},

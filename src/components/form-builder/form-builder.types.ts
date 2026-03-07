@@ -25,6 +25,7 @@ export interface DynamicGridItem {
 }
 
 export interface DynamicField<T = any> {
+  id: string;
   label?: string;
   variant: FieldVariant;
   description?: string;
