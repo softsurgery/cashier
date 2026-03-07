@@ -1,14 +1,18 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { DatatableBuilderComponent } from '../../components/datatable-builder/datatable-builder.component';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 
 import { ProductFamilyService } from './product-family.service';
-import { ResponseProductFamilyDto } from '../../types';
+import { ProductFamilyRepository } from '../../stores/product-family-state/product-family-state.repository';
+import { SheetService } from '../../components/sheet/sheet.service';
+import { CreateProductFamilyDto, ResponseProductFamilyDto } from '../../types';
 
 import { DynamicDataTable } from '../../components/datatable-builder/datatable-builder.types';
 import { getProductFamilyDataTableObject } from './utils/product-family.data-table';
-
+import { getProductFamilyCreateFormStructure } from './utils/product-family-create.form-structure';
+import { getProductFamilyCreateSheet } from './utils/product-family-create.sheet';
 
 @Component({
   selector: 'app-product-family',
@@ -17,11 +21,18 @@ import { getProductFamilyDataTableObject } from './utils/product-family.data-tab
   styleUrl: './product-family.component.css',
 })
 export class ProductFamilyComponent implements OnInit {
-  productFamilyService = inject(ProductFamilyService);
+  private productFamilyService = inject(ProductFamilyService);
+  private store = inject(ProductFamilyRepository);
+  private sheetService = inject(SheetService);
+  private vcr = inject(ViewContainerRef);
+
+  private sheetRef: BrnDialogRef | null = null;
 
   data = new BehaviorSubject<ResponseProductFamilyDto[]>([]);
 
-  dataTableObject: DynamicDataTable<ResponseProductFamilyDto> = getProductFamilyDataTableObject({});
+  dataTableObject: DynamicDataTable<ResponseProductFamilyDto> = getProductFamilyDataTableObject({
+    onCreateAction: () => this.openCreateSheet(),
+  });
 
   ngOnInit() {
     this.loadProductFamilies();
@@ -36,5 +47,35 @@ export class ProductFamilyComponent implements OnInit {
       .subscribe((families) => {
         this.data.next(families);
       });
+  }
+
+  openCreateSheet() {
+    this.store.reset();
+
+    const structure = getProductFamilyCreateFormStructure({ store: this.store });
+
+    const sheetConfig = getProductFamilyCreateSheet({
+      structure,
+      onSave: () => this.onCreateSave(),
+      onCancel: () => this.closeSheet(),
+    });
+
+    this.sheetRef = this.sheetService.open(this.vcr, sheetConfig);
+  }
+
+  private onCreateSave() {
+    const createDto = this.store.get<CreateProductFamilyDto>('createDto');
+
+    this.productFamilyService.create(createDto).subscribe({
+      next: () => {
+        this.closeSheet();
+        this.loadProductFamilies();
+      },
+    });
+  }
+
+  private closeSheet() {
+    this.sheetRef?.close();
+    this.sheetRef = null;
   }
 }
