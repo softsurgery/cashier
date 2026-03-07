@@ -4,7 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
-import { DrawerAction, DrawerObject } from './types';
+import { SheetAction, SheetObject } from './types';
 
 @Component({
   selector: 'app-sheet',
@@ -14,14 +14,14 @@ import { DrawerAction, DrawerObject } from './types';
   imports: [HlmSheetImports, HlmButtonImports, NgComponentOutlet],
 })
 export class SheetComponent {
-  private readonly dialogRef = inject(BrnDialogRef);
-  protected readonly context = injectBrnDialogContext<DrawerObject>();
+  private readonly sheetRef = inject(BrnDialogRef);
+  protected readonly context = injectBrnDialogContext<SheetObject>();
 
   protected readonly actions = this.context.actions ?? [];
 
-  private readonly disabledSignals = new Map<DrawerAction, Signal<boolean>>();
+  private readonly disabledSignals = new Map<SheetAction, Signal<boolean>>();
 
-  protected isDisabled(action: DrawerAction): boolean {
+  protected isDisabled(action: SheetAction): boolean {
     if (!action.disabled) return false;
     let sig = this.disabledSignals.get(action);
     if (!sig) {
@@ -33,10 +33,10 @@ export class SheetComponent {
 
   close() {
     this.context.onHide?.();
-    this.dialogRef.close();
+    this.sheetRef.close();
   }
 
-  onActionClick(action: DrawerAction) {
+  onActionClick(action: SheetAction) {
     action.onClick();
   }
 }

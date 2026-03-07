@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-export type DrawerActionVariant =
+export type SheetActionVariant =
   | 'default'
   | 'destructive'
   | 'outline'
@@ -8,14 +8,14 @@ export type DrawerActionVariant =
   | 'ghost'
   | 'link';
 
-export interface DrawerAction {
+export interface SheetAction {
   label: string;
   onClick: () => void;
-  variant?: DrawerActionVariant;
+  variant?: SheetActionVariant;
   disabled?: Observable<boolean>;
 }
 
-export interface DrawerObject {
+export interface SheetObject {
   title: string;
   description: string;
   component?: {
@@ -27,5 +27,5 @@ export interface DrawerObject {
   closeOnEscape?: boolean;
   dismissable?: boolean;
   onHide?: () => void;
-  actions?: DrawerAction[];
+  actions?: SheetAction[];
 }
