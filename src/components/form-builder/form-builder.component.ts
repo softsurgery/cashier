@@ -13,7 +13,7 @@ import { FieldBuilderComponent } from './field-builder/field-builder.component';
   imports: [CommonModule, FieldBuilderComponent],
 })
 export class FormBuilderComponent implements OnInit, OnDestroy {
-  @Input() formObject: DynamicForm = {
+  @Input() structure: DynamicForm = {
     title: '',
     description: '',
     class: '',
@@ -64,7 +64,7 @@ export class FormBuilderComponent implements OnInit, OnDestroy {
 
   // Example: get filtered rows for a grid
   getFilteredRows(gridIndex: number): Observable<DynamicGridItem[]> {
-    const grid = this.formObject.grids[gridIndex];
+    const grid = this.structure.grids[gridIndex];
     if (!grid) return of([]);
     return this.filterVisibleRows(grid.gridItems);
   }

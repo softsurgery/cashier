@@ -1,21 +1,19 @@
-import { Component, Input } from "@angular/core";
-import { Observable, of } from "rxjs";
-import { DynamicForm } from "../form-builder.types";
-import { FormBuilderComponent } from "../form-builder.component";
-import { CommonModule } from "@angular/common";
-import { getFormBuilderObjectFactory } from "./form-builder-factory";
+import { Component, Input } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { DynamicForm } from '../form-builder.types';
+import { FormBuilderComponent } from '../form-builder.component';
+import { CommonModule } from '@angular/common';
+import { getFormBuilderObjectFactory } from './form-builder-factory';
 
 @Component({
-  selector: "app-observable-form-builder-resolver",
+  selector: 'app-observable-form-builder-resolver',
   template: `<app-form-builder
-    [formObject]="(formObject | async) || fallbackForm"
+    [structure]="(structure | async) || fallbackForm"
   ></app-form-builder>`,
   imports: [FormBuilderComponent, CommonModule],
 })
 export class ObservableFormBuilderResolverComponent {
-  @Input() formObject: Observable<DynamicForm> = of(
-    getFormBuilderObjectFactory()
-  );
+  @Input() structure: Observable<DynamicForm> = of(getFormBuilderObjectFactory());
 
   fallbackForm: DynamicForm = getFormBuilderObjectFactory();
 }
