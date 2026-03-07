@@ -1,6 +1,5 @@
 import { Signal } from '@angular/core';
 import { ColumnDef } from '@tanstack/angular-table';
-import { Observable } from 'rxjs';
 
 export interface DynamicDataTable<T = any> {
   //common
@@ -8,11 +7,10 @@ export interface DynamicDataTable<T = any> {
   plural: string;
   columns: ColumnDef<T>[];
   variant?: DataTableVariant;
+  createAction?: DataTableAction;
   rowActions?: DataTableRowActions;
   rowActionsFn?: (...args: any[]) => DataTableRowActions;
   target?: (entity: T) => void;
-  createAction?: (...args: any[]) => void;
-  createActionDisabled?: boolean | Observable<boolean>;
   //styles
   showGridlines?: boolean;
   stripedRows?: boolean;
@@ -54,11 +52,6 @@ export interface DataTableRowActions {
   editAction?: DataTableAction;
   deleteAction?: DataTableAction;
   additionalActions?: Record<string, DataTableAction[] | undefined>;
-}
-
-interface RenderAsReturnType {
-  value: any;
-  class?: string;
 }
 
 export enum DataTableVariant {

@@ -6,7 +6,8 @@ import { FormsModule } from '@angular/forms';
 
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmDropdownMenu, HlmDropdownMenuCheckboxIndicator } from '@spartan-ng/helm/dropdown-menu';
-import { NgIcon } from '@ng-icons/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideChevronDown, lucidePlus } from '@ng-icons/lucide';
 
 import { BrnSelectImports } from '@spartan-ng/brain/select';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -37,6 +38,7 @@ import { DatatableBuilderActionDropdownComponent } from '../core/datatable-build
   selector: 'app-datatable-builder-common',
   templateUrl: './datatable-builder-common.component.html',
   styleUrls: ['./datatable-builder-common.component.css'],
+  providers: [provideIcons({ lucideChevronDown, lucidePlus })],
   imports: [
     CommonModule,
     FormsModule,
