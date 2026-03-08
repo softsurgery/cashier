@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { SiteHeaderComponent } from './site-header/site-header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-layout',
-  imports: [HlmSidebarImports, SiteHeaderComponent, SidebarComponent],
+  imports: [CommonModule, HlmSidebarImports, SiteHeaderComponent, SidebarComponent],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
