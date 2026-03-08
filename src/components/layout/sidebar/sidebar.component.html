@@ -1,6 +1,6 @@
-<div hlmSidebarWrapper class="flex-col min-h-screen">
+<div hlmSidebarWrapper class="flex flex-col flex-1 max-h-screen min-h-screen overflow-hidden">
     <ng-content select="[header]" />
-    <div class="flex flex-1">
+    <div class="flex flex-1 overflow-hidden">
         <hlm-sidebar sidebarContainerClass="top-(--header-height) h-[calc(100dvh-var(--header-height))]">
             <hlm-sidebar-header>
                 <app-nav-context></app-nav-context>
