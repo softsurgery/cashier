@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ProductEntity } from '../../product/entities/product.entity';
+import { ProductEntity } from '@/modules/product/entities/product.entity';
 import { OrderEntity } from './order.entity';
 
 @Entity('order_product')

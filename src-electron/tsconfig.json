@@ -13,8 +13,12 @@
     "outDir": "../dist-electron",
     "rootDir": ".",
     "sourceMap": true,
+    "baseUrl": ".",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["./**/*.ts"]
 }
