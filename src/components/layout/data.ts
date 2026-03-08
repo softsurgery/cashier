@@ -66,10 +66,21 @@ export const data = {
       isActive: false,
     },
     {
-      title: 'Nigrok',
-      url: '/nigrok',
+      title: 'Ngrok',
+      url: '/ngrok',
       icon: 'lucideSettings',
       isActive: false,
+    },
+    {
+      title: 'Administrative Tools',
+      url: '#',
+      icon: 'lucideShield',
+      items: [
+        {
+          title: 'Table Management',
+          url: '/admin/table-management',
+        },
+      ],
     },
   ],
   navSecondary: [
