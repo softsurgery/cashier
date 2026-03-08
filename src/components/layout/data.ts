@@ -78,7 +78,7 @@ export const data = {
       items: [
         {
           title: 'Table Management',
-          url: '/admin/table-management',
+          url: '/tables',
         },
       ],
     },
