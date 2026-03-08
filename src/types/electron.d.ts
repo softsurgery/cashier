@@ -5,18 +5,27 @@
 
 import { CreateOrderDto, ResponseOrderDto, UpdateOrderDto } from './order.types';
 import { ResponseProductDto, UpdateProductDto } from './product';
-import { ResponseProductFamilyDto } from './product.family';
-import { ResponseTableDto } from './table.types';
+import { CreateProductFamilyDto, ResponseProductFamilyDto } from './product.family';
+import { CreateTableDto, ResponseTableDto } from './table.types';
+import { ResponseTableZoneDto } from './table-zone.types';
 
 export interface TableAPI {
   findAll(query?: any): Promise<ResponseTableDto[]>;
   findOneById(id: number): Promise<ResponseTableDto | null>;
-  create(data: { name: string; capacity?: number; status?: string }): Promise<ResponseTableDto>;
+  create(data: CreateTableDto): Promise<ResponseTableDto>;
   update(
     id: number,
     data: Partial<{ name: string; capacity: number; status: string }>,
   ): Promise<ResponseTableDto | null>;
   delete(id: number): Promise<ResponseTableDto>;
+}
+
+export interface TableZoneAPI {
+  findAll(query?: any): Promise<ResponseTableZoneDto[]>;
+  findOneById(id: number): Promise<ResponseTableZoneDto | null>;
+  create(data: { name: string }): Promise<ResponseTableZoneDto>;
+  update(id: number, data: Partial<{ name: string }>): Promise<ResponseTableZoneDto | null>;
+  delete(id: number): Promise<ResponseTableZoneDto>;
 }
 
 export interface OrderAPI {
@@ -59,6 +68,8 @@ export interface ElectronAPI {
   ping(): Promise<string>;
   /** Table CRUD operations */
   table: TableAPI;
+  /** Table Zone CRUD operations */
+  tableZone: TableZoneAPI;
   /** Order CRUD operations */
   order: OrderAPI;
   /** Product Family CRUD operations */

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn } from 'typeorm';
 import { EntityHelper } from '../../../shared/database/entities/entity-helper';
 import { OrderEntity } from '../../order/entities/order.entity';
 import { TableStatus } from '../enums/table-status.enum';
@@ -19,5 +19,9 @@ export class TableEntity extends EntityHelper {
   orders: OrderEntity[];
 
   @OneToMany(() => TableZoneEntity, (zone) => zone.tables)
+  @JoinColumn({ name: 'zoneId' })
   zone: TableZoneEntity;
+
+  @Column({ type: 'int', nullable: true })
+  zoneId: number;
 }

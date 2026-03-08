@@ -1,4 +1,5 @@
 import { ResponseOrderDto } from './order.types';
+import { ResponseTableZoneDto } from './table-zone.types';
 import { DatabaseEntity } from './utils/database-entity';
 
 export enum TableStatus {
@@ -12,6 +13,8 @@ export interface ResponseTableDto extends DatabaseEntity {
   name: string;
   status: TableStatus;
   orders: ResponseOrderDto[];
+  zoneId?: number;
+  zone?: ResponseTableZoneDto;
 }
 
 export interface CreateTableDto {

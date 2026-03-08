@@ -21,8 +21,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // ── Table CRUD ──────────────────────────────────────────────
   table: {
-    getAll: () => ipcRenderer.invoke('table:getAll'),
-    getById: (id: number) => ipcRenderer.invoke('table:getById', id),
+    findAll: (query?: any) => ipcRenderer.invoke('table:findAll', query),
+    findOneById: (id: number) => ipcRenderer.invoke('table:findOneById', id),
     create: (data: { name: string; capacity?: number; status?: string }) =>
       ipcRenderer.invoke('table:create', data),
     update: (id: number, data: Partial<{ name: string; capacity: number; status: string }>) =>
@@ -31,11 +31,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
   // ── TableZone CRUD ──────────────────────────────────────────────
   tableZone: {
-    getAll: () => ipcRenderer.invoke('table-zone:getAll'),
-    getById: (id: number) => ipcRenderer.invoke('table-zone:getById', id),
-    create: (data: { name: string; capacity?: number; status?: string }) =>
-      ipcRenderer.invoke('table-zone:create', data),
-    update: (id: number, data: Partial<{ name: string; capacity: number; status: string }>) =>
+    findAll: (query?: any) => ipcRenderer.invoke('table-zone:findAll', query),
+    findOneById: (id: number) => ipcRenderer.invoke('table-zone:findOneById', id),
+    create: (data: { name: string }) => ipcRenderer.invoke('table-zone:create', data),
+    update: (id: number, data: Partial<{ name: string }>) =>
       ipcRenderer.invoke('table-zone:update', id, data),
     delete: (id: number) => ipcRenderer.invoke('table-zone:delete', id),
   },
