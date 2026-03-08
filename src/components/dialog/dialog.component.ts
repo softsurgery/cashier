@@ -20,10 +20,10 @@ export class AbstractDialogComponent {
   }>();
 
   cancel() {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   confirm() {
-    this.dialogRef.close();
+    this.dialogRef.close(true);
   }
 }

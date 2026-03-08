@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { TablesComponent } from '../pages/tables/tables.component';
 import { OrderComponent } from '../pages/order/order.component';
 import { ProductFamilyComponent } from '../pages/product-family/product-family.component';
 import { ProductComponent } from '../pages/product/product.component';
@@ -7,7 +6,7 @@ import { ProductComponent } from '../pages/product/product.component';
 export const routes: Routes = [
   {
     path: 'tables',
-    component: TablesComponent,
+    loadComponent: () => import('../pages/tables/table-management.component').then(m => m.TableManagementComponent)
   },
   {
     path: 'orders',
