@@ -6,6 +6,7 @@ import {
   registerOrderHandlers,
   registerProductFamilyHandlers,
   registerProductHandlers,
+  registerTableZoneHandlers,
 } from './ipc';
 import { initializeDatabase } from './shared/database/database';
 
@@ -36,6 +37,7 @@ function createWindow(): void {
 app.whenReady().then(async () => {
   await initializeDatabase();
   registerTableHandlers();
+  registerTableZoneHandlers();
   registerOrderHandlers();
   registerProductFamilyHandlers();
   registerProductHandlers();

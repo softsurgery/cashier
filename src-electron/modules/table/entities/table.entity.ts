@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { EntityHelper } from '../../../shared/database/entities/entity-helper';
 import { OrderEntity } from '../../order/entities/order.entity';
 import { TableStatus } from '../enums/table-status.enum';
+import { TableZoneEntity } from './table-zone.entity';
 
 @Entity('tables')
 export class TableEntity extends EntityHelper {
@@ -16,4 +17,7 @@ export class TableEntity extends EntityHelper {
 
   @OneToMany(() => OrderEntity, (order) => order.table)
   orders: OrderEntity[];
+
+  @OneToMany(() => TableZoneEntity, (zone) => zone.tables)
+  zone: TableZoneEntity;
 }

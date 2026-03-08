@@ -29,6 +29,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
       ipcRenderer.invoke('table:update', id, data),
     delete: (id: number) => ipcRenderer.invoke('table:delete', id),
   },
+  // ── TableZone CRUD ──────────────────────────────────────────────
+  tableZone: {
+    getAll: () => ipcRenderer.invoke('table-zone:getAll'),
+    getById: (id: number) => ipcRenderer.invoke('table-zone:getById', id),
+    create: (data: { name: string; capacity?: number; status?: string }) =>
+      ipcRenderer.invoke('table-zone:create', data),
+    update: (id: number, data: Partial<{ name: string; capacity: number; status: string }>) =>
+      ipcRenderer.invoke('table-zone:update', id, data),
+    delete: (id: number) => ipcRenderer.invoke('table-zone:delete', id),
+  },
   // ── Order CRUD ──────────────────────────────────────────────
   order: {
     findAll: (query: any) => ipcRenderer.invoke('order:findAll', query),
