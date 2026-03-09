@@ -80,6 +80,10 @@ export const data = {
           title: 'Table Management',
           url: '/tables',
         },
+        {
+          title: 'Table Zone Management',
+          url: '/table-zone',
+        },
       ],
     },
   ],
