@@ -73,7 +73,6 @@ export const data = {
     },
     {
       title: 'Administrative Tools',
-      url: '#',
       icon: 'lucideShield',
       items: [
         {

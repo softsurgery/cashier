@@ -21,3 +21,5 @@ export interface CreateTableDto {
   name: string;
   status?: TableStatus;
 }
+
+export interface UpdateTableDto extends Partial<CreateTableDto> {}  
