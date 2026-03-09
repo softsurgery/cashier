@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 import { TableZoneService } from '../table-zone/table-zone.service';
-import { ResponseTableZoneDto, TableStatus } from '../../types';
+import { TablesService } from '../tables/tables.service';
+import { ResponseTableZoneDto, TableStatus, ResponseTableDto } from '../../types';
 
 @Component({
   selector: 'app-zone-tables',
@@ -14,6 +15,7 @@ import { ResponseTableZoneDto, TableStatus } from '../../types';
 })
 export class ZoneTablesComponent implements OnInit {
   private service = inject(TableZoneService);
+  private tableService = inject(TablesService);
   data = new BehaviorSubject<ResponseTableZoneDto[]>([]);
 
   statuses: string[] = [];
@@ -36,13 +38,21 @@ export class ZoneTablesComponent implements OnInit {
     };
   }
 
-  changeStatus(table: { status: string }, status: string) {
+  changeStatus(table: ResponseTableDto, status: string) {
     if (table.status === status) {
       return;
     }
-    table.status = status;
-    const zones = this.data.value;
-    this.data.next([...zones]);
+    this.tableService.update(table.id, { status: status as TableStatus }).subscribe({
+      next: (updated) => {
+        if (!updated) {
+          return;
+        }
+        table.status = updated.status;
+        const zones = this.data.value;
+        this.data.next([...zones]);
+      },
+      error: (err) => console.error('failed to update status', err),
+    });
   }
 
   ngOnInit() {
