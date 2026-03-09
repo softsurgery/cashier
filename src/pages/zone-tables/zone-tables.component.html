@@ -1,6 +1,0 @@
-<div *ngFor="let zone of data | async" class="mb-4">
-  <h2 class="font-bold text-lg">{{ zone.name }}</h2>
-  <ul class="pl-4">
-    <li *ngFor="let t of zone.tables">{{ t.name }} ({{ t.status }})</li>
-  </ul>
-</div>

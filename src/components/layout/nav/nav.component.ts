@@ -57,7 +57,7 @@ export class NavComponent {
   public readonly items = input.required<
     {
       title: string;
-      url: string;
+      url?: string;          
       icon: string;
       isActive?: boolean;
       items?: {
