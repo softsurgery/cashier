@@ -42,6 +42,15 @@ export const getTableDataTableObject = ({
         enableSorting: false,
         cell: (info) => `<div class="capitalize">${info.getValue<string>() ?? ''}</div>`,
       },
+      {
+        accessorFn: (row) => row.zone?.name,
+        id: 'tableZone',
+        header: () =>
+          flexRenderComponent(TableHeadSortButton, {
+            inputs: { header: 'Table Zone' },
+          }),
+        cell: (info) => `<div>${info.getValue<string>() ?? ''}</div>`,
+      },
     ],
   };
 };

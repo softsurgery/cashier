@@ -43,6 +43,7 @@ export class TablesComponent implements OnInit {
       .findAll({
         take: 10,
         skip: 0,
+        relations: ['zone'],
       })
       .subscribe((tables) => {
         this.data.next(tables);
