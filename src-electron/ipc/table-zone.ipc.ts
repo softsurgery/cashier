@@ -29,6 +29,6 @@ export function registerTableZoneHandlers(): void {
 
   // Delete a table zone
   ipcMain.handle('table-zone:delete', async (_event, id: number) => {
-    return service.delete(String(id));
+    return service.softDelete(String(id));
   });
 }

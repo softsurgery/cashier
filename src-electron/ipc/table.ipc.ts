@@ -29,6 +29,6 @@ export function registerTableHandlers(): void {
 
   // Delete a table
   ipcMain.handle('table:delete', async (_event, id: number) => {
-    return service.delete(String(id));
+    return service.softDelete(String(id));
   });
 }
