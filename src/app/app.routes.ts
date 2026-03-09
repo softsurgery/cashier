@@ -4,11 +4,17 @@ import { ProductFamilyComponent } from '../pages/product-family/product-family.c
 import { ProductComponent } from '../pages/product/product.component';
 import { TablesComponent } from '../pages/tables/tables.component';
 import { TableZoneComponent } from '@/pages/table-zone/table-zone.component';
+import { ZoneTablesComponent } from '@/pages/zone-tables/zone-tables.component';
 
 export const routes: Routes = [
   {
     path: 'tables',
     component: TablesComponent,
+  },
+
+  {
+    path: 'zone-tables',
+    component: ZoneTablesComponent,
   },
   {
     path: 'table-zone',

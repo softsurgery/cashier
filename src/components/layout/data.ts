@@ -23,9 +23,10 @@ export const data = {
       icon: 'lucideShoppingCart',
       isActive: false,
     },
+
     {
       title: 'Tables',
-      url: '/tables',
+      url: '/zone-tables',
       icon: 'lucideGrid',
       isActive: false,
     },
