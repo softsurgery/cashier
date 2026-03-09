@@ -9,10 +9,12 @@ import { ProductFamilyRepository } from '@/stores/product-family-state/product-f
 
 interface ProductFamilyCreateFormStructureProps {
   store: ProductFamilyRepository;
+  isUpdate?: boolean;
 }
 
 export const getProductFamilyCreateFormStructure = ({
   store,
+  isUpdate = false,
 }: ProductFamilyCreateFormStructureProps): DynamicForm => {
   const nameField: DynamicField<TextFieldProps> = {
     id: 'name',
@@ -48,8 +50,10 @@ export const getProductFamilyCreateFormStructure = ({
   };
 
   return {
-    title: 'Create Product Family',
-    description: 'Fill out the form below to create a new product family.',
+    title: isUpdate ? 'Update Product Family' : 'Create Product Family',
+    description: isUpdate
+      ? 'Modify the fields below to update the product family.'
+      : 'Fill out the form below to create a new product family.',
     isHeaderHidden: true,
     grids: [
       {

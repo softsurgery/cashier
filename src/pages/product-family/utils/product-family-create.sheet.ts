@@ -6,12 +6,16 @@ interface ProductFamilyCreateSheetProps {
   structure: DynamicForm;
   onSave: () => void;
   onCancel: () => void;
+  title?: string;
+  description?: string;
 }
 
 export const getProductFamilyCreateSheet = ({
   structure,
   onSave,
   onCancel,
+  title = 'Create Product Family',
+  description = 'Fill in the details to create a new product family.',
 }: ProductFamilyCreateSheetProps): SheetObject => {
   const actions: SheetAction[] = [
     {
@@ -27,8 +31,8 @@ export const getProductFamilyCreateSheet = ({
   ];
 
   return {
-    title: 'Create Product Family',
-    description: 'Fill in the details to create a new product family.',
+    title,
+    description,
     component: {
       outlet: FormBuilderComponent,
       props: { structure },

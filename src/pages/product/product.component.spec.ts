@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductFamilyComponent } from './product.component';
+import { ProductComponent } from './product.component';
 
-describe('ProductFamilyComponent', () => {
-  let component: ProductFamilyComponent;
-  let fixture: ComponentFixture<ProductFamilyComponent>;
+describe('ProductComponent', () => {
+  let component: ProductComponent;
+  let fixture: ComponentFixture<ProductComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductFamilyComponent],
+      imports: [ProductComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ProductFamilyComponent);
+    fixture = TestBed.createComponent(ProductComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

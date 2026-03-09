@@ -9,10 +9,14 @@ import { checkboxColumnDef } from '../../../components/datatable-builder/utils/d
 
 interface ProductFamilyDataTableProps {
   onCreateAction?: () => void;
+  onEditAction?: (row: ResponseProductFamilyDto) => void;
+  onDeleteAction?: (row: ResponseProductFamilyDto) => void;
 }
 
 export const getProductFamilyDataTableObject = ({
   onCreateAction,
+  onEditAction,
+  onDeleteAction,
 }: ProductFamilyDataTableProps): DynamicDataTable<ResponseProductFamilyDto> => {
   return {
     singular: 'Product Family',
@@ -22,8 +26,14 @@ export const getProductFamilyDataTableObject = ({
       ? { label: 'Create Product Family', action: onCreateAction }
       : undefined,
     rowActions: {
-      editAction: { label: 'Update', action: (row) => console.log('Update', row) },
-      deleteAction: { label: 'Delete', action: (row) => console.log('Delete', row) },
+      editAction: {
+        label: 'Update',
+        action: onEditAction ? onEditAction : (row) => console.log('Update', row),
+      },
+      deleteAction: {
+        label: 'Delete',
+        action: onDeleteAction ? onDeleteAction : (row) => console.log('Delete', row),
+      },
     },
     columns: [
       checkboxColumnDef,
