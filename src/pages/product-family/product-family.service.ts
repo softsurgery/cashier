@@ -26,4 +26,8 @@ export class ProductFamilyService {
   update(id: number, data: Partial<CreateProductFamilyDto>) {
     return from(window.electronAPI!.productFamily.update(id, data));
   }
+
+  delete(id: number) {
+    return from(window.electronAPI!.productFamily.delete(id));
+  }
 }

@@ -7,6 +7,7 @@ import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { ProductFamilyService } from './product-family.service';
 import { ProductFamilyRepository } from '../../stores/product-family-state/product-family-state.repository';
 import { SheetService } from '../../components/sheet/sheet.service';
+import { DialogService } from '../../components/dialog/dialog.service';
 import { CreateProductFamilyDto, ResponseProductFamilyDto } from '../../types';
 
 import { DynamicDataTable } from '../../components/datatable-builder/datatable-builder.types';
@@ -24,6 +25,7 @@ export class ProductFamilyComponent implements OnInit {
   private productFamilyService = inject(ProductFamilyService);
   private store = inject(ProductFamilyRepository);
   private sheetService = inject(SheetService);
+  private dialogService = inject(DialogService);
   private vcr = inject(ViewContainerRef);
 
   private sheetRef: BrnDialogRef | null = null;
@@ -34,6 +36,7 @@ export class ProductFamilyComponent implements OnInit {
   dataTableObject: DynamicDataTable<ResponseProductFamilyDto> = getProductFamilyDataTableObject({
     onCreateAction: () => this.openCreateSheet(),
     onEditAction: (row) => this.openUpdateSheet(row),
+    onDeleteAction: (row) => this.confirmDelete(row),
   });
 
   ngOnInit() {
@@ -95,6 +98,23 @@ export class ProductFamilyComponent implements OnInit {
     this.sheetRef?.close();
     this.sheetRef = null;
     this.editingId = null;
+  }
+
+  private confirmDelete(row: ResponseProductFamilyDto) {
+    const ref = this.dialogService.open(this.vcr, {
+      title: 'Delete Product Family',
+      description: `Are you sure you want to delete \"${row.name}\"?`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
+
+    ref.closed$.subscribe((confirmed) => {
+      if (confirmed) {
+        this.productFamilyService.delete(row.id).subscribe(() => {
+          this.loadProductFamilies();
+        });
+      }
+    });
   }
   openUpdateSheet(row: ResponseProductFamilyDto) {
     this.editingId = row.id;
