@@ -142,4 +142,17 @@ export class FieldBuilderComponent implements OnInit, AfterViewInit {
       this.field.props['onCheckedChange'](checked);
     }
   }
+
+  onSelectChange(event: Event) {
+    const selectEl = event.target as HTMLSelectElement;
+    const selectedCode = selectEl.value;
+
+    this.options$.pipe(takeUntil(this.destroy$)).subscribe((options) => {
+      const selected = options.find((opt) => String(opt.code) === selectedCode);
+
+      if (this.field.props && typeof this.field.props['onSelectChange'] === 'function') {
+        this.field.props['onSelectChange'](selected);
+      }
+    });
+  }
 }

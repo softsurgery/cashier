@@ -47,6 +47,7 @@ export enum FieldVariant {
   TEXTAREA = 'textarea',
   CUSTOM = 'custom',
   EMPTY = 'empty',
+  SELECT = 'select',
 }
 
 export interface BaseFieldProps {
