@@ -17,13 +17,22 @@ import { isObservable, map, Observable, of, Subject, takeUntil } from 'rxjs';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmSwitch } from '@spartan-ng/helm/switch';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
+import { BrnSelectImports } from '@spartan-ng/brain/select';
+import { HlmSelectImports } from '@spartan-ng/helm/select';
 
 @Component({
   selector: 'app-field-builder',
   templateUrl: './field-builder.component.html',
   styleUrls: ['./field-builder.component.css'],
   standalone: true,
-  imports: [CommonModule, HlmInputImports, HlmSwitch, HlmTextareaImports],
+  imports: [
+    CommonModule,
+    HlmInputImports,
+    HlmSwitch,
+    HlmTextareaImports,
+    BrnSelectImports,
+    HlmSelectImports,
+  ],
 })
 export class FieldBuilderComponent implements OnInit, AfterViewInit {
   @Input() field!: DynamicField<any>;
@@ -143,16 +152,15 @@ export class FieldBuilderComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onSelectChange(event: Event) {
-    const selectEl = event.target as HTMLSelectElement;
-    const selectedCode = selectEl.value;
+  onSelectChange(selected: SelectOption | null) {
+    if (!selected) return;
 
-    this.options$.pipe(takeUntil(this.destroy$)).subscribe((options) => {
-      const selected = options.find((opt) => String(opt.code) === selectedCode);
+    this.selectedValue = selected;
 
-      if (this.field.props && typeof this.field.props['onSelectChange'] === 'function') {
-        this.field.props['onSelectChange'](selected);
-      }
-    });
+    if (this.field.props && typeof this.field.props['onSelectChange'] === 'function') {
+      this.field.props['onSelectChange'](selected);
+    }
+
+    this.onBlur();
   }
 }
