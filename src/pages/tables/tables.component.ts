@@ -14,6 +14,7 @@ import { getTableDataTableObject } from './utils/table.data-table';
 import { getTableCreateFormStructure } from './utils/table-create.form-structure';
 import { getTableCreateSheet } from './utils/table-create.sheet';
 import { DialogService } from '@/components/dialog/dialog.service';
+import { TableZoneService } from '../table-zone/table-zone.service';
 
 @Component({
   selector: 'app-tables',
@@ -25,6 +26,7 @@ export class TablesComponent implements OnInit {
   private tablesService = inject(TablesService);
   private store = inject(TableRepository);
   private sheetService = inject(SheetService);
+  private tableZoneService = inject(TableZoneService);
   private dialogService = inject(DialogService);
   private vcr = inject(ViewContainerRef);
   private editingId: number | null = null;
@@ -58,15 +60,21 @@ export class TablesComponent implements OnInit {
   openCreateSheet() {
     this.store.reset();
 
-    const structure = getTableCreateFormStructure({ store: this.store });
+    this.tableZoneService.findAll({ take: 100, skip: 0 }).subscribe((zones) => {
+      const options = zones.map((zone) => ({ name: zone.name, code: zone.id }));
+      const structure = getTableCreateFormStructure({
+        store: this.store,
+        zoneOptions: options,
+      });
 
-    const sheetConfig = getTableCreateSheet({
-      structure,
-      onSave: () => this.onCreateSave(),
-      onCancel: () => this.closeSheet(),
+      const sheetConfig = getTableCreateSheet({
+        structure,
+        onSave: () => this.onCreateSave(),
+        onCancel: () => this.closeSheet(),
+      });
+
+      this.sheetRef = this.sheetService.open(this.vcr, sheetConfig);
     });
-
-    this.sheetRef = this.sheetService.open(this.vcr, sheetConfig);
   }
 
   private onCreateSave() {

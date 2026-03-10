@@ -50,14 +50,12 @@ export const getProductCreateFormStructure = ({
       placeholder: 'Choose a family',
       value: store.getNestedObservable<number>('createDto.productFamilyId').pipe(
         map((id: number) => {
-          console.log('Value from store:', id);
           if (!id) return undefined;
           return { code: id } as SelectOption;
         }),
       ),
       onSelectChange: (option: SelectOption) => {
         const id = Number(option?.code);
-        console.log('Saving as number:', id);
         store.setNested('createDto.productFamilyId', id);
         store.setNested('errors.productFamilyId', []);
       },
