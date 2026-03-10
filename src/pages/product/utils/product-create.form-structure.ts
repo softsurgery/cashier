@@ -39,31 +39,30 @@ export const getProductCreateFormStructure = ({
     },
   };
 
-  // const familyField: DynamicField<SelectFieldProps> = {
-  //   id: 'productFamilyId',
-  //   label: 'Product Family',
-  //   variant: FieldVariant.CUSTOM,
-  //   description: 'Select a family for this product',
-  //   isRequired: true,
-  //   props: {
-  //     options: familyOptions, // Remove the ?? [] - let it be whatever it is
-  //     placeholder: 'Choose a family',
-  //     value: store.getNestedObservable<string>('createDto.productFamilyId').pipe(
-  //       map((id: string) => {
-  //         // Handle both array and Observable cases
-  //         if (Array.isArray(familyOptions)) {
-  //           return familyOptions.find((opt) => opt.code === id);
-  //         }
-  //         // If it's an Observable, we can't find here - the component should handle it
-  //         return undefined;
-  //       }),
-  //     ),
-  //     onSelectChange: (option: SelectOption) => {
-  //       store.setNested('createDto.productFamilyId', option.code);
-  //       store.setNested('errors.productFamilyId', []);
-  //     },
-  //   },
-  // };
+  const familyField: DynamicField<SelectFieldProps> = {
+    id: 'productFamilyId',
+    label: 'Product Family',
+    variant: FieldVariant.SELECT,
+    description: 'Select a family for this product',
+    isRequired: true,
+    props: {
+      options: familyOptions,
+      placeholder: 'Choose a family',
+      value: store.getNestedObservable<number>('createDto.productFamilyId').pipe(
+        map((id: number) => {
+          console.log('Value from store:', id);
+          if (!id) return undefined;
+          return { code: id } as SelectOption;
+        }),
+      ),
+      onSelectChange: (option: SelectOption) => {
+        const id = Number(option?.code);
+        console.log('Saving as number:', id);
+        store.setNested('createDto.productFamilyId', id);
+        store.setNested('errors.productFamilyId', []);
+      },
+    },
+  };
 
   const priceField: DynamicField<TextFieldProps> = {
     id: 'price',
@@ -112,9 +111,9 @@ export const getProductCreateFormStructure = ({
           {
             fields: [nameField],
           },
-          // {
-          //   fields: [familyField],
-          // },
+          {
+            fields: [familyField],
+          },
           {
             fields: [priceField],
           },

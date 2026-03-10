@@ -18,4 +18,7 @@ export class ProductEntity extends EntityHelper {
   @ManyToOne(() => ProductFamilyEntity)
   @JoinColumn({ name: 'productFamilyId' })
   productFamily: ProductFamilyEntity;
+
+  @Column({ type: 'number' })
+  productFamilyId!: number;
 }
