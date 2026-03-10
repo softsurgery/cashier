@@ -30,18 +30,7 @@ export const data = {
       icon: 'lucideGrid',
       isActive: false,
     },
-    {
-      title: 'Produits',
-      url: '/produits',
-      icon: 'lucidePackage',
-      isActive: false,
-    },
-    {
-      title: 'Familles',
-      url: '/familles',
-      icon: 'lucideFolderTree',
-      isActive: false,
-    },
+
     {
       title: 'Consulter Z',
       url: '/consulter-z',
@@ -77,12 +66,20 @@ export const data = {
       icon: 'lucideShield',
       items: [
         {
-          title: 'Table Management',
+          title: 'Table',
           url: '/tables',
         },
         {
-          title: 'Table Zone Management',
+          title: 'Table Zones',
           url: '/table-zone',
+        },
+        {
+          title: 'Produits',
+          url: '/produits',
+        },
+        {
+          title: 'Familles',
+          url: '/familles',
         },
       ],
     },
