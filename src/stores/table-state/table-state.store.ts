@@ -10,6 +10,7 @@ export const tableInitialState: TableStateProps = {
   createDto: {
     name: '',
     status: TableStatus.AVAILABLE,
+    zoneId: 0,
   },
   errors: {},
 };

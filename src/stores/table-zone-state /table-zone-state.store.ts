@@ -1,8 +1,8 @@
 import { createStore, withProps } from '@ngneat/elf';
-import { CreateTableDto, TableStatus } from '@/types';
+import { CreateTableZoneDto, TableStatus } from '@/types';
 
 export interface TableZoneStateProps {
-  createDto: CreateTableDto;
+  createDto: CreateTableZoneDto;
   errors: Record<string, string[]>;
 }
 

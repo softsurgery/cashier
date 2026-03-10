@@ -94,6 +94,7 @@ export class TablesComponent implements OnInit {
     this.store.reset();
     this.store.set('createDto', {
       name: row.name,
+      zoneId: Number(row.zone?.id),
     });
 
     const structure = getTableCreateFormStructure({

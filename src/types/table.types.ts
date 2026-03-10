@@ -20,6 +20,7 @@ export interface ResponseTableDto extends DatabaseEntity {
 export interface CreateTableDto {
   name: string;
   status?: TableStatus;
+  zoneId: number;
 }
 
-export interface UpdateTableDto extends Partial<CreateTableDto> {}  
+export interface UpdateTableDto extends Partial<CreateTableDto> {}
