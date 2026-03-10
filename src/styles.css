@@ -103,5 +103,10 @@
     .scrollbar-visible ::-webkit-scrollbar {
       opacity: 1; /* Visible scrollbar */
     }
+
+    .cdk-overlay-container {
+      @apply bg-background opacity-0;
+      transition: opacity 0.3s ease-in-out;
+    }
   }
 }

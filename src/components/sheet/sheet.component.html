@@ -12,7 +12,7 @@
     }
 
     @if (actions.length > 0) {
-    <hlm-sheet-footer>
+    <hlm-sheet-footer class="flex flex-row justify-end">
         @for (action of actions; track action.label) {
         <button hlmBtn [variant]="action.variant ?? 'default'" [disabled]="isDisabled(action)"
             (click)="onActionClick(action)">
