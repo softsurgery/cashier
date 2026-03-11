@@ -1,5 +1,6 @@
 import { createStore, withProps } from '@ngneat/elf';
 import { CreateTableDto, TableStatus, UpdateTableDto } from '@/types';
+import { SelectOption } from '@/components/form-builder/form-builder.types';
 
 export interface TableStateProps {
   createDto: CreateTableDto;

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
 import { DatatableBuilderComponent } from '../../components/datatable-builder/datatable-builder.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 
@@ -63,10 +63,13 @@ export class TablesComponent implements OnInit {
   }
 
   loadTableZones() {
-    this.tableZoneService.findAll({ take: 100, skip: 0 }).subscribe((zones) => {
-      const options = zones.map((zone) => ({ name: zone.name, code: zone.id }));
-      this.zones.next(options);
-    });
+    return this.tableZoneService
+      .findAll()
+      .pipe(
+        map((zones) =>
+          zones.map((zone) => ({ name: zone.name, code: zone.id.toString() }) as SelectOption),
+        ),
+      );
   }
 
   private handleCreate() {
@@ -126,12 +129,11 @@ export class TablesComponent implements OnInit {
 
   openCreateSheet() {
     this.store.reset();
-
-    this.tableZoneService.findAll({ take: 100, skip: 0 }).subscribe((zones) => {
-      const options = zones.map((zone) => ({ name: zone.name, code: zone.id }));
+    this.loadTableZones().subscribe((zones) => {
+      this.zones.next(zones);
       const structure = getTableCreateFormStructure({
         store: this.store,
-        zoneOptions: options,
+        zones: this.zones,
       });
 
       const sheetConfig = getTableCreateSheet({
@@ -146,30 +148,33 @@ export class TablesComponent implements OnInit {
 
   openUpdateSheet(row: ResponseTableDto) {
     this.editingId = row.id;
-
     this.store.reset();
     this.store.set('updateDto', {
       name: row.name,
       zoneId: row.zoneId,
     });
 
-    const structure = getTableUpdateFormStructure({
-      store: this.store,
+    this.loadTableZones().subscribe((zones) => {
+      this.zones.next(zones);
+      const structure = getTableUpdateFormStructure({
+        store: this.store,
+        zones: this.zones,
+      });
+
+      const sheetConfig = getTableCreateSheet({
+        structure,
+        onSave: () => this.handleUpdate(),
+        onCancel: () => this.closeSheet(),
+      });
+
+      const updatedSheetConfig = {
+        ...sheetConfig,
+        title: 'Update Table Zone',
+        description: 'Modify the fields below to update the table zone.',
+      };
+
+      this.sheetRef = this.sheetService.open(this.vcr, updatedSheetConfig);
     });
-
-    const sheetConfig = getTableCreateSheet({
-      structure,
-      onSave: () => this.handleUpdate(),
-      onCancel: () => this.closeSheet(),
-    });
-
-    const updatedSheetConfig = {
-      ...sheetConfig,
-      title: 'Update Table Zone',
-      description: 'Modify the fields below to update the table zone.',
-    };
-
-    this.sheetRef = this.sheetService.open(this.vcr, updatedSheetConfig);
   }
 
   private closeSheet() {

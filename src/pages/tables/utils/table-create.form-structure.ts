@@ -11,12 +11,12 @@ import { map, Observable } from 'rxjs';
 
 interface TableCreateFormStructureProps {
   store: TableRepository;
-  zoneOptions?: SelectOption[] | Observable<SelectOption[]>;
+  zones: Observable<SelectOption[]>;
 }
 
 export const getTableCreateFormStructure = ({
   store,
-  zoneOptions,
+  zones,
 }: TableCreateFormStructureProps): DynamicForm => {
   const nameField: DynamicField<TextFieldProps> = {
     id: 'name',
@@ -41,17 +41,13 @@ export const getTableCreateFormStructure = ({
     description: 'Select a zone for this table',
     isRequired: true,
     props: {
-      options: zoneOptions,
+      options: zones,
       placeholder: 'Choose a zone',
-      value: store.getNestedObservable<number>('createDto.zoneId').pipe(
-        map((id: number) => {
-          if (!id) return undefined;
-          return { code: id } as SelectOption;
-        }),
-      ),
-      onSelectChange: (option: SelectOption) => {
-        const id = Number(option?.code);
-        store.setNested('createDto.zoneId', id);
+      value: store
+        .getNestedObservable<number>('createDto.zoneId')
+        .pipe(map((id: number) => id.toString())),
+      onSelectChange: (code: string) => {
+        store.setNested('createDto.zoneId', Number(code));
         store.setNested('errors.zoneId', []);
       },
     },

@@ -48,14 +48,10 @@ export const getProductCreateFormStructure = ({
     props: {
       options: familyOptions,
       placeholder: 'Choose a family',
-      value: store.getNestedObservable<number>('createDto.productFamilyId').pipe(
-        map((id: number) => {
-          if (!id) return undefined;
-          return { code: id } as SelectOption;
-        }),
-      ),
-      onSelectChange: (option: SelectOption) => {
-        const id = Number(option?.code);
+      value: store.getNestedObservable<string>('createDto.productFamilyId'),
+
+      onSelectChange: (code: string) => {
+        const id = Number(code);
         store.setNested('createDto.productFamilyId', id);
         store.setNested('errors.productFamilyId', []);
       },

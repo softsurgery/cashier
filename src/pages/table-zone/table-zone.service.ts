@@ -9,7 +9,7 @@ import { CreateTableZoneDto, ResponseTableZoneDto } from '../../types';
 export class TableZoneService {
   constructor() {}
 
-  findAll(query: FindManyOptions<ResponseTableZoneDto>): Observable<ResponseTableZoneDto[]> {
+  findAll(query: FindManyOptions<ResponseTableZoneDto> = {}): Observable<ResponseTableZoneDto[]> {
     return from(window.electronAPI!.tableZone.findAll(query));
   }
 
