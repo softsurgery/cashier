@@ -6,6 +6,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 import { SheetContentBridgeDirective } from './sheet-content-bridge.directive';
 import { SheetAction, SheetObject } from './types';
+import { applyOverlayStyles, removeOverlayStyles } from '@/lib/overlay.lib';
 
 @Component({
   selector: 'app-sheet',
@@ -25,28 +26,12 @@ export class SheetComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     // Use setTimeout to ensure the overlay container is rendered
     setTimeout(() => {
-      this.applyOverlayStyles();
+      applyOverlayStyles();
     }, 10);
   }
 
   ngOnDestroy() {
-    this.removeOverlayStyles();
-  }
-
-  private applyOverlayStyles() {
-    const overlayContainer = document.querySelector('.cdk-overlay-container') as HTMLElement;
-    if (overlayContainer) {
-      overlayContainer.style.opacity = '0.5';
-    } else {
-      console.warn('CDK overlay container not found');
-    }
-  }
-
-  private removeOverlayStyles() {
-    const overlayContainer = document.querySelector('.cdk-overlay-container') as HTMLElement;
-    if (overlayContainer) {
-      overlayContainer.style.opacity = '0';
-    }
+    removeOverlayStyles();
   }
 
   protected isDisabled(action: SheetAction): boolean {
@@ -60,7 +45,7 @@ export class SheetComponent implements AfterViewInit, OnDestroy {
   }
 
   close() {
-    this.removeOverlayStyles();
+    removeOverlayStyles();
     this.context.onHide?.();
     this.sheetRef.close();
   }
