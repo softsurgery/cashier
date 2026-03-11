@@ -53,6 +53,14 @@ export class LayoutService {
     this.breadcrumbs.next([]);
   }
 
+  toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
   private applyTheme(theme: AppTheme): void {
     const html = document.documentElement;
     let effectiveTheme = theme;
