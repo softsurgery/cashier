@@ -104,8 +104,19 @@ export class ProductFamilyComponent implements OnInit {
     const ref = this.dialogService.open(this.vcr, {
       title: 'Delete Product Family',
       description: `Are you sure you want to delete \"${row.name}\"?`,
-      confirmText: 'Delete',
-      cancelText: 'Cancel',
+      width: '400px',
+      actions: [
+        {
+          label: 'Cancel',
+          variant: 'outline',
+          onClick: () => ref.close(),
+        },
+        {
+          label: 'Delete',
+          variant: 'destructive',
+          onClick: () => ref.close(true),
+        },
+      ],
     });
 
     ref.closed$.subscribe((confirmed) => {

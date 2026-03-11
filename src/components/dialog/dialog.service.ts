@@ -1,20 +1,16 @@
 import { Injectable, ViewContainerRef } from '@angular/core';
 import { BrnDialogService } from '@spartan-ng/brain/dialog';
-import { AbstractDialogComponent } from './dialog.component';
+import { DialogComponent } from './dialog.component';
+import { DialogObject } from './types';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
-  constructor(private brnDialog: BrnDialogService) {}
+  constructor(private readonly brnDialog: BrnDialogService) {}
 
-  open(
-    viewContainerRef: ViewContainerRef,
-    config: { title: string; description: string; confirmText?: string; cancelText?: string },
-  ) {
-    return this.brnDialog.open(AbstractDialogComponent, viewContainerRef, {
-      title: config.title,
-      description: config.description,
-      confirmText: config.confirmText || 'Save',
-      cancelText: config.cancelText || 'Cancel',
+  open(viewContainerRef: ViewContainerRef, config: DialogObject) {
+    return this.brnDialog.open(DialogComponent, viewContainerRef, config, {
+      closeOnBackdropClick: config.dismissable ?? true,
+      disableClose: config.closeOnEscape === false,
     });
   }
 }
