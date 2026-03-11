@@ -35,7 +35,8 @@
       "@spartan-ng/helm/checkbox": ["./libs/ui/checkbox/src/index.ts"],
       "@spartan-ng/helm/dialog": ["./libs/ui/dialog/src/index.ts"],
       "@spartan-ng/helm/label": ["./libs/ui/label/src/index.ts"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@spartan-ng/helm/sonner": ["./libs/ui/sonner/src/index.ts"]
     }
   },
   "angularCompilerOptions": {
