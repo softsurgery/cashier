@@ -12,12 +12,12 @@
 
   <!-- Select Input -->
   <brn-select *ngSwitchCase="'select'" [placeholder]="field.props?.['placeholder']"
-    (valueChange)="onSelectChange($event)">
+    (valueChange)="onSelectChange($any($event))" [value]="field.props?.['value'] | async">
     <hlm-select-trigger class="w-full">
       <hlm-select-value />
     </hlm-select-trigger>
     <hlm-select-content class="w-full">
-      <hlm-option *ngFor="let opt of options$ | async" [value]="opt">
+      <hlm-option *ngFor="let opt of options$ | async" [value]="opt.code">
         {{ opt.name }}
       </hlm-option>
     </hlm-select-content>

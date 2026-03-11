@@ -107,10 +107,10 @@ export interface SearchableSelectOption extends SelectOption {
 }
 
 export interface SelectFieldProps {
+  value?: Observable<string>;
   placeholder?: string;
   options?: SelectOption[] | Observable<SelectOption[]>;
-  value?: Observable<SelectOption | undefined>;
-  onSelectChange?: (event: SelectOption) => void;
+  onSelectChange?: (event: string) => void;
   onBlur?: () => void;
   filterEnabled?: boolean;
   showClear?: boolean;

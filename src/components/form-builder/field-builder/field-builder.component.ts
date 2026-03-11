@@ -39,7 +39,7 @@ export class FieldBuilderComponent implements OnInit, AfterViewInit {
   @Output() fieldBlur = new EventEmitter<void>();
   injector = inject(Injector);
 
-  selectedValue?: SelectOption;
+  selectedValue?: string;
 
   @ViewChild('customComponentContainer', {
     read: ViewContainerRef,
@@ -152,7 +152,7 @@ export class FieldBuilderComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onSelectChange(selected: SelectOption | null) {
+  onSelectChange(selected: string | null) {
     if (!selected) return;
 
     this.selectedValue = selected;
