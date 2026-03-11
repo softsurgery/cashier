@@ -14,6 +14,7 @@ import { getTableZoneDataTableObject } from './utils/table-zone.data-table';
 import { getTableZoneCreateFormStructure } from './utils/table-zone-create.form-structure';
 import { getTableZoneCreateSheet } from './utils/table-zone-create.sheet';
 import { TableZoneRepository } from '@/stores/table-zone-state /table-zone-state.repository';
+import { LayoutService } from '@/components/layout/layout.service';
 
 @Component({
   selector: 'app-table-zone',
@@ -22,6 +23,7 @@ import { TableZoneRepository } from '@/stores/table-zone-state /table-zone-state
   styleUrl: './table-zone.component.css',
 })
 export class TableZoneComponent implements OnInit {
+  private layoutService = inject(LayoutService);
   private tableZoneService = inject(TableZoneService);
   private store = inject(TableZoneRepository);
   private sheetService = inject(SheetService);
@@ -40,7 +42,21 @@ export class TableZoneComponent implements OnInit {
   });
 
   ngOnInit() {
+    this.layoutService.setBreadcrumbs([
+      {
+        label: 'Administrative Tools',
+        url: '',
+      },
+      {
+        label: 'Table Zones',
+        url: '/administration/table-zone',
+      },
+    ]);
     this.loadTables();
+  }
+
+  ngOnDestroy() {
+    this.layoutService.clearBreadcrumbs();
   }
 
   loadTables() {

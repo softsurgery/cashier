@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { DatatableBuilderComponent } from '../../components/datatable-builder/datatable-builder.component';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,7 @@ import { getProductDataTableObject } from './utils/product.data-table';
 import { getProductCreateFormStructure } from './utils/product-create.form-structure';
 import { getProductCreateSheet } from './utils/product-create.sheet';
 import { ProductRepository } from '@/stores/product/product-state.repository';
+import { LayoutService } from '@/components/layout/layout.service';
 
 @Component({
   selector: 'app-product',
@@ -22,7 +23,8 @@ import { ProductRepository } from '@/stores/product/product-state.repository';
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })
-export class ProductComponent implements OnInit {
+export class ProductComponent implements OnInit, OnDestroy {
+  private layoutService = inject(LayoutService);
   private productService = inject(ProductService);
   private productFamilyService = inject(ProductFamilyService);
   private store = inject(ProductRepository);
@@ -42,7 +44,21 @@ export class ProductComponent implements OnInit {
   });
 
   ngOnInit() {
+    this.layoutService.setBreadcrumbs([
+      {
+        label: 'Administrative Tools',
+        url: '',
+      },
+      {
+        label: 'Products',
+        url: '/administration/products',
+      },
+    ]);
     this.loadProducts();
+  }
+
+  ngOnDestroy(): void {
+    this.layoutService.clearBreadcrumbs();
   }
 
   loadProducts() {

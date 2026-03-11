@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { DatatableBuilderComponent } from '../../components/datatable-builder/datatable-builder.component';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -14,6 +14,7 @@ import { DynamicDataTable } from '../../components/datatable-builder/datatable-b
 import { getProductFamilyDataTableObject } from './utils/product-family.data-table';
 import { getProductFamilyCreateFormStructure } from './utils/product-family-create.form-structure';
 import { getProductFamilyCreateSheet } from './utils/product-family-create.sheet';
+import { LayoutService } from '@/components/layout/layout.service';
 
 @Component({
   selector: 'app-product-family',
@@ -21,7 +22,9 @@ import { getProductFamilyCreateSheet } from './utils/product-family-create.sheet
   templateUrl: './product-family.component.html',
   styleUrl: './product-family.component.css',
 })
-export class ProductFamilyComponent implements OnInit {
+export class ProductFamilyComponent implements OnInit, OnDestroy {
+  private layoutService = inject(LayoutService);
+
   private productFamilyService = inject(ProductFamilyService);
   private store = inject(ProductFamilyRepository);
   private sheetService = inject(SheetService);
@@ -40,7 +43,21 @@ export class ProductFamilyComponent implements OnInit {
   });
 
   ngOnInit() {
+    this.layoutService.setBreadcrumbs([
+      {
+        label: 'Administrative Tools',
+        url: '',
+      },
+      {
+        label: 'Families',
+        url: '/administration/families',
+      },
+    ]);
     this.loadProductFamilies();
+  }
+
+  ngOnDestroy() {
+    this.layoutService.clearBreadcrumbs();
   }
 
   loadProductFamilies() {

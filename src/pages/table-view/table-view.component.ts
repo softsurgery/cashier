@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 import { TableZoneService } from '../table-zone/table-zone.service';
 import { TablesService } from '../tables/tables.service';
 import { ResponseTableZoneDto, TableStatus, ResponseTableDto } from '../../types';
+import { LayoutService } from '@/components/layout/layout.service';
 
 @Component({
   selector: 'app-zone-tables',
@@ -13,7 +14,9 @@ import { ResponseTableZoneDto, TableStatus, ResponseTableDto } from '../../types
   templateUrl: './table-view.component.html',
   styleUrls: ['./table-view.component.css'],
 })
-export class ZoneTablesComponent implements OnInit {
+export class ZoneTablesComponent implements OnInit, OnDestroy {
+  private layoutService = inject(LayoutService);
+
   private service = inject(TableZoneService);
   private tableService = inject(TablesService);
   data = new BehaviorSubject<ResponseTableZoneDto[]>([]);
@@ -56,8 +59,18 @@ export class ZoneTablesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.layoutService.setBreadcrumbs([
+      {
+        label: 'Tables',
+        url: '/tables',
+      },
+    ]);
     this.service
       .findAll({ relations: ['tables'], take: 100, skip: 0 })
       .subscribe((zones) => this.data.next(zones));
+  }
+
+  ngOnDestroy() {
+    this.layoutService.clearBreadcrumbs();
   }
 }
