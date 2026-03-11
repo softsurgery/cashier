@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { DatatableBuilderComponent } from '../../components/datatable-builder/datatable-builder.component';
 import { BehaviorSubject, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -18,6 +18,7 @@ import { TableZoneService } from '../table-zone/table-zone.service';
 import { toast } from 'ngx-sonner';
 import { getTableUpdateFormStructure } from './utils/table-update.form-structure';
 import { SelectOption } from '@/components/form-builder/form-builder.types';
+import { LayoutService } from '@/components/layout/layout.service';
 
 @Component({
   selector: 'app-tables',
@@ -25,7 +26,8 @@ import { SelectOption } from '@/components/form-builder/form-builder.types';
   templateUrl: './tables.component.html',
   styleUrl: './tables.component.css',
 })
-export class TablesComponent implements OnInit {
+export class TablesComponent implements OnInit, OnDestroy {
+  private layoutService = inject(LayoutService);
   private tablesService = inject(TablesService);
   private store = inject(TableRepository);
   private sheetService = inject(SheetService);
@@ -47,7 +49,21 @@ export class TablesComponent implements OnInit {
   zones = new BehaviorSubject<SelectOption[]>([]);
 
   ngOnInit() {
+    this.layoutService.setBreadcrumbs([
+      {
+        label: 'Administrative Tools',
+        url: '',
+      },
+      {
+        label: 'Tables',
+        url: '/administration/tables',
+      },
+    ]);
     this.loadTables();
+  }
+
+  ngOnDestroy() {
+    this.layoutService.clearBreadcrumbs();
   }
 
   loadTables() {
