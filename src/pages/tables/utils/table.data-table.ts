@@ -26,16 +26,15 @@ export const getTableDataTableObject = ({
     rowActions: {
       editAction: {
         label: 'Update',
-        action: onEditAction ? onEditAction : (row) => console.log('Update', row),
+        action: (row) => onEditAction?.(row),
       },
       deleteAction: {
         label: 'Delete',
-        action: onDeleteAction ? onDeleteAction : (row) => console.log('Delete', row),
+        action: (row) => onDeleteAction?.(row),
       },
     },
     columns: [
       checkboxColumnDef,
-
       {
         accessorKey: 'name',
         id: 'name',

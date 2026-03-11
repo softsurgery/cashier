@@ -15,6 +15,9 @@ import { getTableCreateFormStructure } from './utils/table-create.form-structure
 import { getTableCreateSheet } from './utils/table-create.sheet';
 import { DialogService } from '@/components/dialog/dialog.service';
 import { TableZoneService } from '../table-zone/table-zone.service';
+import { toast } from 'ngx-sonner';
+import { getTableUpdateFormStructure } from './utils/table-update.form-structure';
+import { SelectOption } from '@/components/form-builder/form-builder.types';
 
 @Component({
   selector: 'app-tables',
@@ -29,8 +32,8 @@ export class TablesComponent implements OnInit {
   private tableZoneService = inject(TableZoneService);
   private dialogService = inject(DialogService);
   private vcr = inject(ViewContainerRef);
-  private editingId: number | null = null;
 
+  private editingId: number | null = null;
   private sheetRef: BrnDialogRef | null = null;
 
   data = new BehaviorSubject<ResponseTableDto[]>([]);
@@ -38,8 +41,10 @@ export class TablesComponent implements OnInit {
   dataTableObject: DynamicDataTable<ResponseTableDto> = getTableDataTableObject({
     onCreateAction: () => this.openCreateSheet(),
     onEditAction: (row) => this.openUpdateSheet(row),
-    onDeleteAction: (row) => this.confirmDelete(row),
+    onDeleteAction: (row) => this.handleDelete(row),
   });
+
+  zones = new BehaviorSubject<SelectOption[]>([]);
 
   ngOnInit() {
     this.loadTables();
@@ -57,80 +62,41 @@ export class TablesComponent implements OnInit {
       });
   }
 
-  openCreateSheet() {
-    this.store.reset();
-
+  loadTableZones() {
     this.tableZoneService.findAll({ take: 100, skip: 0 }).subscribe((zones) => {
       const options = zones.map((zone) => ({ name: zone.name, code: zone.id }));
-      const structure = getTableCreateFormStructure({
-        store: this.store,
-        zoneOptions: options,
-      });
-
-      const sheetConfig = getTableCreateSheet({
-        structure,
-        onSave: () => this.onCreateSave(),
-        onCancel: () => this.closeSheet(),
-      });
-
-      this.sheetRef = this.sheetService.open(this.vcr, sheetConfig);
+      this.zones.next(options);
     });
   }
 
-  private onCreateSave() {
+  private handleCreate() {
     const createDto = this.store.get<CreateTableDto>('createDto');
 
     this.tablesService.create(createDto).subscribe({
       next: () => {
         this.closeSheet();
         this.loadTables();
+        toast.success('Table created successfully');
       },
     });
   }
 
-  openUpdateSheet(row: ResponseTableDto) {
-    this.editingId = row.id;
-
-    this.store.reset();
-    this.store.set('createDto', {
-      name: row.name,
-      zoneId: Number(row.zone?.id),
-    });
-
-    const structure = getTableCreateFormStructure({
-      store: this.store,
-    });
-
-    const sheetConfig = getTableCreateSheet({
-      structure,
-      onSave: () => this.onUpdateSave(),
-      onCancel: () => this.closeSheet(),
-    });
-
-    const updatedSheetConfig = {
-      ...sheetConfig,
-      title: 'Update Table Zone',
-      description: 'Modify the fields below to update the table zone.',
-    };
-
-    this.sheetRef = this.sheetService.open(this.vcr, updatedSheetConfig);
-  }
-
-  private onUpdateSave() {
+  private handleUpdate() {
     if (this.editingId == null) {
       return;
     }
 
-    const updateDto = this.store.get<UpdateTableDto>('createDto');
+    const updateDto = this.store.get<UpdateTableDto>('updateDto');
     this.tablesService.update(this.editingId, updateDto).subscribe({
       next: () => {
         this.closeSheet();
         this.loadTables();
+        toast.success('Table updated successfully');
       },
     });
   }
 
-  private confirmDelete(row: ResponseTableDto) {
+  private handleDelete(row: ResponseTableDto) {
     const ref = this.dialogService.open(this.vcr, {
       title: 'Delete Table Zone',
       description: `Are you sure you want to delete "${row.name}"?`,
@@ -152,9 +118,58 @@ export class TablesComponent implements OnInit {
       if (confirmed) {
         this.tablesService.delete(row.id).subscribe(() => {
           this.loadTables();
+          toast.success('Table deleted successfully');
         });
       }
     });
+  }
+
+  openCreateSheet() {
+    this.store.reset();
+
+    this.tableZoneService.findAll({ take: 100, skip: 0 }).subscribe((zones) => {
+      const options = zones.map((zone) => ({ name: zone.name, code: zone.id }));
+      const structure = getTableCreateFormStructure({
+        store: this.store,
+        zoneOptions: options,
+      });
+
+      const sheetConfig = getTableCreateSheet({
+        structure,
+        onSave: () => this.handleCreate(),
+        onCancel: () => this.closeSheet(),
+      });
+
+      this.sheetRef = this.sheetService.open(this.vcr, sheetConfig);
+    });
+  }
+
+  openUpdateSheet(row: ResponseTableDto) {
+    this.editingId = row.id;
+
+    this.store.reset();
+    this.store.set('updateDto', {
+      name: row.name,
+      zoneId: row.zoneId,
+    });
+
+    const structure = getTableUpdateFormStructure({
+      store: this.store,
+    });
+
+    const sheetConfig = getTableCreateSheet({
+      structure,
+      onSave: () => this.handleUpdate(),
+      onCancel: () => this.closeSheet(),
+    });
+
+    const updatedSheetConfig = {
+      ...sheetConfig,
+      title: 'Update Table Zone',
+      description: 'Modify the fields below to update the table zone.',
+    };
+
+    this.sheetRef = this.sheetService.open(this.vcr, updatedSheetConfig);
   }
 
   private closeSheet() {
