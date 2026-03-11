@@ -1,28 +1,21 @@
-<div *ngFor="let zone of data | async" class="mb-6">
-  <h2 class="font-bold text-lg mb-4">{{ zone.name }}</h2>
+<div class="container mx-auto">
+  <div *ngFor="let zone of data | async" class="mb-6">
+    <h2 class="font-bold text-lg mb-4">{{ zone.name }}</h2>
 
-  <!-- cards container -->
-  <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-4xl">
-    <div
-      *ngFor="let t of zone.tables"
-      class="p-4 rounded-lg border-2 transition-all hover:shadow-md h-36 flex flex-col justify-between"
-      [ngClass]="statusColors[t.status]"
-    >
-      <h3 class="font-bold text-lg text-gray-800">Table {{ t.name }}</h3>
+    <!-- cards container -->
+    <div class="flex flex-wrap gap-4">
+      <div
+        *ngFor="let t of zone.tables"
+        class="p-4 rounded-lg border-2 transition-all hover:shadow-md w-56 h-36 flex flex-col justify-between bg-card"
+      >
+        <h3 class="font-bold text-lg">{{ t.name }}</h3>
 
-      <div class="flex flex-wrap gap-2">
-        <button
-          *ngFor="let status of statuses"
-          class="text-xs px-2 py-1 rounded font-medium transition-all cursor-pointer"
-          [ngClass]="
-            t.status === status
-              ? statusBgColors[status] + ' text-gray-800 font-bold border-2 border-gray-400'
-              : 'bg-gray-300 text-gray-600'
-          "
-          (dblclick)="changeStatus(t, status)"
+        <span
+          class="text-xs px-2 py-1 rounded font-medium w-fit"
+          [ngClass]="statusBgColors[t.status]"
         >
-          {{ status | titlecase }}
-        </button>
+          {{ t.status | titlecase }}
+        </span>
       </div>
     </div>
   </div>
