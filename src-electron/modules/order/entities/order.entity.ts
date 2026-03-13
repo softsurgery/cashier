@@ -18,7 +18,10 @@ export class OrderEntity extends EntityHelper {
   @Column({ enum: OrderStatus, default: OrderStatus.UNPAID })
   status?: OrderStatus;
 
-  @OneToMany(() => OrderProductEntity, (orderProduct) => orderProduct.order, { cascade: true })
+  @OneToMany(() => OrderProductEntity, (orderProduct) => orderProduct.order, {
+    cascade: true,
+    eager: false,
+  })
   products: OrderProductEntity[];
 
   @Column('decimal', { precision: 10, scale: 2, default: 0 })

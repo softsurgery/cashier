@@ -19,7 +19,7 @@ export interface ResponseOrderDto extends DatabaseEntity {
 
 export interface CreateOrderDto {
   tableId?: number;
-  OrderProducts?: CreateOrderProductDto[];
+  products?: CreateOrderProductDto[];
   status?: OrderStatus;
   total?: number;
 }
