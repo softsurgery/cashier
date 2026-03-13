@@ -9,7 +9,7 @@ export interface OrderStateProps {
 export const orderInitialState: OrderStateProps = {
   createDto: {
     tableId: undefined,
-    OrderProducts: [] as CreateOrderProductDto[],
+    products: [] as CreateOrderProductDto[],
     status: undefined,
     total: 0,
   },

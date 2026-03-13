@@ -36,19 +36,14 @@ export const getOrderDataTableObject =
           cell: (info) => `<div class="lowercase">${info.getValue<string>()}</div>`,
         },
         {
-          accessorKey: 'amount',
-          id: 'amount',
-          header: '<div class="text-right">Amount</div>',
+          accessorKey: 'total',
+          id: 'total',
+          header: '<div class="text-right">Total TTC</div>',
           enableSorting: false,
           cell: (info) => {
-            const amount = parseFloat(info.getValue<string>());
+            const total = parseFloat(info.getValue<string>());
 
-            const formatted = new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            }).format(amount);
-
-            return `<div class="text-right">${formatted}</div>`;
+            return `<div class="text-right">${total}</div>`;
           },
         },
       ],
