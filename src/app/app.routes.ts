@@ -5,11 +5,17 @@ import { ProductComponent } from '../pages/product/product.component';
 import { TablesComponent } from '../pages/tables/tables.component';
 import { TableZoneComponent } from '@/pages/table-zone/table-zone.component';
 import { ZoneTablesComponent } from '@/pages/table-view/table-view.component';
+import { CaisseComponent } from '@/pages/caisse/caisse.component';
 
 export const routes: Routes = [
   {
     path: 'tables',
     component: TablesComponent,
+  },
+
+  {
+    path: 'caisse',
+    component: CaisseComponent,
   },
 
   {

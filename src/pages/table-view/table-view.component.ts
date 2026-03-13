@@ -22,17 +22,10 @@ export class ZoneTablesComponent implements OnInit, OnDestroy {
   data = new BehaviorSubject<ResponseTableZoneDto[]>([]);
 
   statuses: string[] = [];
-  statusColors: Record<string, string> = {};
   statusBgColors: Record<string, string> = {};
 
   constructor() {
     this.statuses = Object.values(TableStatus);
-
-    this.statusColors = {
-      available: 'bg-gray-100 border-gray-300',
-      occupied: 'bg-green-100 border-green-300',
-      reserved: 'bg-purple-100 border-purple-300',
-    };
 
     this.statusBgColors = {
       available: 'bg-gray-200',
