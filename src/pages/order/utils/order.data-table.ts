@@ -31,9 +31,15 @@ export const getOrderDataTableObject =
         },
         {
           accessorKey: 'status',
-          id: 'status',
+          id: 'Status',
           header: () => flexRenderComponent(TableHeadSortButton, { inputs: { header: '' } }),
           cell: (info) => `<div class="lowercase">${info.getValue<string>()}</div>`,
+        },
+        {
+          accessorKey: 'table.name',
+          id: 'table',
+          header: 'Table Number',
+          enableSorting: false,
         },
         {
           accessorKey: 'total',
