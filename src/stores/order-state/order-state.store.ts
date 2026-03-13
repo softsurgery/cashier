@@ -1,5 +1,5 @@
 import { createStore, withProps } from '@ngneat/elf';
-import { CreateOrderDto } from '@/types';
+import { CreateOrderDto, CreateOrderProductDto } from '@/types';
 
 export interface OrderStateProps {
   createDto: CreateOrderDto;
@@ -9,6 +9,9 @@ export interface OrderStateProps {
 export const orderInitialState: OrderStateProps = {
   createDto: {
     tableId: undefined,
+    OrderProducts: [] as CreateOrderProductDto[],
+    status: undefined,
+    total: 0,
   },
   errors: {},
 };
