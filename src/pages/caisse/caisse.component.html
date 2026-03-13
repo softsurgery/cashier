@@ -36,6 +36,9 @@
         </div>
         <div *ngFor="let item of cart" class="flex justify-between items-center py-2 border-b">
           <div class="flex-1">
+            <button class="text-sm mr-2 ml-2 cursor-pointer" (click)="removeFromCart(item.product)">
+              x
+            </button>
             <span class="text-sm">{{ item.product.name }}</span>
             <span class="text-s text-muted-foreground ml-2">x{{ item.quantity }}</span>
           </div>
