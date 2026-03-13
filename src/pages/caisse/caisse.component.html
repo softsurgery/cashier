@@ -1,1 +1,28 @@
-<p>caisse.component works!</p>
+<div class="flex gap-6">
+  <!-- Left sidebar: families list -->
+  <div class="w-64 flex-shrink-0">
+    <div class="space-y-2">
+      <div
+        *ngFor="let family of data | async"
+        class="p-3 rounded-lg border-2 cursor-pointer transition-all hover:shadow-md"
+        [class.bg-primary]="selectedFamily === family"
+        [class.text-primary-foreground]="selectedFamily === family"
+        [class.border-primary]="selectedFamily === family"
+        (click)="selectFamily(family)"
+      >
+        {{ family.name }}
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-1">
+    <div *ngIf="selectedFamily" class="flex flex-wrap gap-4">
+      <div
+        *ngFor="let product of selectedFamily.products"
+        class="p-4 rounded-lg border-1 transition-all hover:shadow-md w-48 h-36 flex flex-col justify-between bg-card"
+      >
+        <h3 class="font-bold text-lg">{{ product.name }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
