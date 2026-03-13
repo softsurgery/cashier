@@ -1,9 +1,28 @@
-import { LayoutService } from '@/components/layout/layout.service';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ProductFamilyService } from '../product-family/product-family.service';
-import { ResponseProductFamilyDto, ResponseProductDto } from '@/types';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { LayoutService } from '@/components/layout/layout.service';
+import { ProductFamilyService } from '../product-family/product-family.service';
+import { OrderService } from '@/pages/order/order.service';
+import { orderStateStore } from '@/stores/order-state/order-state.store';
+import {
+  ResponseProductFamilyDto,
+  ResponseProductDto,
+  CreateOrderDto,
+  CreateOrderProductDto,
+  OrderStatus,
+  ResponseOrderDto,
+} from '@/types';
+import { toast } from 'ngx-sonner';
 
 interface CartItem {
   product: ResponseProductDto;
@@ -11,32 +30,46 @@ interface CartItem {
 }
 
 @Component({
-  selector: 'app-caisse.component',
+  selector: 'app-caisse',
   standalone: true,
-  templateUrl: './caisse.component.html',
-  styleUrl: './caisse.component.css',
   imports: [CommonModule],
+  templateUrl: './caisse.component.html',
+  styleUrls: ['./caisse.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaisseComponent implements OnInit, OnDestroy {
-  private layoutService = inject(LayoutService);
-  private productFamilyService = inject(ProductFamilyService);
+export class CaisseComponent implements OnInit {
+  private readonly layoutService = inject(LayoutService);
+  private readonly productFamilyService = inject(ProductFamilyService);
+  private readonly orderService = inject(OrderService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
-  data = new BehaviorSubject<ResponseProductFamilyDto[]>([]);
+  readonly data$ = new BehaviorSubject<ResponseProductFamilyDto[]>([]);
+
   selectedFamily: ResponseProductFamilyDto | null = null;
-  private subscription: Subscription | null = null;
-
   cart: CartItem[] = [];
 
-  ngOnInit() {
+  isCreating = false;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
+
+  ngOnInit(): void {
     this.layoutService.setBreadcrumbs([{ label: 'Caisse', url: '/caisse' }]);
 
-    this.subscription = this.productFamilyService
+    this.productFamilyService
       .findAll({ relations: ['products'], take: 100, skip: 0 })
-      .subscribe((families) => {
-        this.data.next(families);
-        if (families.length > 0 && !this.selectedFamily) {
-          this.selectedFamily = families[0];
-        }
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (families) => {
+          this.data$.next(families);
+          if (families.length > 0 && !this.selectedFamily) {
+            this.selectedFamily = families[0];
+          }
+        },
+        error: () => {
+          this.errorMessage = 'Erreur lors du chargement des familles';
+          this.cdr.detectChanges();
+        },
       });
   }
 
@@ -51,25 +84,113 @@ export class CaisseComponent implements OnInit, OnDestroy {
     } else {
       this.cart.push({ product, quantity: 1 });
     }
+    this.syncCartToStore();
+    this.clearMessages();
+    this.cdr.detectChanges();
   }
 
   removeFromCart(product: ResponseProductDto): void {
     const index = this.cart.findIndex((item) => item.product.id === product.id);
-    if (index !== -1) {
-      if (this.cart[index].quantity > 1) {
-        this.cart[index].quantity--;
-      } else {
-        this.cart.splice(index, 1);
-      }
+    if (index === -1) return;
+
+    if (this.cart[index].quantity > 1) {
+      this.cart[index].quantity--;
+    } else {
+      this.cart.splice(index, 1);
     }
+    this.syncCartToStore();
+    this.clearMessages();
+    this.cdr.detectChanges();
   }
 
   get cartTotal(): number {
-    return this.cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    return Number(
+      this.cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2),
+    );
   }
 
-  ngOnDestroy() {
-    this.layoutService.clearBreadcrumbs();
-    this.subscription?.unsubscribe();
+  get canCreateOrder(): boolean {
+    return this.cart.length > 0;
+  }
+
+  createOrder(): void {
+    if (!this.canCreateOrder) {
+      this.errorMessage = 'Le panier est vide';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.isCreating = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+    this.cdr.detectChanges();
+
+    const orderData = {
+      tableId: 2,
+      products: this.cart.map((item) => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+      })),
+      status: OrderStatus.UNPAID,
+      total: this.cartTotal,
+    } as CreateOrderDto;
+
+    this.orderService.create(orderData).subscribe({
+      next: (createdOrder: ResponseOrderDto) => {
+        this.cart = [];
+        this.syncCartToStore();
+        this.isCreating = false;
+        this.successMessage = `Commande #${createdOrder.id} créée avec succès`;
+        toast.success('Commande créée avec succès');
+        this.cdr.detectChanges();
+
+        setTimeout(() => {
+          this.successMessage = null;
+          this.cdr.detectChanges();
+        }, 3000);
+      },
+      error: (err) => {
+        this.isCreating = false;
+        toast.error(err.message);
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  private syncCartToStore(): void {
+    const orderProducts: CreateOrderProductDto[] = this.cart.map((item) => ({
+      orderId: 0,
+      productId: item.product.id,
+      quantity: item.quantity,
+    }));
+
+    const createDto: CreateOrderDto = {
+      tableId: orderStateStore.getValue().createDto.tableId,
+      products: orderProducts,
+      status: OrderStatus.UNPAID,
+      total: this.cartTotal,
+    };
+
+    orderStateStore.update((state) => ({
+      ...state,
+      createDto,
+    }));
+  }
+
+  private clearMessages(): void {
+    this.errorMessage = null;
+    this.successMessage = null;
+  }
+
+  trackByFamilyId(index: number, family: ResponseProductFamilyDto): number {
+    return family.id;
+  }
+
+  trackByProductId(index: number, product: ResponseProductDto): number {
+    return product.id;
+  }
+
+  trackByCartItem(index: number, item: CartItem): number {
+    return item.product.id;
   }
 }
