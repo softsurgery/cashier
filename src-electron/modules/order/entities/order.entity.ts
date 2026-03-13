@@ -20,4 +20,7 @@ export class OrderEntity extends EntityHelper {
 
   @OneToMany(() => OrderProductEntity, (orderProduct) => orderProduct.order, { cascade: true })
   products: OrderProductEntity[];
+
+  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  total: number;
 }

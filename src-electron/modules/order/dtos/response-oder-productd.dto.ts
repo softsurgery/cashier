@@ -3,20 +3,16 @@ import { ResponseTableDto } from '@/modules/table/dtos/table/response-table.dto'
 import { OrderStatus } from '../enum/order-status.enum';
 import { ResponseDtoHelper } from '@/shared/database/dtos/database.response.dto';
 
-export class ResponseOrderDto extends ResponseDtoHelper {
+export class ResponseOrderProductDto extends ResponseDtoHelper {
   @Expose()
   id: number;
 
   @Expose()
-  @Type(() => ResponseTableDto)
-  table: ResponseTableDto;
+  productId: number;
 
   @Expose()
-  tableId: number;
+  quantity: number;
 
   @Expose()
-  status: OrderStatus;
-
-  @Expose()
-  total: number;
+  orderId: number;
 }
