@@ -1,0 +1,14 @@
+<!-- order-products.component.html -->
+@if (selectedFamily) {
+  <div class="flex flex-wrap gap-4 justify-evenly pr-4 ml-4">
+    @for (product of selectedFamily.products; track trackByProductId($index, product)) {
+      <div
+        class="p-4 rounded-lg border-2 transition-all hover:shadow-md w-36 h-24 flex flex-col justify-between bg-card cursor-pointer"
+        (click)="addToCart.emit(product)"
+      >
+        <h3 class="font-bold text-xs">{{ product.name }}</h3>
+        <span class="text-xs px-2 py-1 rounded font-medium w-fit">{{ product.price }} TTC</span>
+      </div>
+    }
+  </div>
+}
