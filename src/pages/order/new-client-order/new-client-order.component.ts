@@ -164,7 +164,6 @@ export class NewClientOrderComponent implements OnInit {
         this.cart = [];
         this.syncCartToStore();
         this.isCreating = false;
-        this.successMessage = `Commande #${createdOrder.id} créée avec succès`;
         toast.success('Commande créée avec succès');
         this.cdr.detectChanges();
 
