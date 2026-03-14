@@ -1,3 +1,4 @@
+// new-client-order.component.ts
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,11 +10,15 @@ import {
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { toast } from 'ngx-sonner';
+import { HlmResizableImports } from '@spartan-ng/helm/resizable';
 
 import { LayoutService } from '@/components/layout/layout.service';
 import { ProductFamilyService } from '../../product-family/product-family.service';
 import { OrderService } from '@/pages/order/order.service';
 import { orderStateStore } from '@/stores/order-state/order-state.store';
+import { TablesService } from '@/pages/tables/tables.service';
 import {
   ResponseProductFamilyDto,
   ResponseProductDto,
@@ -22,10 +27,10 @@ import {
   OrderStatus,
   ResponseOrderDto,
 } from '@/types';
-import { toast } from 'ngx-sonner';
-import { HlmResizableImports } from '@spartan-ng/helm/resizable';
-import { ActivatedRoute } from '@angular/router';
-import { TablesService } from '@/pages/tables/tables.service';
+import { OrderProductFamilyComponent } from './order-product-family/order-product-family.component';
+import { OrderProductsComponent } from './order-products/order-products.component';
+import { OrderCheckoutComponent } from './order-checkout/order-checkout.component';
+import { OrderKeyboardComponent } from './order-keyboard/order-keyboard.component';
 
 interface CartItem {
   product: ResponseProductDto;
@@ -35,7 +40,14 @@ interface CartItem {
 @Component({
   selector: 'app-new-client-order',
   standalone: true,
-  imports: [CommonModule, HlmResizableImports],
+  imports: [
+    CommonModule,
+    HlmResizableImports,
+    OrderProductFamilyComponent,
+    OrderProductsComponent,
+    OrderCheckoutComponent,
+    OrderKeyboardComponent,
+  ],
   templateUrl: './new-client-order.component.html',
   styleUrls: ['./new-client-order.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,7 +62,7 @@ export class NewClientOrderComponent implements OnInit {
   private readonly tablesService = inject(TablesService);
 
   tableId: number = Number(this.activatedRoute.snapshot.params['id']);
-  readonly data$ = new BehaviorSubject<ResponseProductFamilyDto[]>([]);
+  readonly families$ = new BehaviorSubject<ResponseProductFamilyDto[]>([]);
 
   selectedFamily: ResponseProductFamilyDto | null = null;
   cart: CartItem[] = [];
@@ -63,20 +75,10 @@ export class NewClientOrderComponent implements OnInit {
   ngOnInit(): void {
     this.tablesService.findOne(this.tableId).subscribe((table) => {
       this.tableName = table!.name;
-
       this.layoutService.setBreadcrumbs([
-        {
-          label: 'Tables',
-          url: '/zone-tables',
-        },
-        {
-          label: `Nouvelle Commande`,
-          url: '/new-client-order',
-        },
-        {
-          label: `Table ${this.tableName}`,
-          url: '',
-        },
+        { label: 'Tables', url: '/zone-tables' },
+        { label: `Nouvelle Commande`, url: '/new-client-order' },
+        { label: `Table ${this.tableName}`, url: '' },
       ]);
     });
 
@@ -85,10 +87,11 @@ export class NewClientOrderComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (families) => {
-          this.data$.next(families);
+          this.families$.next(families);
           if (families.length > 0 && !this.selectedFamily) {
             this.selectedFamily = families[0];
           }
+          this.cdr.detectChanges();
         },
         error: () => {
           this.errorMessage = 'Erreur lors du chargement des familles';
@@ -97,11 +100,11 @@ export class NewClientOrderComponent implements OnInit {
       });
   }
 
-  selectFamily(family: ResponseProductFamilyDto): void {
+  onFamilySelected(family: ResponseProductFamilyDto): void {
     this.selectedFamily = family;
   }
 
-  addToCart(product: ResponseProductDto): void {
+  onAddToCart(product: ResponseProductDto): void {
     const existing = this.cart.find((item) => item.product.id === product.id);
     if (existing) {
       existing.quantity++;
@@ -113,10 +116,9 @@ export class NewClientOrderComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  removeFromCart(product: ResponseProductDto): void {
+  onRemoveFromCart(product: ResponseProductDto): void {
     const index = this.cart.findIndex((item) => item.product.id === product.id);
     if (index === -1) return;
-
     if (this.cart[index].quantity > 1) {
       this.cart[index].quantity--;
     } else {
@@ -127,18 +129,8 @@ export class NewClientOrderComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  get cartTotal(): number {
-    return Number(
-      this.cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2),
-    );
-  }
-
-  get canCreateOrder(): boolean {
-    return this.cart.length > 0;
-  }
-
-  createOrder(): void {
-    if (!this.canCreateOrder) {
+  onCreateOrder(): void {
+    if (this.cart.length === 0) {
       this.errorMessage = 'Le panier est vide';
       this.cdr.detectChanges();
       return;
@@ -149,15 +141,16 @@ export class NewClientOrderComponent implements OnInit {
     this.successMessage = null;
     this.cdr.detectChanges();
 
-    const orderData = {
+    const orderData: CreateOrderDto = {
       tableId: this.tableId,
       products: this.cart.map((item) => ({
+        orderId: 0,
         productId: item.product.id,
         quantity: item.quantity,
       })),
       status: OrderStatus.UNPAID,
       total: this.cartTotal,
-    } as CreateOrderDto;
+    };
 
     this.orderService.create(orderData).subscribe({
       next: (createdOrder: ResponseOrderDto) => {
@@ -166,7 +159,6 @@ export class NewClientOrderComponent implements OnInit {
         this.isCreating = false;
         toast.success('Commande créée avec succès');
         this.cdr.detectChanges();
-
         setTimeout(() => {
           this.successMessage = null;
           this.cdr.detectChanges();
@@ -178,6 +170,12 @@ export class NewClientOrderComponent implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  get cartTotal(): number {
+    return Number(
+      this.cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2),
+    );
   }
 
   private syncCartToStore(): void {
@@ -203,17 +201,5 @@ export class NewClientOrderComponent implements OnInit {
   private clearMessages(): void {
     this.errorMessage = null;
     this.successMessage = null;
-  }
-
-  trackByFamilyId(index: number, family: ResponseProductFamilyDto): number {
-    return family.id;
-  }
-
-  trackByProductId(index: number, product: ResponseProductDto): number {
-    return product.id;
-  }
-
-  trackByCartItem(index: number, item: CartItem): number {
-    return item.product.id;
   }
 }
