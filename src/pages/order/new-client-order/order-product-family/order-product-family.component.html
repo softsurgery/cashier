@@ -1,0 +1,17 @@
+<!-- order-product-family.component.html -->
+<div>
+  Product Family
+  <div class="grid grid-cols-2 gap-4 pr-2">
+    @for (family of families; track trackByFamilyId($index, family)) {
+      <div
+        class="p-3 rounded-lg border-2 cursor-pointer transition-all hover:shadow-md"
+        [class.bg-primary]="selectedFamily === family"
+        [class.text-primary-foreground]="selectedFamily === family"
+        [class.border-primary]="selectedFamily === family"
+        (click)="selectFamily(family)"
+      >
+        {{ family.name }}
+      </div>
+    }
+  </div>
+</div>
