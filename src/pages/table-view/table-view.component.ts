@@ -6,6 +6,7 @@ import { TableZoneService } from '../table-zone/table-zone.service';
 import { TablesService } from '../tables/tables.service';
 import { ResponseTableZoneDto, TableStatus, ResponseTableDto } from '../../types';
 import { LayoutService } from '@/components/layout/layout.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-zone-tables',
@@ -19,20 +20,15 @@ export class ZoneTablesComponent implements OnInit, OnDestroy {
 
   private service = inject(TableZoneService);
   private tableService = inject(TablesService);
+  router = inject(Router);
+
   data = new BehaviorSubject<ResponseTableZoneDto[]>([]);
 
   statuses: string[] = [];
-  statusColors: Record<string, string> = {};
   statusBgColors: Record<string, string> = {};
 
   constructor() {
     this.statuses = Object.values(TableStatus);
-
-    this.statusColors = {
-      available: 'bg-gray-100 border-gray-300',
-      occupied: 'bg-green-100 border-green-300',
-      reserved: 'bg-purple-100 border-purple-300',
-    };
 
     this.statusBgColors = {
       available: 'bg-gray-200',

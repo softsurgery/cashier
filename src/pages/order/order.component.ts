@@ -44,6 +44,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       .findAll({
         take: 10,
         skip: 0,
+        relations: ['table'],
       })
       .subscribe((orders) => {
         this.data.next(orders);

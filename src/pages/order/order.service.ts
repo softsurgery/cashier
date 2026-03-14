@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import { ResponseOrderDto } from '../../types';
+import { CreateOrderDto, ResponseOrderDto, UpdateOrderDto } from '../../types';
 import type { FindManyOptions } from 'typeorm';
 
 @Injectable({
@@ -11,5 +11,21 @@ export class OrderService {
 
   findAll(query: FindManyOptions<ResponseOrderDto>): Observable<ResponseOrderDto[]> {
     return from(window.electronAPI!.order.findAll(query));
+  }
+
+  findOneById(id: number): Observable<ResponseOrderDto | null> {
+    return from(window.electronAPI!.order.findOneById(id));
+  }
+
+  create(data: CreateOrderDto): Observable<ResponseOrderDto> {
+    return from(window.electronAPI!.order.create(data));
+  }
+
+  update(id: number, data: Partial<UpdateOrderDto>): Observable<ResponseOrderDto | null> {
+    return from(window.electronAPI!.order.update(id, data));
+  }
+
+  delete(id: number): Observable<ResponseOrderDto> {
+    return from(window.electronAPI!.order.delete(id));
   }
 }
