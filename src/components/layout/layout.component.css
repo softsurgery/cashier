@@ -1,9 +1,0 @@
-/* hide spartan in blocks preview header and footer */
-#spartan-header,
-#spartan-footer {
-  display: none !important;
-}
-
-#spartan-main {
-  max-width: 100%;
-}
