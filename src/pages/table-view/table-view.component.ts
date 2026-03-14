@@ -6,6 +6,7 @@ import { TableZoneService } from '../table-zone/table-zone.service';
 import { TablesService } from '../tables/tables.service';
 import { ResponseTableZoneDto, TableStatus, ResponseTableDto } from '../../types';
 import { LayoutService } from '@/components/layout/layout.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-zone-tables',
@@ -19,6 +20,8 @@ export class ZoneTablesComponent implements OnInit, OnDestroy {
 
   private service = inject(TableZoneService);
   private tableService = inject(TablesService);
+  router = inject(Router);
+
   data = new BehaviorSubject<ResponseTableZoneDto[]>([]);
 
   statuses: string[] = [];

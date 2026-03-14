@@ -11,7 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { LayoutService } from '@/components/layout/layout.service';
-import { ProductFamilyService } from '../product-family/product-family.service';
+import { ProductFamilyService } from '../../product-family/product-family.service';
 import { OrderService } from '@/pages/order/order.service';
 import { orderStateStore } from '@/stores/order-state/order-state.store';
 import {
@@ -23,6 +23,8 @@ import {
   ResponseOrderDto,
 } from '@/types';
 import { toast } from 'ngx-sonner';
+import { HlmResizableImports } from '@spartan-ng/helm/resizable';
+import { ActivatedRoute } from '@angular/router';
 
 interface CartItem {
   product: ResponseProductDto;
@@ -30,19 +32,22 @@ interface CartItem {
 }
 
 @Component({
-  selector: 'app-caisse',
+  selector: 'app-new-client-order',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './caisse.component.html',
-  styleUrls: ['./caisse.component.css'],
+  imports: [CommonModule, HlmResizableImports],
+  templateUrl: './new-client-order.component.html',
+  styleUrls: ['./new-client-order.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaisseComponent implements OnInit {
+export class NewClientOrderComponent implements OnInit {
   private readonly layoutService = inject(LayoutService);
   private readonly productFamilyService = inject(ProductFamilyService);
   private readonly orderService = inject(OrderService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  tableId: number = Number(this.activatedRoute.snapshot.params['id']);
 
   readonly data$ = new BehaviorSubject<ResponseProductFamilyDto[]>([]);
 
@@ -54,7 +59,9 @@ export class CaisseComponent implements OnInit {
   successMessage: string | null = null;
 
   ngOnInit(): void {
-    this.layoutService.setBreadcrumbs([{ label: 'Caisse', url: '/caisse' }]);
+    this.layoutService.setBreadcrumbs([
+      { label: 'Nouvelle commande client', url: '/new-client-order' },
+    ]);
 
     this.productFamilyService
       .findAll({ relations: ['products'], take: 100, skip: 0 })
