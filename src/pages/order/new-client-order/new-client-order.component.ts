@@ -25,6 +25,7 @@ import {
 import { toast } from 'ngx-sonner';
 import { HlmResizableImports } from '@spartan-ng/helm/resizable';
 import { ActivatedRoute } from '@angular/router';
+import { TablesService } from '@/pages/tables/tables.service';
 
 interface CartItem {
   product: ResponseProductDto;
@@ -46,9 +47,9 @@ export class NewClientOrderComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly tablesService = inject(TablesService);
 
   tableId: number = Number(this.activatedRoute.snapshot.params['id']);
-
   readonly data$ = new BehaviorSubject<ResponseProductFamilyDto[]>([]);
 
   selectedFamily: ResponseProductFamilyDto | null = null;
@@ -57,11 +58,27 @@ export class NewClientOrderComponent implements OnInit {
   isCreating = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
+  tableName!: string;
 
   ngOnInit(): void {
-    this.layoutService.setBreadcrumbs([
-      { label: 'Nouvelle commande client', url: '/new-client-order' },
-    ]);
+    this.tablesService.findOne(this.tableId).subscribe((table) => {
+      this.tableName = table!.name;
+
+      this.layoutService.setBreadcrumbs([
+        {
+          label: 'Tables',
+          url: '/zone-tables',
+        },
+        {
+          label: `Nouvelle Commande`,
+          url: '/new-client-order',
+        },
+        {
+          label: `Table ${this.tableName}`,
+          url: '',
+        },
+      ]);
+    });
 
     this.productFamilyService
       .findAll({ relations: ['products'], take: 100, skip: 0 })
@@ -133,7 +150,7 @@ export class NewClientOrderComponent implements OnInit {
     this.cdr.detectChanges();
 
     const orderData = {
-      tableId: 2,
+      tableId: this.tableId,
       products: this.cart.map((item) => ({
         productId: item.product.id,
         quantity: item.quantity,
