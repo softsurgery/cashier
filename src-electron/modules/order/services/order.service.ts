@@ -5,6 +5,7 @@ import { OrderEntity } from '../entities/order.entity';
 import { OrderRepository } from '../repositories/order.repository';
 import { OrderProductService } from './order-product.service';
 import { CreateOrderDto } from '../dtos/create-order.dto';
+import { OrderStatus } from '../enum/order-status.enum';
 
 export class OrderService extends AbstractCrudService<OrderEntity> {
   constructor() {
@@ -35,5 +36,26 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
       throw new Error('Order not found after creation');
     }
     return fullOrder;
+  }
+
+  async pay(id: number, amount: number): Promise<OrderEntity> {
+    const order = await this.repository.findOneById(id);
+
+    if (!order) throw new Error('No order found');
+
+    if (order.total - amount < 0) {
+      throw new Error('Payment amount exceeds order total');
+    }
+
+    order.total = order.total - amount;
+
+    if (order.total === 0) {
+      order.status = OrderStatus.PAID;
+    } else {
+      order.status = OrderStatus.PARTIALLY_PAID;
+    }
+
+    const updatedOrder = await this.repository.save(order);
+    return updatedOrder;
   }
 }

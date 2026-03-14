@@ -21,6 +21,10 @@ export function registerOrderHandlers(): void {
     return service.createFull(data);
   });
 
+  ipcMain.handle('order:pay', async (_event, id: number, amount: number) => {
+    return service.pay(id, amount);
+  });
+
   // ipcMain.handle('order:update', async (_event, id: number, data: UpdateOrderDto) => {
   //   return service.update(id, data);
   // });
