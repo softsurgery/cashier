@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { OrderService } from '../../order.service';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-order-keyboard',
@@ -41,9 +42,23 @@ export class OrderKeyboardComponent implements OnInit {
     this.value = '';
   }
 
-  Pay(id: number, amount: number) {
-    const order = this.orderService.findOneById(id);
-    return this.orderService.pay(id, amount);
+  Pay(orderId: number, amount: string) {
+    const numericAmount = Number(amount);
+
+    if (!numericAmount || numericAmount <= 0) {
+      toast.error('Invalid payment amount');
+      return;
+    }
+
+    this.orderService.pay(orderId, numericAmount).subscribe({
+      next: () => {
+        toast.success('Payment created successfully');
+        this.value = '';
+      },
+      error: (err) => {
+        toast.error('Payment failed');
+      },
+    });
   }
 
   isEmpty() {

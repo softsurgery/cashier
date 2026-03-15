@@ -22,24 +22,29 @@
     </div>
 
     <!-- Actions -->
-    <div class="flex flex-col gap-2 w-36">
-      <button
-        hlmBtn
-        variant="destructive"
-        size="lg"
-        (click)="clear()"
-        [disabled]="isEmpty()"
-        class="flex-1"
-      >
-        Clear
-      </button>
-
-      <button hlmBtn variant="default" size="lg" [disabled]="!isEmpty()" class="flex-1">
+    <div class="flex flex-col gap-2 w-36 h-full">
+      <button hlmBtn variant="default" class="flex-1 font-bold" [disabled]="!isEmpty()">
         Fully Pay
       </button>
 
-      <button hlmBtn variant="secondary" size="lg" [disabled]="isEmpty()" class="flex-1">
-        Partially Pay
+      <button
+        hlmBtn
+        variant="default"
+        class="flex-1 font-bold"
+        (click)="Pay(3, value)"
+        [disabled]="isEmpty()"
+      >
+        Pay
+      </button>
+
+      <button
+        hlmBtn
+        variant="destructive"
+        class="flex-1 font-bold"
+        (click)="clear()"
+        [disabled]="isEmpty()"
+      >
+        Clear
       </button>
     </div>
   </div>
