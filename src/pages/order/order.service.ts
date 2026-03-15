@@ -28,4 +28,8 @@ export class OrderService {
   delete(id: number): Observable<ResponseOrderDto> {
     return from(window.electronAPI!.order.delete(id));
   }
+
+  pay(id: number, amount: number): Observable<ResponseOrderDto> {
+    return from(window.electronAPI!.order.pay(id, amount));
+  }
 }

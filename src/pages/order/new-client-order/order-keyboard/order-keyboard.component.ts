@@ -1,8 +1,9 @@
 // order-keyboard.component.ts
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HlmButton } from '@spartan-ng/helm/button';
+import { OrderService } from '../../order.service';
 
 @Component({
   selector: 'app-order-keyboard',
@@ -12,7 +13,11 @@ import { HlmButton } from '@spartan-ng/helm/button';
   styleUrls: ['./order-keyboard.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrderKeyboardComponent {
+export class OrderKeyboardComponent implements OnInit {
+  private readonly orderService = inject(OrderService);
+
+  ngOnInit(): void {}
+
   value: string = '';
 
   keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', 'x'];
@@ -36,8 +41,9 @@ export class OrderKeyboardComponent {
     this.value = '';
   }
 
-  logPay() {
-    console.log(this.value);
+  Pay(id: number, amount: number) {
+    const order = this.orderService.findOneById(id);
+    return this.orderService.pay(id, amount);
   }
 
   isEmpty() {

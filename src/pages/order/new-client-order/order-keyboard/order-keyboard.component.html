@@ -34,25 +34,11 @@
         Clear
       </button>
 
-      <button
-        hlmBtn
-        variant="default"
-        size="lg"
-        (click)="logPay()"
-        [disabled]="!isEmpty()"
-        class="flex-1"
-      >
+      <button hlmBtn variant="default" size="lg" [disabled]="!isEmpty()" class="flex-1">
         Fully Pay
       </button>
 
-      <button
-        hlmBtn
-        variant="secondary"
-        size="lg"
-        (click)="logPay()"
-        [disabled]="isEmpty()"
-        class="flex-1"
-      >
+      <button hlmBtn variant="secondary" size="lg" [disabled]="isEmpty()" class="flex-1">
         Partially Pay
       </button>
     </div>
