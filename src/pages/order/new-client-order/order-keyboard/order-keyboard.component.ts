@@ -55,8 +55,31 @@ export class OrderKeyboardComponent implements OnInit {
         toast.success('Payment created successfully');
         this.value = '';
       },
-      error: (err) => {
+      error: () => {
         toast.error('Payment failed');
+      },
+    });
+  }
+
+  PayAll(orderId: number) {
+    this.orderService.findOneById(orderId).subscribe({
+      next: (order) => {
+        if (!order) {
+          throw new Error('order not found!');
+        }
+
+        this.orderService.pay(orderId, order.total).subscribe({
+          next: () => {
+            toast.success('Payment created successfully');
+            this.value = '';
+          },
+          error: () => {
+            toast.error('Payment failed');
+          },
+        });
+      },
+      error: () => {
+        toast.error('Failed to fetch order');
       },
     });
   }

@@ -23,7 +23,13 @@
 
     <!-- Actions -->
     <div class="flex flex-col gap-2 w-36 h-full">
-      <button hlmBtn variant="default" class="flex-1 font-bold" [disabled]="!isEmpty()">
+      <button
+        hlmBtn
+        variant="default"
+        class="flex-1 font-bold"
+        (click)="PayAll(8)"
+        [disabled]="!isEmpty()"
+      >
         Fully Pay
       </button>
 
