@@ -1,0 +1,44 @@
+<!-- new-client-order.component.html -->
+<div class="flex flex-col flex-1 lg:flex-row overflow-hidden h-full">
+  <hlm-resizable-group class="rounded-lg flex flex-col lg:flex-row w-full h-full">
+    <hlm-resizable-panel class="w-full lg:min-w-96">
+      <app-order-product-family
+        [families]="families$ | async"
+        [selectedFamily]="selectedFamily"
+        (familySelected)="onFamilySelected($event)"
+      />
+    </hlm-resizable-panel>
+
+    <hlm-resizable-handle class="hidden lg:block" />
+
+    <hlm-resizable-panel class="w-full lg:min-w-144">
+      <div class="flex-1 overflow-y-auto">
+        <app-order-products [selectedFamily]="selectedFamily" (addToCart)="onAddToCart($event)" />
+      </div>
+    </hlm-resizable-panel>
+
+    <hlm-resizable-handle class="hidden lg:block" />
+
+    <hlm-resizable-panel class="w-full lg:min-w-96">
+      <hlm-resizable-group direction="vertical" class="flex flex-col flex-1 min-h-0">
+        <hlm-resizable-panel class="w-full lg:min-h-96">
+          <app-order-checkout
+            [cart]="cart"
+            [errorMessage]="errorMessage"
+            [successMessage]="successMessage"
+            [isCreating]="isCreating"
+            [cartTotal]="cartTotal"
+            (removeFromCart)="onRemoveFromCart($event)"
+            (createOrder)="onCreateOrder()"
+          />
+        </hlm-resizable-panel>
+
+        <hlm-resizable-handle />
+
+        <hlm-resizable-panel class="w-full lg:min-h-48">
+          <app-order-keyboard />
+        </hlm-resizable-panel>
+      </hlm-resizable-group>
+    </hlm-resizable-panel>
+  </hlm-resizable-group>
+</div>

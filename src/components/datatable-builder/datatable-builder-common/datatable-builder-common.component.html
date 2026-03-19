@@ -2,10 +2,20 @@
     <input hlmInput class="w-full md:w-80" placeholder="Filter {{dataTableObject?.singular}}..."
         (input)="_filterChanged($event)" />
 
-    <button hlmBtn variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
-        Columns
-        <ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm" />
-    </button>
+    <div class="flex items-center gap-2">
+
+        <button hlmBtn variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
+            Columns
+            <ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm" />
+        </button>
+        @if (dataTableObject?.createAction && !dataTableObject?.createAction?.isHidden) {
+        <button hlmBtn size="sm" (click)="dataTableObject?.createAction?.action?.()"
+            [disabled]="dataTableObject?.createAction?.disabled ?? false">
+            <ng-icon hlm name="lucidePlus" class="mr-2" size="sm" />
+            {{ dataTableObject?.createAction?.label }}
+        </button>
+        }
+    </div>
     <ng-template #menu>
         <hlm-dropdown-menu class="w-32">
             @for (column of _hidableColumns; track column.id) {

@@ -23,24 +23,14 @@ export const data = {
       icon: 'lucideShoppingCart',
       isActive: false,
     },
+
     {
       title: 'Tables',
-      url: '/tables',
+      url: '/zone-tables',
       icon: 'lucideGrid',
       isActive: false,
     },
-    {
-      title: 'Produits',
-      url: '/produits',
-      icon: 'lucidePackage',
-      isActive: false,
-    },
-    {
-      title: 'Familles',
-      url: '/familles',
-      icon: 'lucideFolderTree',
-      isActive: false,
-    },
+
     {
       title: 'Consulter Z',
       url: '/consulter-z',
@@ -66,10 +56,32 @@ export const data = {
       isActive: false,
     },
     {
-      title: 'Nigrok',
-      url: '/nigrok',
+      title: 'Ngrok',
+      url: '/ngrok',
       icon: 'lucideSettings',
       isActive: false,
+    },
+    {
+      title: 'Administrative Tools',
+      icon: 'lucideShield',
+      items: [
+        {
+          title: 'Table',
+          url: '/tables',
+        },
+        {
+          title: 'Table Zones',
+          url: '/table-zone',
+        },
+        {
+          title: 'Produits',
+          url: '/produits',
+        },
+        {
+          title: 'Familles',
+          url: '/familles',
+        },
+      ],
     },
   ],
   navSecondary: [

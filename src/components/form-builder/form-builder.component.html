@@ -1,12 +1,12 @@
-<div [ngClass]="[formObject.class || '']">
-  <div *ngIf="!formObject.isHeaderHidden" [class]="['flex flex-col w-full p-2']">
+<div [ngClass]="[structure.class || '']">
+  <div *ngIf="!structure.isHeaderHidden" [class]="['flex flex-col w-full p-2']">
     <!-- Header -->
     <div class="space-y-1 py-5 sm:py-0">
       <h1 class="text-2xl font-bold tracking-tight md:text-3xl">
-        {{ formObject.title }}
+        {{ structure.title }}
       </h1>
       <p class="text-md text-muted-color">
-        {{ formObject.description || "" }}
+        {{ structure.description || "" }}
       </p>
     </div>
     <hr class="mt-4 mb-4 lg:mb-6" />
@@ -14,13 +14,13 @@
 
   <div [ngClass]="[
       'flex gap-4 xl:gap-10',
-      formObject.orientation === 'vertical'
+      structure.orientation === 'vertical'
         ? 'flex-col xl:flex-row'
         : 'flex-col'
     ]">
-    <div *ngFor="let grid of formObject.grids" [ngClass]="[
+    <div *ngFor="let grid of structure.grids" [ngClass]="[
         'flex w-full',
-        formObject.orientation === 'vertical'
+        structure.orientation === 'vertical'
           ? 'flex-row xl:flex-col gap-10'
           : 'flex-col gap-4'
       ]">
@@ -43,7 +43,7 @@
             <div [ngClass]="[
                 'grid gap-6 w-full mb-5',
                 item.class || '',
-                formObject.orientation === 'vertical' ||
+                structure.orientation === 'vertical' ||
                 item.fields.length === 1
                   ? 'grid-cols-1'
                   : item.fields.length === 2

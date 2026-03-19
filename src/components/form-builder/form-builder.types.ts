@@ -25,6 +25,7 @@ export interface DynamicGridItem {
 }
 
 export interface DynamicField<T = any> {
+  id: string;
   label?: string;
   variant: FieldVariant;
   description?: string;
@@ -46,6 +47,7 @@ export enum FieldVariant {
   TEXTAREA = 'textarea',
   CUSTOM = 'custom',
   EMPTY = 'empty',
+  SELECT = 'select',
 }
 
 export interface BaseFieldProps {
@@ -105,10 +107,10 @@ export interface SearchableSelectOption extends SelectOption {
 }
 
 export interface SelectFieldProps {
+  value?: Observable<string>;
   placeholder?: string;
   options?: SelectOption[] | Observable<SelectOption[]>;
-  value?: Observable<SelectOption | undefined>;
-  onSelectChange?: (event: SelectOption) => void;
+  onSelectChange?: (event: string) => void;
   onBlur?: () => void;
   filterEnabled?: boolean;
   showClear?: boolean;

@@ -6,7 +6,8 @@ import { FormsModule } from '@angular/forms';
 
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmDropdownMenu, HlmDropdownMenuCheckboxIndicator } from '@spartan-ng/helm/dropdown-menu';
-import { NgIcon } from '@ng-icons/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideChevronDown, lucidePlus } from '@ng-icons/lucide';
 
 import { BrnSelectImports } from '@spartan-ng/brain/select';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -21,6 +22,7 @@ import {
   ColumnFiltersState,
   createAngularTable,
   FlexRenderDirective,
+  flexRenderComponent,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -30,11 +32,13 @@ import {
   Table,
   VisibilityState,
 } from '@tanstack/angular-table';
+import { DatatableBuilderActionDropdownComponent } from '../core/datatable-builder-action-dropdown/datatable-builder-action-dropdown.component';
 
 @Component({
   selector: 'app-datatable-builder-common',
   templateUrl: './datatable-builder-common.component.html',
   styleUrls: ['./datatable-builder-common.component.css'],
+  providers: [provideIcons({ lucideChevronDown, lucidePlus })],
   imports: [
     CommonModule,
     FormsModule,
@@ -99,6 +103,26 @@ export class DatatableBuilderCommonComponent implements OnInit {
     });
 
     this._columns = this.dataTableObject?.columns || [];
+
+    // Auto-append actions column if rowActions or rowActionsFn is defined
+    if (this.dataTableObject?.rowActions || this.dataTableObject?.rowActionsFn) {
+      const hasActionsColumn = this._columns.some((col) => col.id === 'actions');
+      if (!hasActionsColumn) {
+        const rowActions = this.dataTableObject.rowActions;
+        const rowActionsFn = this.dataTableObject.rowActionsFn;
+        this._columns = [
+          ...this._columns,
+          {
+            id: 'actions',
+            enableHiding: false,
+            cell: () =>
+              flexRenderComponent(DatatableBuilderActionDropdownComponent, {
+                inputs: { rowActions, rowActionsFn },
+              }),
+          },
+        ];
+      }
+    }
     // Create table
     this._table = createAngularTable(() => ({
       data: this._data(),

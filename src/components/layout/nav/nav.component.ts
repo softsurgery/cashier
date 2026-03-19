@@ -11,6 +11,7 @@ import {
   lucideWallet,
   lucideShoppingCart,
   lucideGrid,
+  lucideShield,
   lucidePackage,
   lucideFolderTree,
   lucideFileText,
@@ -18,6 +19,7 @@ import {
   lucideBarChart,
   lucideBox,
   lucideSettings,
+  lucideWebcam,
 } from '@ng-icons/lucide';
 import { HlmCollapsibleImports } from '@spartan-ng/helm/collapsible';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
@@ -34,6 +36,7 @@ import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
       lucideSettings2,
       lucideChevronRight,
       lucideHome,
+      lucideShield,
       lucideWallet,
       lucideShoppingCart,
       lucideGrid,
@@ -54,7 +57,7 @@ export class NavComponent {
   public readonly items = input.required<
     {
       title: string;
-      url: string;
+      url?: string;          
       icon: string;
       isActive?: boolean;
       items?: {

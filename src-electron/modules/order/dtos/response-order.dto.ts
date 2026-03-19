@@ -1,7 +1,7 @@
 import { Expose, Type } from 'class-transformer';
-import { ResponseDtoHelper } from '../../../shared/database/dtos/database.response.dto';
-import { ResponseTableDto } from '../../table/dtos/response-table.dto';
+import { ResponseTableDto } from '@/modules/table/dtos/table/response-table.dto';
 import { OrderStatus } from '../enum/order-status.enum';
+import { ResponseDtoHelper } from '@/shared/database/dtos/database.response.dto';
 
 export class ResponseOrderDto extends ResponseDtoHelper {
   @Expose()
@@ -16,4 +16,7 @@ export class ResponseOrderDto extends ResponseDtoHelper {
 
   @Expose()
   status: OrderStatus;
+
+  @Expose()
+  total: number;
 }

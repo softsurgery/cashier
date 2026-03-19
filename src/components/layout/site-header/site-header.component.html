@@ -12,5 +12,8 @@
             </div>
         </div>
         <app-mode-toggle></app-mode-toggle>
+        <button hlmBtn variant="ghost" size="icon" (click)="layoutService.toggleFullscreen()">
+            <lucide-icon [img]="Fullscreen"></lucide-icon>
+        </button>
     </div>
 </header>

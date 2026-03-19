@@ -1,16 +1,14 @@
-import { DynamicField, DynamicForm, FieldVariant } from "../form-builder.types";
+import { DynamicField, DynamicForm, FieldVariant } from '../form-builder.types';
 
-export const getSingleFieldObjectFactory = (
-  field: DynamicField
-): DynamicForm => {
+export const getSingleFieldObjectFactory = (field: DynamicField): DynamicForm => {
   return {
-    title: "",
-    description: "",
+    title: '',
+    description: '',
     isHeaderHidden: true,
-    class: "",
+    class: '',
     grids: [
       {
-        title: "",
+        title: '',
         isHeaderHidden: true,
         gridItems: [
           {
@@ -24,7 +22,8 @@ export const getSingleFieldObjectFactory = (
 
 export const emptyFieldObjectFactory = (): DynamicField => {
   return {
-    label: "",
+    id: crypto.randomUUID(),
+    label: '',
     variant: FieldVariant.EMPTY,
     isRequired: undefined,
     isDisabled: undefined,
