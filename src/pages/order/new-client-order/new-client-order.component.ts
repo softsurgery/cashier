@@ -169,7 +169,9 @@ export class NewClientOrderComponent implements OnInit {
           this.activeOrderId = savedOrder.id;
         }
         this.isCreating = false;
-        toast.success(isUpdatingExistingOrder ? 'Commande mise a jour' : 'Commande creee avec succes');
+        toast.success(
+          isUpdatingExistingOrder ? 'Commande mise a jour' : 'Commande crée avec succes',
+        );
         this.loadActiveOrder();
         this.cdr.detectChanges();
         setTimeout(() => {
@@ -232,7 +234,8 @@ export class NewClientOrderComponent implements OnInit {
       .subscribe({
         next: (orders) => {
           const activeOrder = orders.find(
-            (order) => order.status === OrderStatus.UNPAID || order.status === OrderStatus.PARTIALLY_PAID,
+            (order) =>
+              order.status === OrderStatus.UNPAID || order.status === OrderStatus.PARTIALLY_PAID,
           );
 
           if (!activeOrder) {
@@ -246,8 +249,8 @@ export class NewClientOrderComponent implements OnInit {
           }
 
           this.activeOrderId = activeOrder.id;
-          this.activeOrderRemaining = Number(activeOrder.total ?? 0);
           this.activeOrderPaidAmount = Number(activeOrder.paidAmount ?? 0);
+          this.activeOrderRemaining = Number(activeOrder.total ?? 0) - this.activeOrderPaidAmount;
           const activeOrderProducts = (activeOrder.products ??
             activeOrder.OrderProducts ??
             []) as (ResponseOrderProductDto & { product?: ResponseProductDto })[];
