@@ -27,8 +27,8 @@
         hlmBtn
         variant="default"
         class="flex-1 font-bold"
-        (click)="PayAll(8)"
-        [disabled]="!isEmpty()"
+        (click)="PayAll()"
+        [disabled]="!isEmpty() || !orderId"
       >
         Fully Pay
       </button>
@@ -37,8 +37,8 @@
         hlmBtn
         variant="default"
         class="flex-1 font-bold"
-        (click)="Pay(3, value)"
-        [disabled]="isEmpty()"
+        (click)="Pay(value)"
+        [disabled]="isEmpty() || !orderId"
       >
         Pay
       </button>

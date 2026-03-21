@@ -36,7 +36,7 @@
         <hlm-resizable-handle />
 
         <hlm-resizable-panel class="w-full lg:min-h-48">
-          <app-order-keyboard />
+          <app-order-keyboard [orderId]="activeOrderId" (paymentCompleted)="onPaymentCompleted()" />
         </hlm-resizable-panel>
       </hlm-resizable-group>
     </hlm-resizable-panel>

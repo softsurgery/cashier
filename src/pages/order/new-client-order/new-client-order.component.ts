@@ -20,6 +20,7 @@ import { OrderService } from '@/pages/order/order.service';
 import { orderStateStore } from '@/stores/order-state/order-state.store';
 import { TablesService } from '@/pages/tables/tables.service';
 import {
+  ResponseOrderProductDto,
   ResponseProductFamilyDto,
   ResponseProductDto,
   CreateOrderDto,
@@ -66,6 +67,7 @@ export class NewClientOrderComponent implements OnInit {
 
   selectedFamily: ResponseProductFamilyDto | null = null;
   cart: CartItem[] = [];
+  activeOrderId: number | null = null;
 
   isCreating = false;
   errorMessage: string | null = null;
@@ -98,6 +100,8 @@ export class NewClientOrderComponent implements OnInit {
           this.cdr.detectChanges();
         },
       });
+
+    this.loadActiveOrder();
   }
 
   onFamilySelected(family: ResponseProductFamilyDto): void {
@@ -152,12 +156,19 @@ export class NewClientOrderComponent implements OnInit {
       total: this.cartTotal,
     };
 
-    this.orderService.create(orderData).subscribe({
-      next: (createdOrder: ResponseOrderDto) => {
-        this.cart = [];
-        this.syncCartToStore();
+    const isUpdatingExistingOrder = this.activeOrderId !== null;
+    const save$ = isUpdatingExistingOrder
+      ? this.orderService.update(this.activeOrderId!, orderData)
+      : this.orderService.create(orderData);
+
+    save$.subscribe({
+      next: (savedOrder: ResponseOrderDto | null) => {
+        if (savedOrder) {
+          this.activeOrderId = savedOrder.id;
+        }
         this.isCreating = false;
-        toast.success('Commande créée avec succès');
+        toast.success(isUpdatingExistingOrder ? 'Commande mise a jour' : 'Commande creee avec succes');
+        this.loadActiveOrder();
         this.cdr.detectChanges();
         setTimeout(() => {
           this.successMessage = null;
@@ -170,6 +181,10 @@ export class NewClientOrderComponent implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  onPaymentCompleted(): void {
+    this.loadActiveOrder();
   }
 
   get cartTotal(): number {
@@ -186,7 +201,7 @@ export class NewClientOrderComponent implements OnInit {
     }));
 
     const createDto: CreateOrderDto = {
-      tableId: orderStateStore.getValue().createDto.tableId,
+      tableId: this.tableId,
       products: orderProducts,
       status: OrderStatus.UNPAID,
       total: this.cartTotal,
@@ -201,5 +216,51 @@ export class NewClientOrderComponent implements OnInit {
   private clearMessages(): void {
     this.errorMessage = null;
     this.successMessage = null;
+  }
+
+  private loadActiveOrder(): void {
+    this.orderService
+      .findAll({
+        where: { tableId: this.tableId },
+        relations: ['products', 'products.product'],
+        order: { id: 'DESC' },
+        take: 20,
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (orders) => {
+          const activeOrder = orders.find(
+            (order) => order.status === OrderStatus.UNPAID || order.status === OrderStatus.PARTIALLY_PAID,
+          );
+
+          if (!activeOrder) {
+            this.activeOrderId = null;
+            this.cart = [];
+            this.syncCartToStore();
+            this.cdr.detectChanges();
+            return;
+          }
+
+          this.activeOrderId = activeOrder.id;
+          const activeOrderProducts = (activeOrder.products ??
+            activeOrder.OrderProducts ??
+            []) as (ResponseOrderProductDto & { product?: ResponseProductDto })[];
+
+          this.cart = activeOrderProducts
+            .filter((item) => !!item.product)
+            .map((item) => ({
+              product: item.product as ResponseProductDto,
+              quantity: item.quantity,
+            }));
+          this.syncCartToStore();
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.activeOrderId = null;
+          this.cart = [];
+          this.syncCartToStore();
+          this.cdr.detectChanges();
+        },
+      });
   }
 }
