@@ -34,6 +34,7 @@ export interface OrderAPI {
   create(data: CreateOrderDto): Promise<ResponseOrderDto>;
   update(id: number, data: Partial<UpdateOrderDto>): Promise<ResponseOrderDto | null>;
   delete(id: number): Promise<ResponseOrderDto>;
+  pay(id: number, amount:number): Promise<ResponseOrderDto>;
 }
 
 export interface ProductFamilyAPI {

@@ -19,4 +19,7 @@ export class ResponseOrderDto extends ResponseDtoHelper {
 
   @Expose()
   total: number;
+
+  @Expose()
+  paidAmount: number;
 }
