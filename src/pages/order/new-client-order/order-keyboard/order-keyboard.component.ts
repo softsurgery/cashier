@@ -60,6 +60,7 @@ export class OrderKeyboardComponent implements OnInit {
       return;
     }
     const numericAmount = Number(amount);
+    console.log('why double !!!', numericAmount);
 
     if (!numericAmount || numericAmount <= 0) {
       toast.error('Invalid payment amount');

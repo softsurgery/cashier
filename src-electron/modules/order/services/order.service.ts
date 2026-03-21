@@ -21,7 +21,10 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
 
   private async findActiveOrderByTableId(tableId: number): Promise<OrderEntity | null> {
     return this.repository.findOne({
-      where: [{ tableId, status: OrderStatus.UNPAID }, { tableId, status: OrderStatus.PARTIALLY_PAID }],
+      where: [
+        { tableId, status: OrderStatus.UNPAID },
+        { tableId, status: OrderStatus.PARTIALLY_PAID },
+      ],
       relations: ['products', 'products.product'],
       order: { id: 'DESC' },
     });
@@ -111,12 +114,13 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
       throw new Error('Payment amount exceeds order total');
     }
 
-    order.total = Number((Number(order.total) - amount).toFixed(2));
     order.paidAmount = Number((Number(order.paidAmount ?? 0) + amount).toFixed(2));
 
-    if (order.total === 0) {
+    if (order.total === order.paidAmount) {
       order.status = OrderStatus.PAID;
-      await this.orderProductRepository.rawQuery('DELETE FROM order_product WHERE orderId = ?', [id]);
+      await this.orderProductRepository.rawQuery('DELETE FROM order_product WHERE orderId = ?', [
+        id,
+      ]);
       await this.tableRepository.update(order.tableId, { status: TableStatus.AVAILABLE });
     } else {
       order.status = OrderStatus.PARTIALLY_PAID;
@@ -132,11 +136,9 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
       throw new Error('No order found');
     }
 
-    const nextTableId = data.tableId ?? existingOrder.tableId;
     const paidAmount = Number(existingOrder.paidAmount ?? 0);
     const requestedOrderTotal = Number(data.total ?? existingOrder.total);
-    const remainingTotal = Number((requestedOrderTotal - paidAmount).toFixed(2));
-    const nextTotal = remainingTotal > 0 ? remainingTotal : 0;
+    const nextTotal = Number(requestedOrderTotal.toFixed(2));
     const nextStatus =
       data.status ??
       (nextTotal === 0
@@ -146,7 +148,9 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
           : OrderStatus.UNPAID);
 
     if (data.products) {
-      await this.orderProductRepository.rawQuery('DELETE FROM order_product WHERE orderId = ?', [id]);
+      await this.orderProductRepository.rawQuery('DELETE FROM order_product WHERE orderId = ?', [
+        id,
+      ]);
       if (data.products.length > 0) {
         const orderProductService = new OrderProductService();
         await orderProductService.saveMany(
@@ -159,13 +163,13 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
       }
     }
 
-    existingOrder.tableId = nextTableId;
+    existingOrder.tableId = data.tableId ?? existingOrder.tableId;
     existingOrder.status = nextStatus;
-    existingOrder.total = Number(Number(nextTotal).toFixed(2));
+    existingOrder.total = nextTotal;
     existingOrder.paidAmount = paidAmount;
     await this.repository.save(existingOrder);
 
-    await this.tableRepository.update(nextTableId, { status: TableStatus.OCCUPIED });
+    await this.tableRepository.update(existingOrder.tableId, { status: TableStatus.OCCUPIED });
 
     return this.repository.findOne({
       where: { id },
