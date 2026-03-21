@@ -1,5 +1,13 @@
 // order-keyboard.component.ts
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HlmButton } from '@spartan-ng/helm/button';
@@ -16,6 +24,8 @@ import { toast } from 'ngx-sonner';
 })
 export class OrderKeyboardComponent implements OnInit {
   private readonly orderService = inject(OrderService);
+  @Input() orderId: number | null = null;
+  @Output() paymentCompleted = new EventEmitter<void>();
 
   ngOnInit(): void {}
 
@@ -42,7 +52,11 @@ export class OrderKeyboardComponent implements OnInit {
     this.value = '';
   }
 
-  Pay(orderId: number, amount: string) {
+  Pay(amount: string) {
+    if (!this.orderId) {
+      toast.error('No active order for this table');
+      return;
+    }
     const numericAmount = Number(amount);
 
     if (!numericAmount || numericAmount <= 0) {
@@ -50,10 +64,11 @@ export class OrderKeyboardComponent implements OnInit {
       return;
     }
 
-    this.orderService.pay(orderId, numericAmount).subscribe({
+    this.orderService.pay(this.orderId, numericAmount).subscribe({
       next: () => {
         toast.success('Payment created successfully');
         this.value = '';
+        this.paymentCompleted.emit();
       },
       error: () => {
         toast.error('Payment failed');
@@ -61,17 +76,23 @@ export class OrderKeyboardComponent implements OnInit {
     });
   }
 
-  PayAll(orderId: number) {
-    this.orderService.findOneById(orderId).subscribe({
+  PayAll() {
+    if (!this.orderId) {
+      toast.error('No active order for this table');
+      return;
+    }
+
+    this.orderService.findOneById(this.orderId).subscribe({
       next: (order) => {
         if (!order) {
           throw new Error('order not found!');
         }
 
-        this.orderService.pay(orderId, order.total).subscribe({
+        this.orderService.pay(this.orderId!, order.total).subscribe({
           next: () => {
             toast.success('Payment created successfully');
             this.value = '';
+            this.paymentCompleted.emit();
           },
           error: () => {
             toast.error('Payment failed');
