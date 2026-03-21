@@ -26,4 +26,7 @@ export class OrderEntity extends EntityHelper {
 
   @Column('decimal', { precision: 10, scale: 2, default: 0 })
   total: number;
+
+  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  paidAmount: number;
 }

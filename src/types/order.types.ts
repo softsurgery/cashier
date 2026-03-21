@@ -15,6 +15,7 @@ export interface ResponseOrderDto extends DatabaseEntity {
   tableId: number;
   status: OrderStatus;
   total: number;
+  paidAmount: number;
   products?: (ResponseOrderProductDto & { product?: ResponseProductDto })[];
   OrderProducts?: ResponseOrderProductDto[];
 }

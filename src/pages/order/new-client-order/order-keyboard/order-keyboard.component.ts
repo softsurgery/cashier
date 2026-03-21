@@ -25,6 +25,8 @@ import { toast } from 'ngx-sonner';
 export class OrderKeyboardComponent implements OnInit {
   private readonly orderService = inject(OrderService);
   @Input() orderId: number | null = null;
+  @Input() maxPayAmount = 0;
+  @Input() paidAmount = 0;
   @Output() paymentCompleted = new EventEmitter<void>();
 
   ngOnInit(): void {}
@@ -61,6 +63,10 @@ export class OrderKeyboardComponent implements OnInit {
 
     if (!numericAmount || numericAmount <= 0) {
       toast.error('Invalid payment amount');
+      return;
+    }
+    if (numericAmount > this.maxPayAmount) {
+      toast.error(`Maximum allowed is ${this.maxPayAmount.toFixed(2)}`);
       return;
     }
 
@@ -107,5 +113,9 @@ export class OrderKeyboardComponent implements OnInit {
 
   isEmpty() {
     return this.value.length === 0;
+  }
+
+  get hasPaymentContext(): boolean {
+    return !!this.orderId && this.maxPayAmount > 0;
   }
 }

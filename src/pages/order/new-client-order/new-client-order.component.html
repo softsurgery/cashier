@@ -37,7 +37,12 @@
 
         <!-- KEYBOARD (slightly above min height) -->
         <hlm-resizable-panel class="w-full lg:min-h-48" [defaultSize]="35">
-          <app-order-keyboard [orderId]="activeOrderId" (paymentCompleted)="onPaymentCompleted()" />
+          <app-order-keyboard
+            [orderId]="activeOrderId"
+            [maxPayAmount]="activeOrderRemaining"
+            [paidAmount]="activeOrderPaidAmount"
+            (paymentCompleted)="onPaymentCompleted()"
+          />
         </hlm-resizable-panel>
       </hlm-resizable-group>
     </hlm-resizable-panel>

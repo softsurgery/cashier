@@ -49,9 +49,18 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
         );
       }
 
+      const activePaidAmount = Number(activeOrder.paidAmount ?? 0);
+      const fullOrderTotal = Number(createOrderDto.total ?? 0);
+      const remainingTotal = Number((fullOrderTotal - activePaidAmount).toFixed(2));
       await this.repository.update(activeOrder.id, {
-        total: Number(Number(createOrderDto.total ?? 0).toFixed(2)),
-        status: OrderStatus.UNPAID,
+        total: remainingTotal > 0 ? remainingTotal : 0,
+        paidAmount: activePaidAmount,
+        status:
+          remainingTotal <= 0
+            ? OrderStatus.PAID
+            : activePaidAmount > 0
+              ? OrderStatus.PARTIALLY_PAID
+              : OrderStatus.UNPAID,
       });
       await this.tableRepository.update(createOrderDto.tableId, { status: TableStatus.OCCUPIED });
 
@@ -69,6 +78,7 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
       tableId: createOrderDto.tableId,
       status: createOrderDto.status,
       total: createOrderDto.total,
+      paidAmount: 0,
     };
     const savedOrder = await this.repository.save(orderData);
 
@@ -101,7 +111,8 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
       throw new Error('Payment amount exceeds order total');
     }
 
-    order.total = order.total - amount;
+    order.total = Number((Number(order.total) - amount).toFixed(2));
+    order.paidAmount = Number((Number(order.paidAmount ?? 0) + amount).toFixed(2));
 
     if (order.total === 0) {
       order.status = OrderStatus.PAID;
@@ -122,8 +133,17 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
     }
 
     const nextTableId = data.tableId ?? existingOrder.tableId;
-    const nextStatus = data.status ?? existingOrder.status ?? OrderStatus.UNPAID;
-    const nextTotal = data.total ?? existingOrder.total;
+    const paidAmount = Number(existingOrder.paidAmount ?? 0);
+    const requestedOrderTotal = Number(data.total ?? existingOrder.total);
+    const remainingTotal = Number((requestedOrderTotal - paidAmount).toFixed(2));
+    const nextTotal = remainingTotal > 0 ? remainingTotal : 0;
+    const nextStatus =
+      data.status ??
+      (nextTotal === 0
+        ? OrderStatus.PAID
+        : paidAmount > 0
+          ? OrderStatus.PARTIALLY_PAID
+          : OrderStatus.UNPAID);
 
     if (data.products) {
       await this.orderProductRepository.rawQuery('DELETE FROM order_product WHERE orderId = ?', [id]);
@@ -142,6 +162,7 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
     existingOrder.tableId = nextTableId;
     existingOrder.status = nextStatus;
     existingOrder.total = Number(Number(nextTotal).toFixed(2));
+    existingOrder.paidAmount = paidAmount;
     await this.repository.save(existingOrder);
 
     await this.tableRepository.update(nextTableId, { status: TableStatus.OCCUPIED });

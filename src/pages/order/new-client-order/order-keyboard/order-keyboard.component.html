@@ -6,6 +6,9 @@
     class="w-full border rounded-md px-3 py-2 text-right text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
     placeholder="0"
   />
+  <div class="text-xs text-muted-foreground" *ngIf="hasPaymentContext">
+    Paid: {{ paidAmount.toFixed(2) }} | Remaining: {{ maxPayAmount.toFixed(2) }}
+  </div>
 
   <div class="flex flex-row gap-3 flex-1">
     <!-- Keypad -->
@@ -28,7 +31,7 @@
         variant="default"
         class="flex-1 font-bold"
         (click)="PayAll()"
-        [disabled]="!isEmpty() || !orderId"
+        [disabled]="!isEmpty() || !orderId || maxPayAmount <= 0"
       >
         Fully Pay
       </button>
@@ -38,7 +41,7 @@
         variant="default"
         class="flex-1 font-bold"
         (click)="Pay(value)"
-        [disabled]="isEmpty() || !orderId"
+        [disabled]="isEmpty() || !orderId || maxPayAmount <= 0"
       >
         Pay
       </button>

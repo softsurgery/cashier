@@ -68,6 +68,8 @@ export class NewClientOrderComponent implements OnInit {
   selectedFamily: ResponseProductFamilyDto | null = null;
   cart: CartItem[] = [];
   activeOrderId: number | null = null;
+  activeOrderRemaining = 0;
+  activeOrderPaidAmount = 0;
 
   isCreating = false;
   errorMessage: string | null = null;
@@ -235,6 +237,8 @@ export class NewClientOrderComponent implements OnInit {
 
           if (!activeOrder) {
             this.activeOrderId = null;
+            this.activeOrderRemaining = 0;
+            this.activeOrderPaidAmount = 0;
             this.cart = [];
             this.syncCartToStore();
             this.cdr.detectChanges();
@@ -242,6 +246,8 @@ export class NewClientOrderComponent implements OnInit {
           }
 
           this.activeOrderId = activeOrder.id;
+          this.activeOrderRemaining = Number(activeOrder.total ?? 0);
+          this.activeOrderPaidAmount = Number(activeOrder.paidAmount ?? 0);
           const activeOrderProducts = (activeOrder.products ??
             activeOrder.OrderProducts ??
             []) as (ResponseOrderProductDto & { product?: ResponseProductDto })[];
@@ -257,6 +263,8 @@ export class NewClientOrderComponent implements OnInit {
         },
         error: () => {
           this.activeOrderId = null;
+          this.activeOrderRemaining = 0;
+          this.activeOrderPaidAmount = 0;
           this.cart = [];
           this.syncCartToStore();
           this.cdr.detectChanges();
