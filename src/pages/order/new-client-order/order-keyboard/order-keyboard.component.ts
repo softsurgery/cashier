@@ -90,7 +90,13 @@ export class OrderKeyboardComponent {
           throw new Error('order not found!');
         }
 
-        this.orderService.pay(this.orderId!, order.total).subscribe({
+        const remainingAmount = order.total - (order.paidAmount ?? 0);
+        if (remainingAmount <= 0) {
+          toast.error('Order is already fully paid');
+          return;
+        }
+
+        this.orderService.pay(this.orderId!, remainingAmount).subscribe({
           next: () => {
             toast.success('Payment created successfully');
             this.value = '';
