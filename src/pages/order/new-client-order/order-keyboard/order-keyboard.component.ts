@@ -1,4 +1,3 @@
-// order-keyboard.component.ts
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,7 +5,6 @@ import {
   Input,
   Output,
   inject,
-  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -22,14 +20,12 @@ import { toast } from 'ngx-sonner';
   styleUrls: ['./order-keyboard.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrderKeyboardComponent implements OnInit {
+export class OrderKeyboardComponent {
   private readonly orderService = inject(OrderService);
   @Input() orderId: number | null = null;
   @Input() maxPayAmount = 0;
   @Input() paidAmount = 0;
   @Output() paymentCompleted = new EventEmitter<void>();
-
-  ngOnInit(): void {}
 
   value: string = '';
 
@@ -60,7 +56,6 @@ export class OrderKeyboardComponent implements OnInit {
       return;
     }
     const numericAmount = Number(amount);
-    console.log('why double !!!', numericAmount);
 
     if (!numericAmount || numericAmount <= 0) {
       toast.error('Invalid payment amount');
