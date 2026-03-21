@@ -1,6 +1,7 @@
 import { DatabaseEntity } from './utils/database-entity';
 import { ResponseTableDto } from './table.types';
 import { CreateOrderProductDto, ResponseOrderProductDto } from './order-product';
+import { ResponseProductDto } from './product';
 
 export enum OrderStatus {
   UNPAID = 'unpaid',
@@ -14,6 +15,7 @@ export interface ResponseOrderDto extends DatabaseEntity {
   tableId: number;
   status: OrderStatus;
   total: number;
+  products?: (ResponseOrderProductDto & { product?: ResponseProductDto })[];
   OrderProducts?: ResponseOrderProductDto[];
 }
 
