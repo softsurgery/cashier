@@ -21,6 +21,14 @@ export class LayoutService {
 
   breadcrumbs = new BehaviorSubject<Breadcrumb[]>([]);
 
+  injectableFooter = new BehaviorSubject<{
+    component: any;
+    inputs?: { [key: string]: any };
+  }>({
+    component: null,
+    inputs: {},
+  });
+
   constructor() {
     this.applyTheme(this.theme.value);
 
@@ -51,6 +59,14 @@ export class LayoutService {
 
   clearBreadcrumbs() {
     this.breadcrumbs.next([]);
+  }
+
+  setFooter(component: any, inputs?: { [key: string]: any }): void {
+    this.injectableFooter.next({ component, inputs });
+  }
+
+  clearFooter(): void {
+    this.injectableFooter.next({ component: null, inputs: {} });
   }
 
   toggleFullscreen() {
