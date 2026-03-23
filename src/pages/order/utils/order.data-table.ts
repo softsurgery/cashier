@@ -4,7 +4,7 @@ import {
   DynamicDataTable,
 } from '../../../components/datatable-builder/datatable-builder.types';
 import { ResponseOrderDto } from '../../../types';
-import { TableHeadSortButton } from '../../../components/datatable-builder/datatable-builder-common/sort-header-button';
+import { TableHeadSortButton } from '../../../components/datatable-builder/core/sort-header-button';
 import { checkboxColumnDef } from '../../../components/datatable-builder/utils/datatable-builder-select';
 
 interface OrderDataTableProps {}

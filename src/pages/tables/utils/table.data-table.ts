@@ -4,9 +4,9 @@ import {
   DynamicDataTable,
 } from '../../../components/datatable-builder/datatable-builder.types';
 import { ResponseTableDto } from '../../../types';
-import { TableHeadSortButton } from '../../../components/datatable-builder/datatable-builder-common/sort-header-button';
+import { TableHeadSortButton } from '../../../components/datatable-builder/core/sort-header-button';
 import { checkboxColumnDef } from '../../../components/datatable-builder/utils/datatable-builder-select';
-import { DataTableBadgeCell } from '../../../components/datatable-builder/datatable-builder-common/badge-cell';
+import { DataTableBadgeCell } from '../../../components/datatable-builder/core/badge-cell';
 
 interface TableDataTableProps {
   onCreateAction?: () => void;

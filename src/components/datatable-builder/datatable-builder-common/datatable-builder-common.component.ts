@@ -35,7 +35,7 @@ import {
 import { DatatableBuilderActionDropdownComponent } from '../core/datatable-builder-action-dropdown/datatable-builder-action-dropdown.component';
 import { LayoutService } from '@/components/layout/layout.service';
 import { BreadcrumbComponent } from '@/components/layout/breadcrumb/breadcrumb.component';
-import { DataTablePagination } from './pagination';
+import { DataTablePagination } from '../core/pagination';
 
 @Component({
   selector: 'app-datatable-builder-common',
