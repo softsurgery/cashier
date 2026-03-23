@@ -89,11 +89,12 @@ export class TablesComponent implements OnInit, OnDestroy {
         url: '/administration/tables',
       },
     ]);
-    this.loadTables();
+    this.layoutService.setIntro('Tables', 'Manage the tables available in the restaurant.');
   }
 
   ngOnDestroy() {
     this.layoutService.clearBreadcrumbs();
+    this.layoutService.clearIntro();
   }
 
   loadTables(page = 0, size = 10, search = '', sortBy = '', sortOrder: 'asc' | 'desc' | '' = '') {
