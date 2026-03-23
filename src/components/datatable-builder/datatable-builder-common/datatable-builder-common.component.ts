@@ -1,5 +1,5 @@
 import { Component, inject, Input, OnDestroy, OnInit, signal } from '@angular/core';
-import { DynamicDataTable } from '../datatable-builder.types';
+import { DataTableServerQuery, DynamicDataTable } from '../datatable-builder.types';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -34,7 +34,6 @@ import {
 } from '@tanstack/angular-table';
 import { DatatableBuilderActionDropdownComponent } from '../core/datatable-builder-action-dropdown/datatable-builder-action-dropdown.component';
 import { LayoutService } from '@/components/layout/layout.service';
-import { BreadcrumbComponent } from '@/components/layout/breadcrumb/breadcrumb.component';
 import { DataTablePagination } from '../core/pagination';
 
 @Component({
@@ -66,7 +65,7 @@ export class DatatableBuilderCommonComponent implements OnInit, OnDestroy {
 
   @Input() dataTableObject?: DynamicDataTable;
   @Input() data: Observable<any[]> = of([]);
-  @Input() totalRecords = 0;
+  @Input() totalRecords: Observable<number> = of(0);
   @Input() loading = false;
 
   protected _data = signal<any[]>([]);
@@ -80,13 +79,18 @@ export class DatatableBuilderCommonComponent implements OnInit, OnDestroy {
 
   _columns: ColumnDef<any>[] = [];
 
-  protected _filterChanged(event: Event) {
-    this._table.getColumn('email')?.setFilterValue((event.target as HTMLInputElement).value);
+  private get _serverQuery(): DataTableServerQuery | undefined {
+    return this.dataTableObject?.enableServerActions ? this.dataTableObject.serverQuery : undefined;
   }
 
   protected _filterChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this._table.setGlobalFilter(target.value);
+    const value = (event.target as HTMLInputElement).value;
+    if (this._serverQuery) {
+      this._serverQuery.setSearch(value);
+      this._serverQuery.setPage(0);
+    } else {
+      this._table.setGlobalFilter(value);
+    }
   }
 
   ngOnInit() {
@@ -95,6 +99,7 @@ export class DatatableBuilderCommonComponent implements OnInit, OnDestroy {
       table: this._table,
       totalRecords: this.totalRecords,
       sizes: this.dataTableObject?.sizes || [10, 20, 50],
+      serverQuery: this._serverQuery,
     });
   }
 
@@ -134,8 +139,18 @@ export class DatatableBuilderCommonComponent implements OnInit, OnDestroy {
       data: this._data(),
       columns: this._columns,
 
-      onSortingChange: (updater) =>
-        updater instanceof Function ? this._sorting.update(updater) : this._sorting.set(updater),
+      onSortingChange: (updater) => {
+        const newSorting = updater instanceof Function ? updater(this._sorting()) : updater;
+        this._sorting.set(newSorting);
+        if (this._serverQuery && newSorting.length > 0) {
+          this._serverQuery.setSortBy(newSorting[0].id);
+          this._serverQuery.setSortOrder(newSorting[0].desc ? 'desc' : 'asc');
+          this._serverQuery.setPage(0);
+        } else if (this._serverQuery) {
+          this._serverQuery.setSortBy('');
+          this._serverQuery.setSortOrder(undefined);
+        }
+      },
 
       onColumnFiltersChange: (updater) =>
         updater instanceof Function
@@ -152,6 +167,9 @@ export class DatatableBuilderCommonComponent implements OnInit, OnDestroy {
           ? this._rowSelection.update(updater)
           : this._rowSelection.set(updater),
 
+      manualPagination: !!this._serverQuery,
+      manualSorting: !!this._serverQuery,
+      manualFiltering: !!this._serverQuery,
       getCoreRowModel: getCoreRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
       getSortedRowModel: getSortedRowModel(),
