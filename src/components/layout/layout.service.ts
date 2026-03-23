@@ -21,6 +21,14 @@ export class LayoutService {
 
   breadcrumbs = new BehaviorSubject<Breadcrumb[]>([]);
 
+  intro: {
+    title: string;
+    description: string;
+  } = {
+    title: '',
+    description: '',
+  };
+
   injectableFooter = new BehaviorSubject<{
     component: any;
     inputs?: { [key: string]: any };
@@ -59,6 +67,14 @@ export class LayoutService {
 
   clearBreadcrumbs() {
     this.breadcrumbs.next([]);
+  }
+
+  setIntro(title: string, description: string) {
+    this.intro = { title, description };
+  }
+
+  clearIntro() {
+    this.intro = { title: '', description: '' };
   }
 
   setFooter(component: any, inputs?: { [key: string]: any }): void {
