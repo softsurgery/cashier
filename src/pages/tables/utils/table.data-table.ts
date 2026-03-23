@@ -6,6 +6,7 @@ import {
 import { ResponseTableDto } from '../../../types';
 import { TableHeadSortButton } from '../../../components/datatable-builder/datatable-builder-common/sort-header-button';
 import { checkboxColumnDef } from '../../../components/datatable-builder/utils/datatable-builder-select';
+import { DataTableBadgeCell } from '../../../components/datatable-builder/datatable-builder-common/badge-cell';
 
 interface TableDataTableProps {
   onCreateAction?: () => void;
@@ -49,7 +50,10 @@ export const getTableDataTableObject = ({
         id: 'status',
         header: 'Status',
         enableSorting: false,
-        cell: (info) => `<div class="capitalize">${info.getValue<string>() ?? ''}</div>`,
+        cell: (info) =>
+          flexRenderComponent(DataTableBadgeCell, {
+            inputs: { variant: 'destructive', value: info.getValue<string>() ?? '' },
+          }),
       },
       {
         accessorFn: (row) => row.zone?.name,
