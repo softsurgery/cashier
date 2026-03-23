@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, signal } from '@angular/core';
 import { DynamicDataTable } from '../datatable-builder.types';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
@@ -33,6 +33,9 @@ import {
   VisibilityState,
 } from '@tanstack/angular-table';
 import { DatatableBuilderActionDropdownComponent } from '../core/datatable-builder-action-dropdown/datatable-builder-action-dropdown.component';
+import { LayoutService } from '@/components/layout/layout.service';
+import { BreadcrumbComponent } from '@/components/layout/breadcrumb/breadcrumb.component';
+import { DataTablePagination } from './pagination';
 
 @Component({
   selector: 'app-datatable-builder-common',
@@ -58,15 +61,13 @@ import { DatatableBuilderActionDropdownComponent } from '../core/datatable-build
     HlmTableImports,
   ],
 })
-export class DatatableBuilderCommonComponent implements OnInit {
-  /* -------------------- INPUTS -------------------- */
+export class DatatableBuilderCommonComponent implements OnInit, OnDestroy {
+  layoutService = inject(LayoutService);
 
   @Input() dataTableObject?: DynamicDataTable;
   @Input() data: Observable<any[]> = of([]);
   @Input() totalRecords = 0;
   @Input() loading = false;
-
-  /* -------------------- SIGNAL STATE -------------------- */
 
   protected _data = signal<any[]>([]);
   private readonly _columnFilters = signal<ColumnFiltersState>([]);
@@ -74,16 +75,10 @@ export class DatatableBuilderCommonComponent implements OnInit {
   private readonly _rowSelection = signal<RowSelectionState>({});
   private readonly _columnVisibility = signal<VisibilityState>({});
 
-  /* -------------------- TABLE INSTANCE -------------------- */
-
   _table!: Table<any>;
   protected _hidableColumns: any[] = [];
 
-  /* -------------------- TABLE COLUMNS -------------------- */
-
   _columns: ColumnDef<any>[] = [];
-
-  /* -------------------- FILTER EVENTS -------------------- */
 
   protected _filterChanged(event: Event) {
     this._table.getColumn('email')?.setFilterValue((event.target as HTMLInputElement).value);
@@ -94,9 +89,20 @@ export class DatatableBuilderCommonComponent implements OnInit {
     this._table.setGlobalFilter(target.value);
   }
 
-  /* -------------------- INIT -------------------- */
-
   ngOnInit() {
+    this.initializeTable();
+    this.layoutService.setFooter(DataTablePagination, {
+      table: this._table,
+      totalRecords: this.totalRecords,
+      sizes: this.dataTableObject?.sizes || [10, 20, 50],
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.layoutService.clearFooter();
+  }
+
+  initializeTable() {
     // Convert observable → signal
     this.data.subscribe((data) => {
       this._data.set(data);
