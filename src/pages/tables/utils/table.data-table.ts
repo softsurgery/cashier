@@ -1,5 +1,6 @@
 import { flexRenderComponent } from '@tanstack/angular-table';
 import {
+  DataTableServerQuery,
   DataTableVariant,
   DynamicDataTable,
 } from '../../../components/datatable-builder/datatable-builder.types';
@@ -12,18 +13,22 @@ interface TableDataTableProps {
   onCreateAction?: () => void;
   onEditAction?: (row: ResponseTableDto) => void;
   onDeleteAction?: (row: ResponseTableDto) => void;
+  serverQuery?: DataTableServerQuery;
 }
 
 export const getTableDataTableObject = ({
   onCreateAction,
   onEditAction,
   onDeleteAction,
+  serverQuery,
 }: TableDataTableProps): DynamicDataTable<ResponseTableDto> => {
   return {
     singular: 'Table',
     plural: 'Tables',
     variant: DataTableVariant.COMMON,
     createAction: onCreateAction ? { label: 'Create Table', action: onCreateAction } : undefined,
+    enableServerActions: true,
+    serverQuery,
     rowActions: {
       editAction: {
         label: 'Update',
@@ -48,8 +53,10 @@ export const getTableDataTableObject = ({
       {
         accessorKey: 'status',
         id: 'status',
-        header: 'Status',
-        enableSorting: false,
+        header: () =>
+          flexRenderComponent(TableHeadSortButton, {
+            inputs: { header: 'Status' },
+          }),
         cell: (info) => {
           const value = info.getValue<string>() ?? '';
           const variant =
@@ -62,10 +69,8 @@ export const getTableDataTableObject = ({
       {
         accessorFn: (row) => row.zone?.name,
         id: 'tableZone',
-        header: () =>
-          flexRenderComponent(TableHeadSortButton, {
-            inputs: { header: 'Table Zone' },
-          }),
+        enableSorting: false,
+        header: 'Zone',
         cell: (info) => `<div>${info.getValue<string>() ?? ''}</div>`,
       },
     ],

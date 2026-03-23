@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { DatatableBuilderComponent } from '../../components/datatable-builder/datatable-builder.component';
 import { BehaviorSubject, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,10 @@ import { TableRepository } from '../../stores/table-state/table-state.repository
 import { SheetService } from '../../components/sheet/sheet.service';
 import { CreateTableDto, ResponseTableDto, UpdateTableDto } from '../../types';
 
-import { DynamicDataTable } from '../../components/datatable-builder/datatable-builder.types';
+import {
+  DataTableServerQuery,
+  DynamicDataTable,
+} from '../../components/datatable-builder/datatable-builder.types';
 import { getTableDataTableObject } from './utils/table.data-table';
 import { getTableCreateFormStructure } from './utils/table-create.form-structure';
 import { getTableCreateSheet } from './utils/table-create.sheet';
@@ -19,6 +22,7 @@ import { toast } from 'ngx-sonner';
 import { getTableUpdateFormStructure } from './utils/table-update.form-structure';
 import { SelectOption } from '@/components/form-builder/form-builder.types';
 import { LayoutService } from '@/components/layout/layout.service';
+import { createServerQuery } from '@/components/datatable-builder/server-query';
 
 @Component({
   selector: 'app-tables',
@@ -39,14 +43,40 @@ export class TablesComponent implements OnInit, OnDestroy {
   private sheetRef: BrnDialogRef | null = null;
 
   data = new BehaviorSubject<ResponseTableDto[]>([]);
+  totalRecords = new BehaviorSubject(0);
+  serverQuery: DataTableServerQuery = createServerQuery({
+    initialPageSize: 10,
+    initialSortBy: 'updatedAt',
+    initialSortOrder: 'desc',
+  });
 
   dataTableObject: DynamicDataTable<ResponseTableDto> = getTableDataTableObject({
     onCreateAction: () => this.openCreateSheet(),
     onEditAction: (row) => this.openUpdateSheet(row),
     onDeleteAction: (row) => this.handleDelete(row),
+    serverQuery: this.serverQuery,
   });
 
   zones = new BehaviorSubject<SelectOption[]>([]);
+
+  constructor() {
+    let firstRun = true;
+
+    effect(() => {
+      const page = this.serverQuery.page();
+      const size = this.serverQuery.pageSize();
+      const sortBy = this.serverQuery.sortBy();
+      const sortOrder = this.serverQuery.sortOrder();
+      const search = this.serverQuery.search();
+
+      if (firstRun) {
+        firstRun = false;
+        return;
+      }
+
+      this.loadTables(page, size, search, sortBy, sortOrder);
+    });
+  }
 
   ngOnInit() {
     this.layoutService.setBreadcrumbs([
@@ -66,15 +96,21 @@ export class TablesComponent implements OnInit, OnDestroy {
     this.layoutService.clearBreadcrumbs();
   }
 
-  loadTables() {
+  loadTables(page = 0, size = 10, search = '', sortBy = '', sortOrder: 'asc' | 'desc' | '' = '') {
     this.tablesService
       .findAll({
-        take: 10,
-        skip: 0,
+        take: size,
+        skip: page * size,
+        order: sortBy
+          ? ({
+              [sortBy]: sortOrder.toUpperCase(),
+            } as Record<string, 'ASC' | 'DESC'>)
+          : undefined,
         relations: ['zone'],
       })
       .subscribe((tables) => {
         this.data.next(tables);
+        this.totalRecords.next(tables.length);
       });
   }
 
