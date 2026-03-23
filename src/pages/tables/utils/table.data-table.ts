@@ -50,10 +50,14 @@ export const getTableDataTableObject = ({
         id: 'status',
         header: 'Status',
         enableSorting: false,
-        cell: (info) =>
-          flexRenderComponent(DataTableBadgeCell, {
-            inputs: { variant: 'destructive', value: info.getValue<string>() ?? '' },
-          }),
+        cell: (info) => {
+          const value = info.getValue<string>() ?? '';
+          const variant =
+            value === 'available' ? 'default' : value === 'occupied' ? 'destructive' : 'outline';
+          return flexRenderComponent(DataTableBadgeCell, {
+            inputs: { variant, value },
+          });
+        },
       },
       {
         accessorFn: (row) => row.zone?.name,
