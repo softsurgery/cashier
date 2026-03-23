@@ -13,56 +13,50 @@ import { Observable, of, Subscription } from 'rxjs';
   imports: [CommonModule, HlmToggleImports, HlmButtonImports],
   template: `
     <div class="flex flex-col justify-between gap-4 py-4 sm:flex-row sm:items-center">
-      @if (hasData) {
-        @if (sizes?.length) {
-          <div class="flex flex-row gap-2">
-            @for (size of sizes; track size) {
-              <button
-                hlmToggle
-                type="button"
-                [state]="currentPageSize === size ? 'on' : 'off'"
-                (click)="setPageSize(size)"
-              >
-                {{ size }}
-              </button>
-            }
-          </div>
-        }
-
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-          <div class="text-muted-foreground text-sm">
-            {{ selectedRowCount }} of {{ displayRowCount }} row(s) selected
-          </div>
-
-          <div class="flex space-x-2">
+      @if (sizes?.length) {
+        <div class="flex flex-row gap-2">
+          @for (size of sizes; track size) {
             <button
-              size="sm"
-              variant="outline"
-              hlmBtn
-              [disabled]="!canPreviousPage"
-              (click)="previousPage()"
+              hlmToggle
               type="button"
+              [state]="currentPageSize === size ? 'on' : 'off'"
+              (click)="setPageSize(size)"
             >
-              Previous
+              {{ size }}
             </button>
-
-            <button
-              size="sm"
-              variant="outline"
-              hlmBtn
-              [disabled]="!canNextPage"
-              (click)="nextPage()"
-              type="button"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      } @else {
-        <div class="flex h-full w-full items-center justify-center">
-          <div class="text-muted-foreground text-sm">No Data</div>
+          }
         </div>
       }
+
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <div class="text-muted-foreground text-sm">
+          {{ selectedRowCount }} of {{ displayRowCount }} row(s) selected
+        </div>
+
+        <div class="flex space-x-2">
+          <button
+            size="sm"
+            variant="outline"
+            hlmBtn
+            [disabled]="!canPreviousPage"
+            (click)="previousPage()"
+            type="button"
+          >
+            Previous
+          </button>
+
+          <button
+            size="sm"
+            variant="outline"
+            hlmBtn
+            [disabled]="!canNextPage"
+            (click)="nextPage()"
+            type="button"
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   `,
 })
@@ -83,13 +77,6 @@ export class DataTablePagination<T> implements OnDestroy {
 
   ngOnDestroy(): void {
     this.totalRecordsSub?.unsubscribe();
-  }
-
-  get hasData(): boolean {
-    if (this.serverQuery) {
-      return this._totalRecords > 0;
-    }
-    return !!this.table && this.table.getRowCount() > 0;
   }
 
   get displayRowCount(): number {
