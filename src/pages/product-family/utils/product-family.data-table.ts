@@ -1,5 +1,7 @@
+// product-family.data-table.ts
 import { flexRenderComponent } from '@tanstack/angular-table';
 import {
+  DataTableServerQuery,
   DataTableVariant,
   DynamicDataTable,
 } from '../../../components/datatable-builder/datatable-builder.types';
@@ -11,12 +13,14 @@ interface ProductFamilyDataTableProps {
   onCreateAction?: () => void;
   onEditAction?: (row: ResponseProductFamilyDto) => void;
   onDeleteAction?: (row: ResponseProductFamilyDto) => void;
+  serverQuery?: DataTableServerQuery;
 }
 
 export const getProductFamilyDataTableObject = ({
   onCreateAction,
   onEditAction,
   onDeleteAction,
+  serverQuery,
 }: ProductFamilyDataTableProps): DynamicDataTable<ResponseProductFamilyDto> => {
   return {
     singular: 'Product Family',
@@ -25,6 +29,8 @@ export const getProductFamilyDataTableObject = ({
     createAction: onCreateAction
       ? { label: 'Create Product Family', action: onCreateAction }
       : undefined,
+    enableServerActions: true,
+    serverQuery,
     rowActions: {
       editAction: {
         label: 'Update',

@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, effect, inject, OnInit, OnDestroy, ViewContainerRef } from '@angular/core';
 import { DatatableBuilderComponent } from '../../components/datatable-builder/datatable-builder.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 
@@ -9,12 +9,17 @@ import { SheetService } from '../../components/sheet/sheet.service';
 import { DialogService } from '../../components/dialog/dialog.service';
 import { CreateTableZoneDto, ResponseTableZoneDto, UpdateTableZoneDto } from '../../types';
 
-import { DynamicDataTable } from '../../components/datatable-builder/datatable-builder.types';
+import {
+  DataTableServerQuery,
+  DynamicDataTable,
+} from '../../components/datatable-builder/datatable-builder.types';
 import { getTableZoneDataTableObject } from './utils/table-zone.data-table';
 import { getTableZoneCreateFormStructure } from './utils/table-zone-create.form-structure';
 import { getTableZoneCreateSheet } from './utils/table-zone-create.sheet';
-import { TableZoneRepository } from '@/stores/table-zone-state /table-zone-state.repository';
 import { LayoutService } from '@/components/layout/layout.service';
+import { createServerQuery } from '@/components/datatable-builder/server-query';
+import { toast } from 'ngx-sonner';
+import { TableZoneRepository } from '@/stores/table-zone-state /table-zone-state.repository';
 
 @Component({
   selector: 'app-table-zone',
@@ -22,7 +27,7 @@ import { LayoutService } from '@/components/layout/layout.service';
   templateUrl: './table-zone.component.html',
   styleUrl: './table-zone.component.css',
 })
-export class TableZoneComponent implements OnInit {
+export class TableZoneComponent implements OnInit, OnDestroy {
   private layoutService = inject(LayoutService);
   private tableZoneService = inject(TableZoneService);
   private store = inject(TableZoneRepository);
@@ -34,12 +39,38 @@ export class TableZoneComponent implements OnInit {
   private editingId: number | null = null;
 
   data = new BehaviorSubject<ResponseTableZoneDto[]>([]);
+  totalRecords = new BehaviorSubject(0);
+  serverQuery: DataTableServerQuery = createServerQuery({
+    initialPageSize: 10,
+    initialSortBy: 'updatedAt',
+    initialSortOrder: 'desc',
+  });
 
   dataTableObject: DynamicDataTable<ResponseTableZoneDto> = getTableZoneDataTableObject({
     onCreateAction: () => this.openCreateSheet(),
     onEditAction: (row) => this.openUpdateSheet(row),
     onDeleteAction: (row) => this.confirmDelete(row),
+    serverQuery: this.serverQuery,
   });
+
+  constructor() {
+    let firstRun = true;
+
+    effect(() => {
+      const page = this.serverQuery.page();
+      const size = this.serverQuery.pageSize();
+      const sortBy = this.serverQuery.sortBy();
+      const sortOrder = this.serverQuery.sortOrder();
+      const search = this.serverQuery.search();
+
+      if (firstRun) {
+        firstRun = false;
+        return;
+      }
+
+      this.loadTableZones(page, size, search, sortBy, sortOrder);
+    });
+  }
 
   ngOnInit() {
     this.layoutService.setBreadcrumbs([
@@ -52,21 +83,34 @@ export class TableZoneComponent implements OnInit {
         url: '/administration/table-zone',
       },
     ]);
-    this.loadTables();
+    this.layoutService.setIntro('Table Zones', 'Manage the table zones in the restaurant.');
   }
 
   ngOnDestroy() {
     this.layoutService.clearBreadcrumbs();
+    this.layoutService.clearIntro();
   }
 
-  loadTables() {
+  loadTableZones(
+    page = 0,
+    size = 10,
+    search = '',
+    sortBy = '',
+    sortOrder: 'asc' | 'desc' | '' = '',
+  ) {
     this.tableZoneService
       .findAll({
-        take: 10,
-        skip: 0,
+        take: size,
+        skip: page * size,
+        order: sortBy
+          ? ({
+              [sortBy]: sortOrder.toUpperCase(),
+            } as Record<string, 'ASC' | 'DESC'>)
+          : undefined,
       })
-      .subscribe((tables) => {
-        this.data.next(tables);
+      .subscribe((zones) => {
+        this.data.next(zones);
+        this.totalRecords.next(zones.length);
       });
   }
 
@@ -91,7 +135,8 @@ export class TableZoneComponent implements OnInit {
     this.tableZoneService.create(createDto).subscribe({
       next: () => {
         this.closeSheet();
-        this.loadTables();
+        this.loadTableZones();
+        toast.success('Table zone created successfully');
       },
     });
   }
@@ -132,7 +177,8 @@ export class TableZoneComponent implements OnInit {
     this.tableZoneService.update(this.editingId, updateDto).subscribe({
       next: () => {
         this.closeSheet();
-        this.loadTables();
+        this.loadTableZones();
+        toast.success('Table zone updated successfully');
       },
     });
   }
@@ -164,7 +210,8 @@ export class TableZoneComponent implements OnInit {
     ref.closed$.subscribe((confirmed) => {
       if (confirmed) {
         this.tableZoneService.delete(row.id).subscribe(() => {
-          this.loadTables();
+          this.loadTableZones();
+          toast.success('Table zone deleted successfully');
         });
       }
     });
