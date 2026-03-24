@@ -55,19 +55,12 @@ export class ProductFamilyComponent implements OnInit, OnDestroy {
   });
 
   constructor() {
-    let firstRun = true;
-
     effect(() => {
       const page = this.serverQuery.page();
       const size = this.serverQuery.pageSize();
       const sortBy = this.serverQuery.sortBy();
       const sortOrder = this.serverQuery.sortOrder();
       const search = this.serverQuery.search();
-
-      if (firstRun) {
-        firstRun = false;
-        return;
-      }
 
       this.loadProductFamilies(page, size, search, sortBy, sortOrder);
     });
