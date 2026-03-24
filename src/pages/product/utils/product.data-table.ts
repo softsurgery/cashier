@@ -55,7 +55,8 @@ export const getProductDataTableObject = ({
         id: 'description',
         header: 'Description',
         enableSorting: false,
-        cell: (info) => `${info.getValue<string>() ?? ''}</div>`,
+        cell: (info) =>
+          `<div class="${!info.getValue<string>() ? 'text-muted-foreground' : ''}">${info.getValue<string>() || 'No Data Currently'}</div>`,
       },
       {
         accessorKey: 'price',

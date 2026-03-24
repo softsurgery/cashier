@@ -58,7 +58,8 @@ export const getProductFamilyDataTableObject = ({
         id: 'description',
         header: 'Description',
         enableSorting: false,
-        cell: (info) => `<div>${info.getValue<string>() ?? ''}</div>`,
+        cell: (info) =>
+          `<div class="${!info.getValue<string>() ? 'text-muted-foreground' : ''}">${info.getValue<string>() || 'No Data Currently'}</div>`,
       },
     ],
   };
