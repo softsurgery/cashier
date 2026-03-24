@@ -52,6 +52,16 @@ export const getTableZoneDataTableObject = ({
           }),
         cell: (info) => `<div class="capitalize">${info.getValue<string>()}</div>`,
       },
+
+      {
+        accessorFn: (row) => row.tables?.length ?? 0,
+        id: 'count',
+        header: () =>
+          flexRenderComponent(TableHeadSortButton, {
+            inputs: { header: 'Count' },
+          }),
+        cell: (info) => `<div>${info.getValue<number>()}</div>`,
+      },
     ],
   };
 };

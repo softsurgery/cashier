@@ -100,6 +100,7 @@ export class TableZoneComponent implements OnInit, OnDestroy {
   ) {
     this.tableZoneService
       .findAll({
+        relations:['tables'],
         take: size,
         skip: page * size,
         order: sortBy
