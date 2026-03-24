@@ -58,21 +58,6 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   constructor() {
     let firstRun = true;
-
-    effect(() => {
-      const page = this.serverQuery.page();
-      const size = this.serverQuery.pageSize();
-      const sortBy = this.serverQuery.sortBy();
-      const sortOrder = this.serverQuery.sortOrder();
-      const search = this.serverQuery.search();
-
-      if (firstRun) {
-        firstRun = false;
-        return;
-      }
-
-      this.loadProducts(page, size, search, sortBy, sortOrder);
-    });
   }
 
   ngOnInit() {
@@ -87,6 +72,13 @@ export class ProductComponent implements OnInit, OnDestroy {
       },
     ]);
     this.layoutService.setIntro('Products', 'Manage the products available in the restaurant.');
+    this.loadProducts(
+      this.serverQuery.page(),
+      this.serverQuery.pageSize(),
+      this.serverQuery.search(),
+      this.serverQuery.sortBy(),
+      this.serverQuery.sortOrder(),
+    );
   }
 
   ngOnDestroy(): void {
@@ -94,13 +86,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.layoutService.clearIntro();
   }
 
-  loadProducts(
-    page = 0,
-    size = 10,
-    search = '',
-    sortBy = '',
-    sortOrder: 'asc' | 'desc' | '' = '',
-  ) {
+  loadProducts(page = 0, size = 10, search = '', sortBy = '', sortOrder: 'asc' | 'desc' | '' = '') {
     this.productService
       .findAll({
         take: size,
