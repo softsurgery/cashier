@@ -12,6 +12,14 @@ export const routes: Routes = [
     path: 'tables',
     component: TablesComponent,
   },
+  {
+    path: 'new-client-order',
+    component: NewClientOrderComponent,
+  },
+  {
+    path: 'new-client-order/order/:orderId',
+    component: NewClientOrderComponent,
+  },
 
   {
     path: 'new-client-order/:id',
