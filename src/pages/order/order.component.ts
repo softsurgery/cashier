@@ -8,6 +8,7 @@ import { DynamicDataTable } from '../../components/datatable-builder/datatable-b
 import { getOrderDataTableObject } from './utils/order.data-table';
 import { OrderRepository } from '@/stores/order-state/order-state.repository';
 import { LayoutService } from '@/components/layout/layout.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order',
@@ -16,15 +17,19 @@ import { LayoutService } from '@/components/layout/layout.service';
   styleUrl: './order.component.css',
 })
 export class OrderComponent implements OnInit, OnDestroy {
+  constructor(private router: Router) {}
   orderService = inject(OrderService);
   orderRepository = inject(OrderRepository);
   private layoutService = inject(LayoutService);
 
   data = new BehaviorSubject<ResponseOrderDto[]>([]);
-
-  dataTableObject: DynamicDataTable<ResponseOrderDto> = getOrderDataTableObject({});
+  dataTableObject!: DynamicDataTable<ResponseOrderDto>;
 
   ngOnInit() {
+    this.dataTableObject = getOrderDataTableObject({
+      router: this.router,
+    });
+
     this.layoutService.setBreadcrumbs([
       {
         label: 'Orders',

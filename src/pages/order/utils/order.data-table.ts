@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 
 interface OrderDataTableProps {
   router: Router;
-  onDeleteOrder?: (orderId: number) => void;
 }
 
 export const getOrderDataTableObject = ({
