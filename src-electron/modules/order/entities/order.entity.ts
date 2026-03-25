@@ -13,7 +13,7 @@ export class OrderEntity extends EntityHelper {
   table?: TableEntity;
 
   @Column()
-  tableId: number;
+  tableId?: number;
 
   @Column({ enum: OrderStatus, default: OrderStatus.UNPAID })
   status?: OrderStatus;
