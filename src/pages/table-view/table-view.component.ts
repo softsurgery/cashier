@@ -37,23 +37,6 @@ export class ZoneTablesComponent implements OnInit, OnDestroy {
     };
   }
 
-  changeStatus(table: ResponseTableDto, status: string) {
-    if (table.status === status) {
-      return;
-    }
-    this.tableService.update(table.id, { status: status as TableStatus }).subscribe({
-      next: (updated) => {
-        if (!updated) {
-          return;
-        }
-        table.status = updated.status;
-        const zones = this.data.value;
-        this.data.next([...zones]);
-      },
-      error: (err) => console.error('failed to update status', err),
-    });
-  }
-
   ngOnInit() {
     this.layoutService.setBreadcrumbs([
       {

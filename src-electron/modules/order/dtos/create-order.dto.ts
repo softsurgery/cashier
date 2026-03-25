@@ -4,7 +4,7 @@ import { OrderStatus } from '../enum/order-status.enum';
 
 export class CreateOrderDto {
   @IsNumber()
-  tableId: number;
+  tableId?: number;
 
   products: CreateOrderProductDto[];
 
