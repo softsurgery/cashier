@@ -1,4 +1,3 @@
-// new-client-order.component.ts
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -62,7 +61,8 @@ export class NewClientOrderComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly tablesService = inject(TablesService);
 
-  tableId: number = Number(this.activatedRoute.snapshot.params['id']);
+  tableId: number | null = null;
+  orderId: number | null = null;
   readonly families$ = new BehaviorSubject<ResponseProductFamilyDto[]>([]);
 
   selectedFamily: ResponseProductFamilyDto | null = null;
@@ -70,21 +70,24 @@ export class NewClientOrderComponent implements OnInit {
   activeOrderId: number | null = null;
   activeOrderRemaining = 0;
   activeOrderPaidAmount = 0;
-
   isCreating = false;
-  errorMessage: string | null = null;
-  successMessage: string | null = null;
   tableName!: string;
 
   ngOnInit(): void {
-    this.tablesService.findOne(this.tableId).subscribe((table) => {
-      this.tableName = table!.name;
-      this.layoutService.setBreadcrumbs([
-        { label: 'Tables', url: '/zone-tables' },
-        { label: `Nouvelle Commande`, url: '/new-client-order' },
-        { label: `Table ${this.tableName}`, url: '' },
-      ]);
-    });
+    const paramTableId =
+      this.activatedRoute.snapshot.params['tableId'] ?? this.activatedRoute.snapshot.params['id'];
+    const paramOrderId = this.activatedRoute.snapshot.params['orderId'];
+
+    if (paramOrderId && !isNaN(Number(paramOrderId))) {
+      this.orderId = Number(paramOrderId);
+      this.loadOrderById(this.orderId);
+    } else if (paramTableId && !isNaN(Number(paramTableId))) {
+      this.tableId = Number(paramTableId);
+      this.loadActiveOrder();
+    } else {
+      this.tableId = null;
+      this.initEmptyState();
+    }
 
     this.productFamilyService
       .findAll({ relations: ['products'], take: 100, skip: 0 })
@@ -97,13 +100,8 @@ export class NewClientOrderComponent implements OnInit {
           }
           this.cdr.detectChanges();
         },
-        error: () => {
-          this.errorMessage = 'Erreur lors du chargement des familles';
-          this.cdr.detectChanges();
-        },
+        error: () => toast.error('Erreur lors du chargement des familles'),
       });
-
-    this.loadActiveOrder();
   }
 
   onFamilySelected(family: ResponseProductFamilyDto): void {
@@ -118,7 +116,6 @@ export class NewClientOrderComponent implements OnInit {
       this.cart.push({ product, quantity: 1 });
     }
     this.syncCartToStore();
-    this.clearMessages();
     this.cdr.detectChanges();
   }
 
@@ -131,70 +128,74 @@ export class NewClientOrderComponent implements OnInit {
       this.cart.splice(index, 1);
     }
     this.syncCartToStore();
-    this.clearMessages();
     this.cdr.detectChanges();
   }
 
   onCreateOrder(): void {
     if (this.cart.length === 0) {
-      this.errorMessage = 'Le panier est vide';
-      this.cdr.detectChanges();
+      toast.error('Le panier est vide');
       return;
     }
 
     this.isCreating = true;
-    this.errorMessage = null;
-    this.successMessage = null;
     this.cdr.detectChanges();
 
+    // Ensure we have a valid numeric ID before updating
+    const isUpdating = this.activeOrderId !== null && typeof this.activeOrderId === 'number';
     const orderData: CreateOrderDto = {
-      tableId: this.tableId,
+      tableId: this.tableId ?? undefined,
       products: this.cart.map((item) => ({
         orderId: 0,
         productId: item.product.id,
         quantity: item.quantity,
       })),
-      status: OrderStatus.UNPAID,
+      status: isUpdating ? undefined : OrderStatus.UNPAID,
       total: this.cartTotal,
     };
 
-    const isUpdatingExistingOrder = this.activeOrderId !== null;
-    const save$ = isUpdatingExistingOrder
+    const save$ = isUpdating
       ? this.orderService.update(this.activeOrderId!, orderData)
       : this.orderService.create(orderData);
 
     save$.subscribe({
       next: (savedOrder: ResponseOrderDto | null) => {
-        if (savedOrder) {
-          this.activeOrderId = savedOrder.id;
-        }
+        if (savedOrder) this.activeOrderId = savedOrder.id;
         this.isCreating = false;
-        toast.success(
-          isUpdatingExistingOrder ? 'Commande mise a jour' : 'Commande crée avec succes',
-        );
-        this.loadActiveOrder();
+        const msg = isUpdating ? 'Commande mise à jour' : 'Commande créée avec succès';
+        toast.success(msg);
+        if (this.activeOrderId !== null) this.loadOrderById(this.activeOrderId);
         this.cdr.detectChanges();
-        setTimeout(() => {
-          this.successMessage = null;
-          this.cdr.detectChanges();
-        }, 3000);
       },
       error: (err) => {
         this.isCreating = false;
-        toast.error(err.message);
+        const message = err?.message ?? 'Erreur lors de la création de la commande';
+        toast.error(message);
         this.cdr.detectChanges();
       },
     });
   }
 
   onPaymentCompleted(): void {
-    this.loadActiveOrder();
+    if (this.activeOrderId !== null) this.loadOrderById(this.activeOrderId);
   }
 
   get cartTotal(): number {
     return Number(
       this.cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2),
     );
+  }
+
+  private initEmptyState(): void {
+    this.activeOrderId = null;
+    this.activeOrderRemaining = 0;
+    this.activeOrderPaidAmount = 0;
+    this.cart = [];
+    this.syncCartToStore();
+    this.layoutService.setBreadcrumbs([
+      { label: 'Orders', url: '/orders' },
+      { label: 'Nouvelle Commande', url: '' },
+    ]);
+    this.cdr.detectChanges();
   }
 
   private syncCartToStore(): void {
@@ -205,24 +206,77 @@ export class NewClientOrderComponent implements OnInit {
     }));
 
     const createDto: CreateOrderDto = {
-      tableId: this.tableId,
+      tableId: this.tableId ?? undefined,
       products: orderProducts,
       status: OrderStatus.UNPAID,
       total: this.cartTotal,
     };
 
-    orderStateStore.update((state) => ({
-      ...state,
-      createDto,
-    }));
+    orderStateStore.update((state) => ({ ...state, createDto }));
   }
 
-  private clearMessages(): void {
-    this.errorMessage = null;
-    this.successMessage = null;
+  private loadOrderById(orderId: number): void {
+    this.orderService
+      .findAll({
+        where: { id: orderId },
+        relations: ['products', 'products.product'],
+        take: 1,
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (orders) => {
+          const order = orders?.[0];
+          if (!order) {
+            toast.error('Commande introuvable');
+            this.initEmptyState();
+            return;
+          }
+
+          this.activeOrderId = order.id;
+          this.tableId = order.tableId ?? null;
+          this.activeOrderPaidAmount = Number(order.paidAmount ?? 0);
+          this.activeOrderRemaining = Number(order.total ?? 0) - this.activeOrderPaidAmount;
+
+          const orderProducts = (order.products ??
+            (order as any).OrderProducts ??
+            []) as (ResponseOrderProductDto & { product?: ResponseProductDto })[];
+          this.cart = orderProducts
+            .filter((item) => !!item.product)
+            .map((item) => ({
+              product: item.product as ResponseProductDto,
+              quantity: item.quantity,
+            }));
+
+          if (this.tableId !== null && this.tableId > 0) {
+            this.tablesService.findOne(this.tableId).subscribe((table) => {
+              this.tableName = table!.name;
+              this.layoutService.setBreadcrumbs([
+                { label: 'Orders', url: '/orders' },
+                { label: `Commande #${order.id}`, url: '' },
+                { label: `Table ${this.tableName}`, url: '' },
+              ]);
+              this.syncCartToStore();
+              this.cdr.detectChanges();
+            });
+          } else {
+            this.layoutService.setBreadcrumbs([
+              { label: 'Orders', url: '/orders' },
+              { label: `Commande #${order.id}`, url: '' },
+            ]);
+            this.syncCartToStore();
+            this.cdr.detectChanges();
+          }
+        },
+        error: () => {
+          toast.error('Erreur lors du chargement de la commande');
+          this.initEmptyState();
+        },
+      });
   }
 
   private loadActiveOrder(): void {
+    if (!this.tableId) return this.initEmptyState();
+
     this.orderService
       .findAll({
         where: { tableId: this.tableId },
@@ -239,39 +293,35 @@ export class NewClientOrderComponent implements OnInit {
           );
 
           if (!activeOrder) {
-            this.activeOrderId = null;
-            this.activeOrderRemaining = 0;
-            this.activeOrderPaidAmount = 0;
-            this.cart = [];
-            this.syncCartToStore();
-            this.cdr.detectChanges();
+            this.initEmptyState();
             return;
           }
 
           this.activeOrderId = activeOrder.id;
           this.activeOrderPaidAmount = Number(activeOrder.paidAmount ?? 0);
           this.activeOrderRemaining = Number(activeOrder.total ?? 0) - this.activeOrderPaidAmount;
-          const activeOrderProducts = (activeOrder.products ??
-            activeOrder.OrderProducts ??
+          const orderProducts = (activeOrder.products ??
+            (activeOrder as any).OrderProducts ??
             []) as (ResponseOrderProductDto & { product?: ResponseProductDto })[];
-
-          this.cart = activeOrderProducts
+          this.cart = orderProducts
             .filter((item) => !!item.product)
             .map((item) => ({
               product: item.product as ResponseProductDto,
               quantity: item.quantity,
             }));
-          this.syncCartToStore();
-          this.cdr.detectChanges();
+
+          this.tablesService.findOne(this.tableId!).subscribe((table) => {
+            this.tableName = table!.name;
+            this.layoutService.setBreadcrumbs([
+              { label: 'Tables', url: '/zone-tables' },
+              { label: `Nouvelle Commande`, url: '/new-client-order' },
+              { label: `Table ${this.tableName}`, url: '' },
+            ]);
+            this.syncCartToStore();
+            this.cdr.detectChanges();
+          });
         },
-        error: () => {
-          this.activeOrderId = null;
-          this.activeOrderRemaining = 0;
-          this.activeOrderPaidAmount = 0;
-          this.cart = [];
-          this.syncCartToStore();
-          this.cdr.detectChanges();
-        },
+        error: () => this.initEmptyState(),
       });
   }
 }

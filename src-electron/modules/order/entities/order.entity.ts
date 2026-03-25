@@ -12,7 +12,7 @@ export class OrderEntity extends EntityHelper {
   @ManyToOne(() => TableEntity, (table) => table.orders)
   table?: TableEntity;
 
-  @Column()
+  @Column({ nullable: true })
   tableId?: number;
 
   @Column({ enum: OrderStatus, default: OrderStatus.UNPAID })
