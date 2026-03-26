@@ -22,7 +22,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'new-client-order/:id',
+    path: 'new-client-order/:tableId',
     component: NewClientOrderComponent,
   },
 

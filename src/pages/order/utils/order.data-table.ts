@@ -1,5 +1,6 @@
 import { flexRenderComponent } from '@tanstack/angular-table';
 import {
+  DataTableServerQuery,
   DataTableVariant,
   DynamicDataTable,
 } from '../../../components/datatable-builder/datatable-builder.types';
@@ -10,15 +11,18 @@ import { Router } from '@angular/router';
 
 interface OrderDataTableProps {
   router: Router;
+  serverQuery?: DataTableServerQuery;
 }
 
 export const getOrderDataTableObject = ({
   router,
+  serverQuery,
 }: OrderDataTableProps): DynamicDataTable<ResponseOrderDto> => {
   return {
     singular: 'Order',
     plural: 'Orders',
     variant: DataTableVariant.COMMON,
+    serverQuery,
     createAction: {
       label: 'Create Order',
       action: () => router.navigate(['/new-client-order']),

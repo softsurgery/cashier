@@ -38,17 +38,10 @@ export class OrderService {
     return from(
       window.electronAPI!.order.findAll({
         where: { tableId },
-        relations: ['products', 'products.product'], // use same relations as loadOrderById
-        order: { id: 'DESC' },
-        take: 20,
+        status: [OrderStatus.UNPAID, OrderStatus.PARTIALLY_PAID],
+        take: 1,
+        relactions: ['products', 'products.product'],
       }),
-    ).pipe(
-      map(
-        (orders) =>
-          orders.find(
-            (o) => o.status === OrderStatus.UNPAID || o.status === OrderStatus.PARTIALLY_PAID,
-          ) || null,
-      ),
-    );
+    ).pipe(map((orders) => orders[0] || null));
   }
 }

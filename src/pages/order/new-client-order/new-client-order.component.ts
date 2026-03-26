@@ -60,10 +60,11 @@ export class NewClientOrderComponent implements OnInit {
   activeOrderPaidAmount = 0;
   isCreating = false;
   tableName!: string;
+
   ngOnInit(): void {
     this.activatedRoute.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const paramOrderId = params.get('orderId');
-      const paramTableId = params.get('id');
+      const paramTableId = params.get('tableId');
 
       if (paramOrderId && !isNaN(Number(paramOrderId))) {
         this.orderId = Number(paramOrderId);
@@ -75,7 +76,6 @@ export class NewClientOrderComponent implements OnInit {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: (activeOrder) => {
-              console.log('Active order received in component:', activeOrder);
               if (activeOrder) {
                 this.loadOrderById(activeOrder.id);
               } else {
@@ -83,7 +83,6 @@ export class NewClientOrderComponent implements OnInit {
               }
             },
             error: (err) => {
-              console.error('Error fetching active order:', err);
               this.initEmptyState();
             },
           });
@@ -92,7 +91,6 @@ export class NewClientOrderComponent implements OnInit {
       }
     });
 
-    // Load families (only once)
     this.productFamilyService
       .findAll({ relations: ['products'], take: 100, skip: 0 })
       .pipe(takeUntilDestroyed(this.destroyRef))
