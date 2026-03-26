@@ -7,6 +7,7 @@ import { ProductFamilyEntity } from '../../modules/product-family/entities/produ
 import { ProductEntity } from '../../modules/product/entities/product.entity';
 import { OrderProductEntity } from '../../modules/order/entities/order-product.entity';
 import { TableZoneEntity } from '../../modules/table/entities/table-zone.entity';
+import { StorageEntity } from '../storage/entities/storage.entity';
 
 let dataSource: DataSource | null = null;
 
@@ -21,6 +22,7 @@ export async function initializeDatabase(): Promise<DataSource> {
     type: 'better-sqlite3',
     database: dbPath,
     entities: [
+      StorageEntity,
       TableZoneEntity,
       TableEntity,
       OrderEntity,
@@ -29,7 +31,8 @@ export async function initializeDatabase(): Promise<DataSource> {
       OrderProductEntity,
     ],
     synchronize: true,
-    logging: !app.isPackaged,
+    // logging: !app.isPackaged,
+    logging: false,
   });
 
   await dataSource.initialize();
