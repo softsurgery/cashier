@@ -50,7 +50,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dataTableObject = getOrderDataTableObject({
       router: this.router,
-      serverQuery: this.serverQuery, // ✅ FIX
+      serverQuery: this.serverQuery,
     });
 
     this.layoutService.setBreadcrumbs([

@@ -23,6 +23,7 @@ export const getOrderDataTableObject = ({
     plural: 'Orders',
     variant: DataTableVariant.COMMON,
     serverQuery,
+    enableServerActions: true,
     createAction: {
       label: 'Create Order',
       action: () => router.navigate(['/new-client-order']),
