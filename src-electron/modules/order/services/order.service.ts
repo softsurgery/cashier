@@ -44,34 +44,6 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
 
   async createFull(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
     const tableId = createOrderDto.tableId ?? undefined;
-    const isTableOrder = tableId !== undefined;
-
-    if (isTableOrder) {
-      const activeOrder = await this.findActiveOrderByTableId(tableId);
-      if (activeOrder) {
-        await this.replaceOrderProducts(activeOrder.id, createOrderDto.products ?? []);
-
-        const paidAmount = Number(activeOrder.paidAmount ?? 0);
-        const newTotal = Number(createOrderDto.total ?? 0);
-        const remainingTotal = Math.max(0, newTotal - paidAmount);
-        const status =
-          remainingTotal === 0
-            ? OrderStatus.PAID
-            : paidAmount > 0
-              ? OrderStatus.PARTIALLY_PAID
-              : OrderStatus.UNPAID;
-
-        await this.repository.update(activeOrder.id, { total: remainingTotal, paidAmount, status });
-        await this.tableRepository.update(tableId, { status: TableStatus.OCCUPIED });
-
-        const refreshedOrder = await this.repository.findOne({
-          where: { id: activeOrder.id },
-          relations: ['products', 'products.product'],
-        });
-        if (!refreshedOrder) throw new Error('Order not found after update');
-        return refreshedOrder;
-      }
-    }
 
     const orderData: DeepPartial<OrderEntity> = {
       tableId,
@@ -91,7 +63,7 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
       );
     }
 
-    if (isTableOrder) {
+    if (tableId !== undefined) {
       await this.tableRepository.update(tableId, { status: TableStatus.OCCUPIED });
     }
 
@@ -125,6 +97,7 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
   async update(id: number, data: UpdateOrderDto): Promise<OrderEntity | null> {
     const existingOrder = await this.repository.findOneById(id);
     if (!existingOrder) throw new Error('No order found');
+    if (existingOrder.status == 'paid') throw new Error('Cannot Mutate a Paid Order');
 
     if (data.products) {
       await this.replaceOrderProducts(id, data.products);
@@ -132,22 +105,9 @@ export class OrderService extends AbstractCrudService<OrderEntity> {
 
     const paidAmount = Number(existingOrder.paidAmount ?? 0);
     const newTotal = Number(data.total ?? existingOrder.total);
-    const status =
-      data.status ??
-      (newTotal === 0
-        ? OrderStatus.PAID
-        : paidAmount > 0
-          ? OrderStatus.PARTIALLY_PAID
-          : OrderStatus.UNPAID);
-    const newTableId =
-      data.tableId !== undefined
-        ? data.tableId === 0
-          ? undefined
-          : data.tableId
-        : existingOrder.tableId;
 
-    existingOrder.tableId = newTableId;
-    existingOrder.status = status;
+    if (paidAmount >= newTotal) throw new Error('Mutation not Possible at this state');
+
     existingOrder.total = newTotal;
     existingOrder.paidAmount = paidAmount;
     await this.repository.save(existingOrder);
