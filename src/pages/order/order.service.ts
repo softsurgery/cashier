@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import { CreateOrderDto, ResponseOrderDto, UpdateOrderDto } from '../../types';
+import { CreateOrderDto, OrderStatus, ResponseOrderDto, UpdateOrderDto } from '../../types';
 import type { FindManyOptions } from 'typeorm';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -31,5 +32,23 @@ export class OrderService {
 
   pay(id: number, amount: number): Observable<ResponseOrderDto> {
     return from(window.electronAPI!.order.pay(id, amount));
+  }
+
+  findAllByTable(tableId: number): Observable<ResponseOrderDto | null> {
+    return from(
+      window.electronAPI!.order.findAll({
+        where: { tableId },
+        relations: ['products', 'products.product'], // use same relations as loadOrderById
+        order: { id: 'DESC' },
+        take: 20,
+      }),
+    ).pipe(
+      map(
+        (orders) =>
+          orders.find(
+            (o) => o.status === OrderStatus.UNPAID || o.status === OrderStatus.PARTIALLY_PAID,
+          ) || null,
+      ),
+    );
   }
 }
