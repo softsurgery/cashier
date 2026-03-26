@@ -27,8 +27,6 @@
         <hlm-resizable-panel class="w-full h-[65%] min-h-[40%]" [defaultSize]="65">
           <app-order-checkout
             [cart]="cart"
-            [errorMessage]="errorMessage"
-            [successMessage]="successMessage"
             [isCreating]="isCreating"
             [cartTotal]="cartTotal"
             (removeFromCart)="onRemoveFromCart($event)"

@@ -60,19 +60,12 @@ export class TablesComponent implements OnInit, OnDestroy {
   zones = new BehaviorSubject<SelectOption[]>([]);
 
   constructor() {
-    let firstRun = true;
-
     effect(() => {
       const page = this.serverQuery.page();
       const size = this.serverQuery.pageSize();
       const sortBy = this.serverQuery.sortBy();
       const sortOrder = this.serverQuery.sortOrder();
       const search = this.serverQuery.search();
-
-      if (firstRun) {
-        firstRun = false;
-        return;
-      }
 
       this.loadTables(page, size, search, sortBy, sortOrder);
     });
