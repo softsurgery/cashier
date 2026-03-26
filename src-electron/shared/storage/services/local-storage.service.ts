@@ -12,8 +12,8 @@ import { StorageService } from './storage.service';
 @Injectable()
 export class LocalStorageService extends StorageService {
   rootLocation: string;
-  constructor(readonly storageRepository: StorageRepository) {
-    super(storageRepository);
+  constructor() {
+    super(new StorageRepository());
     this.rootLocation = process.env.UPLOAD_PATH || '/upload';
   }
 
