@@ -1,5 +1,7 @@
+// product.data-table.ts
 import { flexRenderComponent } from '@tanstack/angular-table';
 import {
+  DataTableServerQuery,
   DataTableVariant,
   DynamicDataTable,
 } from '../../../components/datatable-builder/datatable-builder.types';
@@ -11,18 +13,22 @@ interface ProductDataTableProps {
   onCreateAction?: () => void;
   onEditAction?: (row: ResponseProductDto) => void;
   onDeleteAction?: (row: ResponseProductDto) => void;
+  serverQuery?: DataTableServerQuery;
 }
 
 export const getProductDataTableObject = ({
   onCreateAction,
   onEditAction,
   onDeleteAction,
+  serverQuery,
 }: ProductDataTableProps): DynamicDataTable<ResponseProductDto> => {
   return {
     singular: 'Product',
     plural: 'Products',
     variant: DataTableVariant.COMMON,
     createAction: onCreateAction ? { label: 'Create Product', action: onCreateAction } : undefined,
+    enableServerActions: true,
+    serverQuery,
     rowActions: {
       editAction: {
         label: 'Update',
@@ -49,7 +55,8 @@ export const getProductDataTableObject = ({
         id: 'description',
         header: 'Description',
         enableSorting: false,
-        cell: (info) => `${info.getValue<string>() ?? ''}</div>`,
+        cell: (info) =>
+          `<div class="${!info.getValue<string>() ? 'text-muted-foreground' : ''}">${info.getValue<string>() || 'No Data Currently'}</div>`,
       },
       {
         accessorKey: 'price',
