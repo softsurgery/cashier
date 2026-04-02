@@ -8,13 +8,14 @@ import { ReadStream } from 'typeorm/platform/PlatformTools';
 import { StorageRepository } from '../repositories/storage.repository';
 import { StorageEntity } from '../entities/storage.entity';
 import { StorageService } from './storage.service';
+import { app } from 'electron';
 
 @Injectable()
 export class LocalStorageService extends StorageService {
   rootLocation: string;
   constructor() {
     super(new StorageRepository());
-    this.rootLocation = process.env.UPLOAD_PATH || '/upload';
+    this.rootLocation = join(app.getPath('userData'), '/upload');
   }
 
   getStorageType(): string {
@@ -82,6 +83,15 @@ export class LocalStorageService extends StorageService {
     } catch (error) {
       throw new Error(`File not found: ${error}`);
     }
+  }
+
+  async getFilePath(id: number): Promise<string> {
+    const entity = await this.findOneById(id);
+    if (!entity) throw new Error(`Storage with id ${id} not found`);
+    const filePath = join(this.rootLocation, entity.relativePath);
+    const fileBuffer = await fs.readFile(filePath);
+    const base64 = fileBuffer.toString('base64');
+    return `data:${entity.mimetype};base64,${base64}`;
   }
 
   async duplicate(id: number): Promise<StorageEntity> {

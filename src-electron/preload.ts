@@ -66,4 +66,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
       ipcRenderer.invoke('product:update', id, data),
     delete: (id: number) => ipcRenderer.invoke('product:delete', id),
   },
+  // ── Storage ─────────────────────────────────────────
+  storage: {
+    store: (file: any) => ipcRenderer.invoke('storage:store', file),
+    findOneById: (id: number) => ipcRenderer.invoke('storage:findOneById', id),
+    getFilePath: (id: number) => ipcRenderer.invoke('storage:getFilePath', id),
+    delete: (id: number) => ipcRenderer.invoke('storage:softDelete', id),
+  },
 });

@@ -5,12 +5,14 @@ import { FindManyOptions } from 'typeorm';
 export function registerStorageHandlers(): void {
   const service = new LocalStorageService();
 
-  ipcMain.handle(
-    'storage:store',
-    async (_event, file: Express.Multer.File, isTemporary = false, isPrivate = false) => {
-      return service.store(file, isTemporary, isPrivate);
-    },
-  );
+  ipcMain.handle('storage:store', async (_event, fileData: Express.Multer.File) => {
+    return service.store({
+      buffer: Buffer.from(fileData.buffer),
+      originalname: fileData.originalname,
+      mimetype: fileData.mimetype,
+      size: fileData.size,
+    } as Express.Multer.File);
+  });
 
   ipcMain.handle(
     'storage:storeMultipleFiles',
@@ -61,5 +63,9 @@ export function registerStorageHandlers(): void {
 
   ipcMain.handle('storage:softDelete', async (_event, id: number) => {
     return service.softDelete(String(id));
+  });
+
+  ipcMain.handle('storage:getFilePath', async (_event, id: number) => {
+    return service.getFilePath(id);
   });
 }

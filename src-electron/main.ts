@@ -7,6 +7,7 @@ import {
   registerProductFamilyHandlers,
   registerProductHandlers,
   registerTableZoneHandlers,
+  registerStorageHandlers,
 } from './ipc';
 import { initializeDatabase } from './shared/database/database';
 
@@ -41,6 +42,7 @@ app.whenReady().then(async () => {
   registerOrderHandlers();
   registerProductFamilyHandlers();
   registerProductHandlers();
+  registerStorageHandlers();
   createWindow();
 });
 
