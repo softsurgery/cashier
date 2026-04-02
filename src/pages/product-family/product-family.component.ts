@@ -9,7 +9,11 @@ import { ProductFamilyService } from './product-family.service';
 import { ProductFamilyRepository } from '../../stores/product-family-state/product-family-state.repository';
 import { SheetService } from '../../components/sheet/sheet.service';
 import { DialogService } from '../../components/dialog/dialog.service';
-import { CreateProductFamilyDto, ResponseProductFamilyDto } from '../../types';
+import {
+  CreateProductFamilyDto,
+  ResponseProductFamilyDto,
+  UpdateProductFamilyDto,
+} from '../../types';
 
 import {
   DataTableServerQuery,
@@ -21,6 +25,8 @@ import { getProductFamilyCreateSheet } from './utils/product-family-create.sheet
 import { LayoutService } from '@/components/layout/layout.service';
 import { createServerQuery } from '@/components/datatable-builder/server-query';
 import { toast } from 'ngx-sonner';
+import { getProductFamilyUpdateFormStructure } from './utils/product-family-update.form-structure';
+import { getProductFamilyUpdateSheet } from './utils/product-family-update.sheet';
 
 @Component({
   selector: 'app-product-family',
@@ -139,22 +145,19 @@ export class ProductFamilyComponent implements OnInit, OnDestroy {
     this.editingId = row.id;
 
     this.store.reset();
-    this.store.set('createDto', {
+    this.store.set('updateDto', {
       name: row.name,
       description: row.description,
       pictureId: row.pictureId ?? null,
     });
 
-    const structure = getProductFamilyCreateFormStructure({
+    const structure = getProductFamilyUpdateFormStructure({
       store: this.store,
-      isUpdate: true,
     });
 
-    const sheetConfig = getProductFamilyCreateSheet({
+    const sheetConfig = getProductFamilyUpdateSheet({
       structure,
-      title: 'Update Product Family',
-      description: 'Modify the values below and save to update.',
-      onSave: () => this.onUpdateSave(),
+      onUpdate: () => this.onUpdateSave(),
       onCancel: () => this.closeSheet(),
     });
 
@@ -166,7 +169,7 @@ export class ProductFamilyComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const updateDto = this.store.get<CreateProductFamilyDto>('createDto');
+    const updateDto = this.store.get<UpdateProductFamilyDto>('updateDto');
     this.productFamilyService.update(this.editingId, updateDto).subscribe({
       next: () => {
         this.closeSheet();

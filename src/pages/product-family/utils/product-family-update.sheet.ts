@@ -2,17 +2,17 @@ import { FormBuilderComponent } from '@/components/form-builder/form-builder.com
 import { DynamicForm } from '@/components/form-builder/form-builder.types';
 import { SheetAction, SheetObject } from '@/components/sheet/types';
 
-interface ProductFamilyCreateSheetProps {
+interface ProductFamilyUpdateSheetProps {
   structure: DynamicForm;
-  onSave: () => void;
+  onUpdate: () => void;
   onCancel: () => void;
 }
 
-export const getProductFamilyCreateSheet = ({
+export const getProductFamilyUpdateSheet = ({
   structure,
-  onSave,
+  onUpdate,
   onCancel,
-}: ProductFamilyCreateSheetProps): SheetObject => {
+}: ProductFamilyUpdateSheetProps): SheetObject => {
   const actions: SheetAction[] = [
     {
       label: 'Cancel',
@@ -20,15 +20,15 @@ export const getProductFamilyCreateSheet = ({
       onClick: onCancel,
     },
     {
-      label: 'Save',
+      label: 'Update',
       variant: 'default',
-      onClick: onSave,
+      onClick: onUpdate,
     },
   ];
 
   return {
-    title: 'Create Product Family',
-    description: 'Fill in the details to create a new product family.',
+    title: 'Update Product Family',
+    description: 'Modify the fields below to update the product family.',
     component: {
       outlet: FormBuilderComponent,
       props: { structure },

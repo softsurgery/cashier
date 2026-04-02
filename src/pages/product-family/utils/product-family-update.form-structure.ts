@@ -9,13 +9,13 @@ import {
 import { PictureUploadComponent } from '@/components/picture-upload/picture-upload.component';
 import { ProductFamilyRepository } from '@/stores/product-family-state/product-family-state.repository';
 
-interface ProductFamilyCreateFormStructureProps {
+interface ProductFamilyUpdateFormStructureProps {
   store: ProductFamilyRepository;
 }
 
-export const getProductFamilyCreateFormStructure = ({
+export const getProductFamilyUpdateFormStructure = ({
   store,
-}: ProductFamilyCreateFormStructureProps): DynamicForm => {
+}: ProductFamilyUpdateFormStructureProps): DynamicForm => {
   const nameField: DynamicField<TextFieldProps> = {
     id: 'name',
     label: 'Name',
@@ -24,9 +24,9 @@ export const getProductFamilyCreateFormStructure = ({
     isRequired: true,
     props: {
       placeholder: 'Product Family Name',
-      value: store.getNestedObservable<string>('createDto.name'),
+      value: store.getNestedObservable<string>('updateDto.name'),
       onChange: (value: string) => {
-        store.setNested('createDto.name', value);
+        store.setNested('updateDto.name', value);
         store.setNested('errors.name', []);
       },
     },
@@ -39,9 +39,9 @@ export const getProductFamilyCreateFormStructure = ({
     description: 'Enter a description for the product family (optional)',
     props: {
       placeholder: 'Product Family Description',
-      value: store.getNestedObservable<string>('createDto.description'),
+      value: store.getNestedObservable<string>('updateDto.description'),
       onChange: (value: string) => {
-        store.setNested('createDto.description', value);
+        store.setNested('updateDto.description', value);
         store.setNested('errors.description', []);
       },
       rows: 10,
@@ -56,16 +56,16 @@ export const getProductFamilyCreateFormStructure = ({
     description: 'Upload an image for the product family',
     props: {
       component: PictureUploadComponent,
-      value: store.getNestedObservable<number | null>('createDto.pictureId'),
+      value: store.getNestedObservable<number | null>('updateDto.pictureId'),
       onChange: (pictureId: number | null) => {
-        store.setNested('createDto.pictureId', pictureId);
+        store.setNested('updateDto.pictureId', pictureId);
       },
     },
   };
 
   return {
-    title: 'Create Product Family',
-    description: 'Fill out the form below to create a new product family.',
+    title: 'Update Product Family',
+    description: 'Modify the fields below to update the product family.',
     isHeaderHidden: true,
     grids: [
       {

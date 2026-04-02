@@ -1,13 +1,19 @@
 import { createStore, withProps } from '@ngneat/elf';
-import { CreateProductFamilyDto } from '@/types';
+import { CreateProductFamilyDto, UpdateProductFamilyDto } from '@/types';
 
 export interface ProductFamilyStateProps {
   createDto: CreateProductFamilyDto;
+  updateDto?: UpdateProductFamilyDto;
   errors: Record<string, string[]>;
 }
 
 export const productFamilyInitialState: ProductFamilyStateProps = {
   createDto: {
+    name: '',
+    description: '',
+    pictureId: null,
+  },
+  updateDto: {
     name: '',
     description: '',
     pictureId: null,
