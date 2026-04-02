@@ -142,6 +142,7 @@ export class ProductFamilyComponent implements OnInit, OnDestroy {
     this.store.set('createDto', {
       name: row.name,
       description: row.description,
+      pictureId: row.pictureId ?? null,
     });
 
     const structure = getProductFamilyCreateFormStructure({

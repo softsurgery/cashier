@@ -10,6 +10,7 @@ export const productFamilyInitialState: ProductFamilyStateProps = {
   createDto: {
     name: '',
     description: '',
+    pictureId: null,
   },
   errors: {},
 };

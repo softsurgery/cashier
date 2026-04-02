@@ -1,8 +1,9 @@
 import { ipcMain } from 'electron';
-import { FindManyOptions } from 'typeorm';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
 import { ProductFamilyService } from '../modules/product-family/services/product-family.service';
 import { CreateProductFamilyDto } from '../modules/product-family/dtos/create-product-family.dto';
 import { UpdateProductFamilyDto } from '../modules/product-family/dtos/update-product-family.dto';
+import { ProductFamilyEntity } from '@/modules/product-family/entities/product-family.entity';
 
 export function registerProductFamilyHandlers(): void {
   const service = new ProductFamilyService();
@@ -12,9 +13,12 @@ export function registerProductFamilyHandlers(): void {
   });
 
   // Get a single product-family by id
-  ipcMain.handle('product-family:findOneById', async (_event, id: number) => {
-    return service.findOneById(id);
-  });
+  ipcMain.handle(
+    'product-family:findOneById',
+    async (_event, id: number, query?: Pick<FindOneOptions<ProductFamilyEntity>, 'join'>) => {
+      return service.findOneById(id, query);
+    },
+  );
 
   // Create a new product-family for a product-family
   ipcMain.handle('product-family:create', async (_event, data: CreateProductFamilyDto) => {
