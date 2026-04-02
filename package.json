@@ -30,6 +30,7 @@
     "@ng-icons/lucide": ">=32.0.0 <34.0.0",
     "@ngneat/elf": "^2.5.1",
     "@ngneat/elf-entities": "^5.0.2",
+    "@ngneat/elf-persist-state": "^1.2.1",
     "@spartan-ng/brain": "^0.0.1-alpha.642",
     "@tanstack/angular-table": "^8.21.3",
     "@types/uuid": "^10.0.0",
