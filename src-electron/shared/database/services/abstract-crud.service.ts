@@ -9,8 +9,14 @@ export class AbstractCrudService<T extends ObjectLiteral> {
     this.repository = repository;
   }
 
-  async findOneById(id: number | string): Promise<T | null> {
-    const entity = await this.repository.findOneById(id);
+  async findOneById(
+    id: number | string,
+    query?: Pick<FindOneOptions<T>, 'join'>,
+  ): Promise<T | null> {
+    const entity = await this.repository.findOne({
+      ...query,
+      where: { id },
+    } as any);
     if (!entity) {
       throw new Error(`${this.repository.getMetadata().name} with id ${id} is not found`);
     }
