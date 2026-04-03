@@ -1,59 +1,70 @@
 # Cashier
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+A highly abstracted **Electron + Angular** desktop application for point-of-sale operations. This project combines the power of Electron with Angular's robust framework to deliver a production-grade desktop application with clean architecture patterns.
 
-## Development server
+## 🏗️ Architecture Overview
 
-To start a local development server, run:
+### Highly Abstracted Layers
 
-```bash
-ng serve
-```
+- **Main Process** (`src-electron/main.ts`) - Electron main process with database connectivity
+- **Preload Script** (`src-electron/preload.ts`) - Secure IPC bridge between main and renderer
+- **Module-Based Backend** (`src-electron/modules/`) - Organized business logic with:
+  - **DTOs** - Data Transfer Objects for type-safe communication
+  - **Entities** - Database entity definitions
+  - **Repositories** - Data access abstraction layer
+  - **Services** - Business logic encapsulation
+- **Renderer Process** (`src/`) - Angular frontend with:
+  - Standalone components
+  - State management stores
+  - Route-based page organization
+  - Reusable UI component library
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### IPC Communication
 
-## Code scaffolding
+Type-safe inter-process communication between Electron main and renderer processes through well-defined IPC channels and handlers.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🚀 Development
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Start the development server:
 
 ```bash
-ng build
+npm run electron:dev
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+This runs both the Electron main process and Angular development server with hot-reload.
 
-## Running unit tests
+## 🧪 Testing
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Run unit tests with [Vitest](https://vitest.dev/):
 
 ```bash
-ng test
+npm test
 ```
 
-## Running end-to-end tests
+## 🔨 Building
 
-For end-to-end (e2e) testing, run:
+Build for production:
 
 ```bash
-ng e2e
+npm run build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Compiled artifacts are stored in the `dist/` and `dist-electron/` directories.
 
-## Additional Resources
+## 📦 Project Structure
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **`src/`** - Angular renderer process (UI components, pages, services, stores)
+- **`src-electron/`** - Electron main process (backend logic, database, IPC handlers)
+- **`libs/ui/`** - Shared UI component library
+- **`dist/`** - Built Angular application
+- **`dist-electron/`** - Built Electron main process
+
+## 🎯 Key Features
+
+- Clean separation of concerns with abstracted layers
+- Type-safe IPC communication
+- Module-based backend architecture
+- Reusable component library
+- State management with stores
+- Database integration
+- Local Storage Management
