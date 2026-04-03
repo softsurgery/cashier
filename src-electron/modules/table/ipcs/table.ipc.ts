@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron';
-import { TableService } from '../modules/table/service/table.service';
+import { TableService } from '../service/table.service';
 import { FindManyOptions } from 'typeorm';
-import { CreateTableDto } from '../modules/table/dtos/table/create-table.dto';
-import { UpdateTableDto } from '../modules/table/dtos/table/update-table.dto';
+import { CreateTableDto } from '../dtos/table/create-table.dto';
+import { UpdateTableDto } from '../dtos/table/update-table.dto';
 
 export function registerTableHandlers(): void {
   const service = new TableService();

@@ -1,15 +1,13 @@
 import 'reflect-metadata';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
-import {
-  registerTableHandlers,
-  registerOrderHandlers,
-  registerProductFamilyHandlers,
-  registerProductHandlers,
-  registerTableZoneHandlers,
-  registerStorageHandlers,
-} from './ipc';
 import { initializeDatabase } from './shared/database/database';
+import { registerTableHandlers } from './modules/table/ipcs/table.ipc';
+import { registerTableZoneHandlers } from './modules/table/ipcs/table-zone.ipc';
+import { registerOrderHandlers } from './modules/order/ipcs/order.ipc';
+import { registerProductFamilyHandlers } from './modules/product-family/ipcs/product-family.ipc';
+import { registerProductHandlers } from './modules/product/ipcs/product.ipc';
+import { registerStorageHandlers } from './shared/storage/ipcs/storage.ipc';
 
 // IPC Handlers
 ipcMain.handle('ping', () => 'pong');
