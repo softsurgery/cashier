@@ -1,10 +1,11 @@
-import { IsEnum, IsNumber } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { CreateOrderProductDto } from './create-oder-product.dto';
 import { OrderStatus } from '../enum/order-status.enum';
 
 export class CreateOrderDto {
   @IsNumber()
-  tableId: number;
+  @IsOptional()
+  tableId?: number;
 
   products: CreateOrderProductDto[];
 

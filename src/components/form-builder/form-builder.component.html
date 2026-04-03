@@ -63,7 +63,7 @@
                     'w-full',
                     field.class || ''
                   ]" *ngIf="(isHidden(field) | async) === false">
-                  <label for="input-{{ field.label }}" class="block text-sm font-medium">
+                  <label for="input-{{ field.label }}" class="block text-sm font-bold">
                     {{ field.label || "" }}
                     <span *ngIf="field.isRequired" class="text-red-500">*</span>
                   </label>

@@ -1,8 +1,5 @@
 import { flexRenderComponent } from '@tanstack/angular-table';
-import {
-  TableHeadSelection,
-  TableRowSelection,
-} from '../datatable-builder-common/selection-column';
+import { TableHeadSelection, TableRowSelection } from '../core/selection-column';
 
 export const checkboxColumnDef = {
   id: 'select',

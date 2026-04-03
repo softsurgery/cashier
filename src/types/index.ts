@@ -4,3 +4,4 @@ export * from './order.types';
 export * from './product.family';
 export * from './product';
 export * from './order-product';
+export * from './storage';

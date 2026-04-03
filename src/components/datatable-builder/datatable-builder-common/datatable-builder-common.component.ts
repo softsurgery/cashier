@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
-import { DynamicDataTable } from '../datatable-builder.types';
+import { Component, inject, Input, OnDestroy, OnInit, signal } from '@angular/core';
+import { DataTableServerQuery, DynamicDataTable } from '../datatable-builder.types';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -33,6 +33,8 @@ import {
   VisibilityState,
 } from '@tanstack/angular-table';
 import { DatatableBuilderActionDropdownComponent } from '../core/datatable-builder-action-dropdown/datatable-builder-action-dropdown.component';
+import { LayoutService } from '@/components/layout/layout.service';
+import { DataTablePagination } from '../core/pagination';
 
 @Component({
   selector: 'app-datatable-builder-common',
@@ -58,15 +60,13 @@ import { DatatableBuilderActionDropdownComponent } from '../core/datatable-build
     HlmTableImports,
   ],
 })
-export class DatatableBuilderCommonComponent implements OnInit {
-  /* -------------------- INPUTS -------------------- */
+export class DatatableBuilderCommonComponent implements OnInit, OnDestroy {
+  layoutService = inject(LayoutService);
 
   @Input() dataTableObject?: DynamicDataTable;
   @Input() data: Observable<any[]> = of([]);
-  @Input() totalRecords = 0;
+  @Input() totalRecords: Observable<number> = of(0);
   @Input() loading = false;
-
-  /* -------------------- SIGNAL STATE -------------------- */
 
   protected _data = signal<any[]>([]);
   private readonly _columnFilters = signal<ColumnFiltersState>([]);
@@ -74,29 +74,40 @@ export class DatatableBuilderCommonComponent implements OnInit {
   private readonly _rowSelection = signal<RowSelectionState>({});
   private readonly _columnVisibility = signal<VisibilityState>({});
 
-  /* -------------------- TABLE INSTANCE -------------------- */
-
   _table!: Table<any>;
   protected _hidableColumns: any[] = [];
 
-  /* -------------------- TABLE COLUMNS -------------------- */
-
   _columns: ColumnDef<any>[] = [];
 
-  /* -------------------- FILTER EVENTS -------------------- */
-
-  protected _filterChanged(event: Event) {
-    this._table.getColumn('email')?.setFilterValue((event.target as HTMLInputElement).value);
+  private get _serverQuery(): DataTableServerQuery | undefined {
+    return this.dataTableObject?.enableServerActions ? this.dataTableObject.serverQuery : undefined;
   }
 
   protected _filterChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this._table.setGlobalFilter(target.value);
+    const value = (event.target as HTMLInputElement).value;
+    if (this._serverQuery) {
+      this._serverQuery.setSearch(value);
+      this._serverQuery.setPage(0);
+    } else {
+      this._table.setGlobalFilter(value);
+    }
   }
 
-  /* -------------------- INIT -------------------- */
-
   ngOnInit() {
+    this.initializeTable();
+    this.layoutService.setFooter(DataTablePagination, {
+      table: this._table,
+      totalRecords: this.totalRecords,
+      sizes: this.dataTableObject?.sizes || [10, 20, 50],
+      serverQuery: this._serverQuery,
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.layoutService.clearFooter();
+  }
+
+  initializeTable() {
     // Convert observable → signal
     this.data.subscribe((data) => {
       this._data.set(data);
@@ -128,8 +139,18 @@ export class DatatableBuilderCommonComponent implements OnInit {
       data: this._data(),
       columns: this._columns,
 
-      onSortingChange: (updater) =>
-        updater instanceof Function ? this._sorting.update(updater) : this._sorting.set(updater),
+      onSortingChange: (updater) => {
+        const newSorting = updater instanceof Function ? updater(this._sorting()) : updater;
+        this._sorting.set(newSorting);
+        if (this._serverQuery && newSorting.length > 0) {
+          this._serverQuery.setSortBy(newSorting[0].id);
+          this._serverQuery.setSortOrder(newSorting[0].desc ? 'desc' : 'asc');
+          this._serverQuery.setPage(0);
+        } else if (this._serverQuery) {
+          this._serverQuery.setSortBy('');
+          this._serverQuery.setSortOrder(undefined);
+        }
+      },
 
       onColumnFiltersChange: (updater) =>
         updater instanceof Function
@@ -146,6 +167,9 @@ export class DatatableBuilderCommonComponent implements OnInit {
           ? this._rowSelection.update(updater)
           : this._rowSelection.set(updater),
 
+      manualPagination: !!this._serverQuery,
+      manualSorting: !!this._serverQuery,
+      manualFiltering: !!this._serverQuery,
       getCoreRowModel: getCoreRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
       getSortedRowModel: getSortedRowModel(),

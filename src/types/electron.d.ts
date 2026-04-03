@@ -8,6 +8,7 @@ import { ResponseProductDto, UpdateProductDto } from './product';
 import { CreateProductFamilyDto, ResponseProductFamilyDto } from './product.family';
 import { CreateTableDto, ResponseTableDto } from './table.types';
 import { ResponseTableZoneDto } from './table-zone.types';
+import { StorageFileData, StorageResponse } from '../services/storage.service';
 
 export interface TableAPI {
   findAll(query?: any): Promise<ResponseTableDto[]>;
@@ -34,6 +35,7 @@ export interface OrderAPI {
   create(data: CreateOrderDto): Promise<ResponseOrderDto>;
   update(id: number, data: Partial<UpdateOrderDto>): Promise<ResponseOrderDto | null>;
   delete(id: number): Promise<ResponseOrderDto>;
+  pay(id: number, amount: number): Promise<ResponseOrderDto>;
 }
 
 export interface ProductFamilyAPI {
@@ -53,6 +55,13 @@ export interface ProductAPI {
   create(data: CreateProductDto): Promise<ResponseProductDto>;
   update(id: number, data: Partial<UpdateProductDto>): Promise<ResponseProductDto | null>;
   delete(id: number): Promise<ResponseProductDto>;
+}
+
+export interface StorageAPI {
+  store(file: StorageFileData): Promise<StorageResponse>;
+  findOneById(id: number): Promise<StorageResponse>;
+  getFilePath(id: number): Promise<string>;
+  delete(id: number): Promise<StorageResponse>;
 }
 
 export interface ElectronAPI {
@@ -76,6 +85,8 @@ export interface ElectronAPI {
   productFamily: ProductFamilyAPI;
   /** Product CRUD operations */
   product: ProductAPI;
+  /** Storage operations */
+  storage: StorageAPI;
 }
 
 declare global {

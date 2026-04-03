@@ -12,8 +12,8 @@ export class OrderEntity extends EntityHelper {
   @ManyToOne(() => TableEntity, (table) => table.orders)
   table?: TableEntity;
 
-  @Column()
-  tableId: number;
+  @Column({ nullable: true })
+  tableId?: number;
 
   @Column({ enum: OrderStatus, default: OrderStatus.UNPAID })
   status?: OrderStatus;
@@ -26,4 +26,7 @@ export class OrderEntity extends EntityHelper {
 
   @Column('decimal', { precision: 10, scale: 2, default: 0 })
   total: number;
+
+  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  paidAmount: number;
 }

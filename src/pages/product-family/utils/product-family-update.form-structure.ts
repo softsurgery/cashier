@@ -1,0 +1,88 @@
+import {
+  DynamicField,
+  DynamicForm,
+  FieldVariant,
+  CustomFieldProps,
+  TextareaFieldProps,
+  TextFieldProps,
+} from '@/components/form-builder/form-builder.types';
+import { PictureUploadComponent } from '@/components/picture-upload/picture-upload.component';
+import { ProductFamilyRepository } from '@/stores/product-family-state/product-family-state.repository';
+
+interface ProductFamilyUpdateFormStructureProps {
+  store: ProductFamilyRepository;
+}
+
+export const getProductFamilyUpdateFormStructure = ({
+  store,
+}: ProductFamilyUpdateFormStructureProps): DynamicForm => {
+  const nameField: DynamicField<TextFieldProps> = {
+    id: 'name',
+    label: 'Name',
+    variant: FieldVariant.TEXT,
+    description: 'Enter the name of the product family',
+    isRequired: true,
+    props: {
+      placeholder: 'Product Family Name',
+      value: store.getNestedObservable<string>('updateDto.name'),
+      onChange: (value: string) => {
+        store.setNested('updateDto.name', value);
+        store.setNested('errors.name', []);
+      },
+    },
+  };
+
+  const descriptionField: DynamicField<TextareaFieldProps> = {
+    id: 'description',
+    label: 'Description',
+    variant: FieldVariant.TEXTAREA,
+    description: 'Enter a description for the product family (optional)',
+    props: {
+      placeholder: 'Product Family Description',
+      value: store.getNestedObservable<string>('updateDto.description'),
+      onChange: (value: string) => {
+        store.setNested('updateDto.description', value);
+        store.setNested('errors.description', []);
+      },
+      rows: 10,
+      resize: 'none',
+    },
+  };
+
+  const pictureField: DynamicField<CustomFieldProps> = {
+    id: 'picture',
+    label: 'Picture',
+    variant: FieldVariant.CUSTOM,
+    description: 'Upload an image for the product family',
+    props: {
+      component: PictureUploadComponent,
+      value: store.getNestedObservable<number | null>('updateDto.pictureId'),
+      onChange: (pictureId: number | null) => {
+        store.setNested('updateDto.pictureId', pictureId);
+      },
+    },
+  };
+
+  return {
+    title: 'Update Product Family',
+    description: 'Modify the fields below to update the product family.',
+    isHeaderHidden: true,
+    grids: [
+      {
+        title: '',
+        isHeaderHidden: true,
+        gridItems: [
+          {
+            fields: [nameField],
+          },
+          {
+            fields: [descriptionField],
+          },
+          {
+            fields: [pictureField],
+          },
+        ],
+      },
+    ],
+  };
+};

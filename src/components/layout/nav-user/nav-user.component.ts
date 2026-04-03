@@ -1,3 +1,4 @@
+import { AuthPersistRepository } from '@/stores/auth-persist/auth-persist.repository';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
@@ -30,6 +31,7 @@ import { HlmSidebarImports, HlmSidebarService } from '@spartan-ng/helm/sidebar';
   styleUrls: ['./nav-user.component.css'],
 })
 export class NavUserComponent {
+  authPersistRepository = inject(AuthPersistRepository);
   private readonly _sidebarService = inject(HlmSidebarService);
   protected readonly _menuSide = computed(() =>
     this._sidebarService.isMobile() ? 'top' : 'right',
@@ -40,4 +42,9 @@ export class NavUserComponent {
     email: string;
     avatar: string;
   }>();
+
+  logout(): void {
+    this.authPersistRepository.set('authenticated', false);
+    window.location.reload();
+  }
 }

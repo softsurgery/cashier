@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 
 export class CreateProductFamilyDto {
   @IsString()
@@ -6,4 +6,8 @@ export class CreateProductFamilyDto {
 
   @IsString()
   description: string;
+
+  @IsOptional()
+  @IsNumber()
+  pictureId?: number;
 }

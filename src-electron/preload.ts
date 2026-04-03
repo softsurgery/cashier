@@ -42,10 +42,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   order: {
     findAll: (query: any) => ipcRenderer.invoke('order:findAll', query),
     findOneById: (id: number) => ipcRenderer.invoke('order:findOneById', id),
-    create: (data: { tableId: number }) => ipcRenderer.invoke('order:create', data),
-    update: (id: number, data: Partial<{ tableId: number; status: string }>) =>
+    create: (data: { tableId?: number }) => ipcRenderer.invoke('order:create', data),
+    update: (id: number, data: Partial<{ tableId?: number; status: string }>) =>
       ipcRenderer.invoke('order:update', id, data),
     delete: (id: number) => ipcRenderer.invoke('order:delete', id),
+    pay: (id: number, amount: number) => ipcRenderer.invoke('order:pay', id, amount),
   },
   // ── ProductFamily CRUD ─────────────────────────────────────
   productFamily: {
@@ -64,5 +65,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
     update: (id: number, data: Partial<UpdateProductDto>) =>
       ipcRenderer.invoke('product:update', id, data),
     delete: (id: number) => ipcRenderer.invoke('product:delete', id),
+  },
+  // ── Storage ─────────────────────────────────────────
+  storage: {
+    store: (file: any) => ipcRenderer.invoke('storage:store', file),
+    findOneById: (id: number) => ipcRenderer.invoke('storage:findOneById', id),
+    getFilePath: (id: number) => ipcRenderer.invoke('storage:getFilePath', id),
+    delete: (id: number) => ipcRenderer.invoke('storage:softDelete', id),
   },
 });

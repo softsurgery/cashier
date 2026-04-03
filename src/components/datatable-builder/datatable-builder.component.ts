@@ -15,7 +15,7 @@ export class DatatableBuilderComponent {
   @Input() dataTableObject?: DynamicDataTable;
 
   @Input() data: Observable<any[]> = of([]);
-  @Input() totalRecords = 0;
+  @Input() totalRecords: Observable<number> = of(0);
   @Input() loading = false;
 
   isCommon = computed(() => {

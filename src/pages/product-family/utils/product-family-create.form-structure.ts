@@ -2,19 +2,19 @@ import {
   DynamicField,
   DynamicForm,
   FieldVariant,
+  CustomFieldProps,
   TextareaFieldProps,
   TextFieldProps,
 } from '@/components/form-builder/form-builder.types';
+import { PictureUploadComponent } from '@/components/picture-upload/picture-upload.component';
 import { ProductFamilyRepository } from '@/stores/product-family-state/product-family-state.repository';
 
 interface ProductFamilyCreateFormStructureProps {
   store: ProductFamilyRepository;
-  isUpdate?: boolean;
 }
 
 export const getProductFamilyCreateFormStructure = ({
   store,
-  isUpdate = false,
 }: ProductFamilyCreateFormStructureProps): DynamicForm => {
   const nameField: DynamicField<TextFieldProps> = {
     id: 'name',
@@ -49,11 +49,23 @@ export const getProductFamilyCreateFormStructure = ({
     },
   };
 
+  const pictureField: DynamicField<CustomFieldProps> = {
+    id: 'picture',
+    label: 'Picture',
+    variant: FieldVariant.CUSTOM,
+    description: 'Upload an image for the product family',
+    props: {
+      component: PictureUploadComponent,
+      value: store.getNestedObservable<number | null>('createDto.pictureId'),
+      onChange: (pictureId: number | null) => {
+        store.setNested('createDto.pictureId', pictureId);
+      },
+    },
+  };
+
   return {
-    title: isUpdate ? 'Update Product Family' : 'Create Product Family',
-    description: isUpdate
-      ? 'Modify the fields below to update the product family.'
-      : 'Fill out the form below to create a new product family.',
+    title: 'Create Product Family',
+    description: 'Fill out the form below to create a new product family.',
     isHeaderHidden: true,
     grids: [
       {
@@ -65,6 +77,9 @@ export const getProductFamilyCreateFormStructure = ({
           },
           {
             fields: [descriptionField],
+          },
+          {
+            fields: [pictureField],
           },
         ],
       },
