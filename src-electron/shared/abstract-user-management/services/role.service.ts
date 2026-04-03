@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
+import { DeepPartial } from 'typeorm';
 import { RolePermissionService } from './role-permission.service';
 import { UpdateRoleDto } from '../dtos/role/update-role.dto';
 import { RolePermissionEntity } from '../entities/role-permission.entity';
