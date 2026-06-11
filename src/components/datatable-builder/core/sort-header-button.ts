@@ -36,6 +36,7 @@ import {
       variant="ghost"
       [hlmDropdownMenuTrigger]="menu"
       [class.capitalize]="header() === ''"
+      class="-ml-3"
     >
       <span class="font-bold">
         {{ _header() }}
