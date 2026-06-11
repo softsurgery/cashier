@@ -9,7 +9,6 @@ import {
   DynamicDataTable,
 } from '../../components/datatable-builder/datatable-builder.types';
 import { getOrderDataTableObject } from './utils/order.data-table';
-import { OrderRepository } from '@/stores/order-state/order-state.repository';
 import { LayoutService } from '@/components/layout/layout.service';
 import { Router } from '@angular/router';
 import { createServerQuery } from '@/components/datatable-builder/server-query';
@@ -22,7 +21,6 @@ import { createServerQuery } from '@/components/datatable-builder/server-query';
 })
 export class OrderComponent implements OnInit, OnDestroy {
   private orderService = inject(OrderService);
-  private orderRepository = inject(OrderRepository);
   private layoutService = inject(LayoutService);
 
   totalRecords = new BehaviorSubject(0);

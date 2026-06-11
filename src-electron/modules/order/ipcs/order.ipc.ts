@@ -1,10 +1,10 @@
 // order.handler.ts
 import { ipcMain } from 'electron';
-import { OrderService } from '../modules/order/services/order.service';
 import { FindManyOptions } from 'typeorm';
-import { OrderEntity } from '../modules/order/entities/order.entity';
-import { CreateOrderDto } from '../modules/order/dtos/create-order.dto';
-import { UpdateOrderDto } from '../modules/order/dtos/update-order.dto';
+import { OrderService } from '../services/order.service';
+import { OrderEntity } from '../entities/order.entity';
+import { CreateOrderDto } from '../dtos/create-order.dto';
+import { UpdateOrderDto } from '../dtos/update-order.dto';
 
 export function registerOrderHandlers(): void {
   const service = new OrderService();

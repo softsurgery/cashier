@@ -178,14 +178,14 @@ Defined in `src/components/layout/data.ts`:
 
 **Goal:** Fix known bugs, align API surfaces, improve developer experience.
 
-- [ ] Fix `relactions` → `relations` in `src/pages/order/order.service.ts`
-- [ ] Resolve order-product IPC: rename channels to `order-product:*` or fold into `OrderService`; register in `main.ts` if needed
-- [ ] Align preload table DTO with `TableEntity` / `CreateTableDto` (remove or add `capacity`)
+- [x] Fix `relactions` → `relations` in `src/pages/order/order.service.ts`
+- [x] Resolve order-product IPC: rename channels to `order-product:*` or fold into `OrderService`; register in `main.ts` if needed
+- [x] Align preload table DTO with `TableEntity` / `CreateTableDto` (remove or add `capacity`)
 - [ ] Wire `findAllPaginated` through IPC handlers and renderer datatables
-- [ ] Remove dead code (unused injections, orphaned imports)
-- [ ] Rename typo files (`create-oder-product.dto.ts`, etc.)
-- [ ] Fix `table-zone-state ` folder trailing space
-- [ ] Add dev seed script for sample zones, tables, product families, and products
+- [x] Remove dead code (unused injections, orphaned imports)
+- [x] Rename typo files (`create-oder-product.dto.ts`, etc.)
+- [ ] Fix `table-zone-state ` folder trailing space (Note: Run `mv "src/stores/table-zone-state " "src/stores/table-zone-state"` manually)
+- [x] Add dev seed script for sample zones, tables, product families, and products
 
 **Key files:** `src-electron/main.ts`, `src-electron/preload.ts`, `src/pages/order/order.service.ts`, `src/components/datatable-builder/`
 

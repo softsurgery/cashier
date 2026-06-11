@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsOptional } from 'class-validator';
-import { CreateOrderProductDto } from './create-oder-product.dto';
+import { CreateOrderProductDto } from './create-order-product.dto';
 import { OrderStatus } from '../enum/order-status.enum';
 
 export class CreateOrderDto {

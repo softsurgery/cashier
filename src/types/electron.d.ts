@@ -16,7 +16,7 @@ export interface TableAPI {
   create(data: CreateTableDto): Promise<ResponseTableDto>;
   update(
     id: number,
-    data: Partial<{ name: string; capacity: number; status: string }>,
+    data: Partial<{ name: string; zoneId: number; status: string }>,
   ): Promise<ResponseTableDto | null>;
   delete(id: number): Promise<ResponseTableDto>;
 }

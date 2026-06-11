@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron';
-import { TableZoneService } from '../modules/table/service/table-zone.service';
+import { TableZoneService } from '../service/table-zone.service';
 import { FindManyOptions } from 'typeorm';
-import { CreateTableZoneDto } from '../modules/table/dtos/table-zone/create-table-zone.dto';
-import { UpdatetableZoneDto } from '../modules/table/dtos/table-zone/update-table-zone.dto';
+import { CreateTableZoneDto } from '../dtos/table-zone/create-table-zone.dto';
+import { UpdateTableZoneDto } from '../dtos/table-zone/update-table-zone.dto';
 
 export function registerTableZoneHandlers(): void {
   const service = new TableZoneService();
@@ -23,7 +23,7 @@ export function registerTableZoneHandlers(): void {
   });
 
   // Update an existing table zone
-  ipcMain.handle('table-zone:update', async (_event, id: number, data: UpdatetableZoneDto) => {
+  ipcMain.handle('table-zone:update', async (_event, id: number, data: UpdateTableZoneDto) => {
     return service.update(id, data);
   });
 

@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { ProductFamilyService } from '../modules/product-family/services/product-family.service';
-import { CreateProductFamilyDto } from '../modules/product-family/dtos/create-product-family.dto';
-import { UpdateProductFamilyDto } from '../modules/product-family/dtos/update-product-family.dto';
+import { ProductFamilyService } from '../services/product-family.service';
+import { CreateProductFamilyDto } from '../dtos/create-product-family.dto';
+import { UpdateProductFamilyDto } from '../dtos/update-product-family.dto';
 import { ProductFamilyEntity } from '@/modules/product-family/entities/product-family.entity';
 
 export function registerProductFamilyHandlers(): void {

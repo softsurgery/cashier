@@ -1,9 +1,8 @@
 import { ipcMain } from 'electron';
 import { FindManyOptions } from 'typeorm';
-
-import { ProductService } from '../modules/product/services/product.service';
-import { CreateProductDto } from '../modules/product/dtos/create-product.dto';
-import { UpdateProductDto } from '../modules/product/dtos/update-product.dto';
+import { ProductService } from '../services/product.service';
+import { CreateProductDto } from '../dtos/create-product.dto';
+import { UpdateProductDto } from '../dtos/update-product.dto';
 
 export function registerProductHandlers(): void {
   const service = new ProductService();

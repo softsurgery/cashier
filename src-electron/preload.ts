@@ -23,9 +23,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   table: {
     findAll: (query?: any) => ipcRenderer.invoke('table:findAll', query),
     findOneById: (id: number) => ipcRenderer.invoke('table:findOneById', id),
-    create: (data: { name: string; capacity?: number; status?: string }) =>
+    create: (data: { name: string; zoneId?: number; status?: string }) =>
       ipcRenderer.invoke('table:create', data),
-    update: (id: number, data: Partial<{ name: string; capacity: number; status: string }>) =>
+    update: (id: number, data: Partial<{ name: string; zoneId: number; status: string }>) =>
       ipcRenderer.invoke('table:update', id, data),
     delete: (id: number) => ipcRenderer.invoke('table:delete', id),
   },
