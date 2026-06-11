@@ -29,6 +29,10 @@
             [cart]="cart"
             [isCreating]="isCreating"
             [cartTotal]="cartTotal"
+            [activeOrderId]="activeOrderId"
+            [orderStatus]="activeOrderStatus"
+            [paidAmount]="activeOrderPaidAmount"
+            [remainingAmount]="activeOrderRemaining"
             (removeFromCart)="onRemoveFromCart($event)"
             (createOrder)="onCreateOrder()"
           />

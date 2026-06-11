@@ -117,8 +117,8 @@ Database file location: `{userData}/cashier.db` (Electron app data directory).
 | Feature | Route | Backend IPC | UI | Status |
 |---------|-------|-------------|-----|--------|
 | Login | `/login` | None | Done | **Stub** — hardcoded `admin` / `admin` |
-| Table ops view | `/zone-tables` | `table:*`, `table-zone:*`, `order:*` | Done | **Done** |
-| POS order flow | `/new-client-order`, `/new-client-order/:tableId`, `/new-client-order/order/:orderId` | `order:*`, `product-family:*`, `product:*` | Done | **Done** |
+| Table ops view | `/zone-tables` | `table:*`, `table-zone:*`, `order:*` | Done | **Done** — per-table order status + remaining balance |
+| POS order flow | `/new-client-order`, `/new-client-order/:tableId`, `/new-client-order/order/:orderId` | `order:*`, `product-family:*`, `product:*` | Done | **Done** — Tailwind POS panels with status + payment summary |
 | Orders list | `/orders` | `order:*` | Done | **Done** — pagination uses array length, not DB total |
 | Tables (admin) | `/tables` | `table:*`, `table-zone:*` | Done | **Done** |
 | Table zones (admin) | `/table-zone` | `table-zone:*` | Done | **Done** |
@@ -214,9 +214,11 @@ Defined in `src/components/layout/data.ts`:
 **Goal:** Complete order lifecycle and improve floor-staff UX.
 
 - [ ] Order cancellation flow — set `OrderStatus.CANCELLED`, free table if applicable
-- [ ] Table `RESERVED` status — visual indicator in `/zone-tables`, admin set from `/tables`
+- [ ] Table `RESERVED` status — admin set from `/tables` (visual indicator done in `/zone-tables`)
 - [ ] Receipt / ticket summary — print dialog or PDF export after payment
 - [ ] Walk-in order UX refinement (no-table orders, PR #7 baseline)
+- [x] POS Tailwind polish — checkout/cart/keypad panels with order status, paid/remaining summary
+- [x] Table cards show active order status and remaining amount to pay (`/zone-tables`)
 - [ ] Loading and error states on POS panels (families, products, cart, keypad)
 - [ ] Toast consistency (pick FR or EN, apply everywhere)
 

@@ -8,7 +8,6 @@ import { ResponseProductFamilyDto } from '@/types';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './order-product-family.component.html',
-  styleUrls: ['./order-product-family.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderProductFamilyComponent {

@@ -56,6 +56,7 @@ export class NewClientOrderComponent implements OnInit {
   selectedFamily: ResponseProductFamilyDto | null = null;
   cart: CartItem[] = [];
   activeOrderId: number | null = null;
+  activeOrderStatus: OrderStatus | null = null;
   activeOrderRemaining = 0;
   activeOrderPaidAmount = 0;
   isCreating = false;
@@ -180,6 +181,7 @@ export class NewClientOrderComponent implements OnInit {
 
   private initEmptyState(): void {
     this.activeOrderId = null;
+    this.activeOrderStatus = null;
     this.activeOrderRemaining = 0;
     this.activeOrderPaidAmount = 0;
     this.cart = [];
@@ -207,6 +209,7 @@ export class NewClientOrderComponent implements OnInit {
           }
 
           this.activeOrderId = order.id;
+          this.activeOrderStatus = order.status;
           this.tableId = order.tableId ?? null;
           this.activeOrderPaidAmount = Number(order.paidAmount ?? 0);
           this.activeOrderRemaining = Number(order.total ?? 0) - this.activeOrderPaidAmount;

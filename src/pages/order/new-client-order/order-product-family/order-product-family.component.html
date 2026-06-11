@@ -1,17 +1,26 @@
-<!-- order-product-family.component.html -->
-<div>
-  <h1 class="text-center text-xl font-bold mb-4">Familles</h1>
-  <div class="grid grid-cols-2 gap-4 pr-2">
-    @for (family of families; track trackByFamilyId($index, family)) {
-      <div
-        class="p-3 rounded-lg border-2 cursor-pointer transition-all hover:shadow-md"
-        [class.bg-primary]="selectedFamily === family"
-        [class.text-primary-foreground]="selectedFamily === family"
-        [class.border-primary]="selectedFamily === family"
-        (click)="selectFamily(family)"
-      >
-        {{ family.name }}
+<div class="flex flex-col h-full p-3">
+  <div class="rounded-xl border border-border bg-card shadow-sm flex flex-col h-full overflow-hidden">
+    <div class="px-4 py-3 border-b border-border bg-muted/30">
+      <h2 class="font-semibold text-sm text-center">Familles</h2>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3">
+      <div class="grid grid-cols-2 gap-2">
+        @for (family of families; track trackByFamilyId($index, family)) {
+          <button
+            type="button"
+            class="p-3 rounded-lg border text-sm font-medium text-left transition-all hover:shadow-md"
+            [class.bg-primary]="selectedFamily === family"
+            [class.text-primary-foreground]="selectedFamily === family"
+            [class.border-primary]="selectedFamily === family"
+            [class.bg-background]="selectedFamily !== family"
+            [class.border-border]="selectedFamily !== family"
+            [class.hover:border-primary/50]="selectedFamily !== family"
+            (click)="selectFamily(family)"
+          >
+            {{ family.name }}
+          </button>
+        }
       </div>
-    }
+    </div>
   </div>
 </div>

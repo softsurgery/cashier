@@ -1,59 +1,80 @@
 <div class="w-full h-full flex flex-col gap-3 p-3">
-  <!-- Input -->
-  <input
-    type="text"
-    [(ngModel)]="value"
-    class="w-full border rounded-md px-3 py-2 text-right text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
-    placeholder="0"
-  />
-  <div class="text-xs text-muted-foreground" *ngIf="hasPaymentContext">
-    Paid: {{ paidAmount.toFixed(2) }} | Remaining: {{ maxPayAmount.toFixed(2) }}
-  </div>
-  <div class="flex flex-row gap-3 flex-1">
-    <!-- Keypad -->
-    <div class="grid grid-cols-3 gap-2 flex-1">
-      <button
-        hlmBtn
-        size="lg"
-        *ngFor="let key of keys"
-        (click)="press(key)"
-        class="w-full h-full text-lg font-semibold"
-      >
-        {{ key === 'x' ? '⌫' : key }}
-      </button>
+  <div class="rounded-xl border border-border bg-card shadow-sm flex flex-col flex-1 overflow-hidden">
+    <div class="px-4 py-3 border-b border-border bg-muted/30">
+      <h3 class="font-semibold text-sm">Paiement</h3>
+      @if (hasPaymentContext) {
+        <div class="mt-2 grid grid-cols-2 gap-2">
+          <div class="rounded-lg bg-background px-3 py-2">
+            <p class="text-[10px] uppercase tracking-wide text-muted-foreground">Déjà payé</p>
+            <p class="text-sm font-semibold text-green-600 dark:text-green-400">
+              {{ formatAmount(paidAmount) }}
+            </p>
+          </div>
+          <div class="rounded-lg bg-background px-3 py-2">
+            <p class="text-[10px] uppercase tracking-wide text-muted-foreground">Reste à payer</p>
+            <p class="text-sm font-semibold text-destructive">{{ formatAmount(maxPayAmount) }}</p>
+          </div>
+        </div>
+      } @else {
+        <p class="text-xs text-muted-foreground mt-1">Créez une commande pour activer le paiement</p>
+      }
     </div>
 
-    <!-- Actions -->
-    <div class="flex flex-col gap-2 w-36 h-full">
-      <button
-        hlmBtn
-        variant="default"
-        class="flex-1 font-bold"
-        (click)="PayAll()"
-        [disabled]="!isEmpty() || !orderId || maxPayAmount <= 0"
-      >
-        Fully Pay
-      </button>
+    <div class="p-4 flex flex-col gap-3 flex-1">
+      <input
+        type="text"
+        [(ngModel)]="value"
+        class="w-full border border-border rounded-lg px-4 py-3 text-right text-2xl font-semibold bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+        placeholder="0.00"
+        readonly
+      />
 
-      <button
-        hlmBtn
-        variant="default"
-        class="flex-1 font-bold"
-        (click)="Pay(value)"
-        [disabled]="isEmpty() || !orderId || maxPayAmount <= 0"
-      >
-        Pay
-      </button>
+      <div class="flex flex-row gap-3 flex-1 min-h-0">
+        <div class="grid grid-cols-3 gap-2 flex-1">
+          <button
+            hlmBtn
+            variant="secondary"
+            size="lg"
+            *ngFor="let key of keys"
+            (click)="press(key)"
+            class="w-full h-full text-lg font-semibold"
+          >
+            {{ key === 'x' ? '⌫' : key }}
+          </button>
+        </div>
 
-      <button
-        hlmBtn
-        variant="destructive"
-        class="flex-1 font-bold"
-        (click)="clear()"
-        [disabled]="isEmpty()"
-      >
-        Clear
-      </button>
+        <div class="flex flex-col gap-2 w-36">
+          <button
+            hlmBtn
+            variant="default"
+            class="flex-1 font-bold"
+            (click)="PayAll()"
+            [disabled]="!isEmpty() || !orderId || maxPayAmount <= 0"
+          >
+            Tout payer
+          </button>
+
+          <button
+            hlmBtn
+            variant="default"
+            class="flex-1 font-bold"
+            (click)="Pay(value)"
+            [disabled]="isEmpty() || !orderId || maxPayAmount <= 0"
+          >
+            Payer
+          </button>
+
+          <button
+            hlmBtn
+            variant="destructive"
+            class="flex-1 font-bold"
+            (click)="clear()"
+            [disabled]="isEmpty()"
+          >
+            Effacer
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -11,17 +11,18 @@ import { FormsModule } from '@angular/forms';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { OrderService } from '../../order.service';
 import { toast } from 'ngx-sonner';
+import { formatAmount } from '../../utils/order-status.utils';
 
 @Component({
   selector: 'app-order-keyboard',
   standalone: true,
   imports: [CommonModule, FormsModule, HlmButton],
   templateUrl: './order-keyboard.component.html',
-  styleUrls: ['./order-keyboard.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderKeyboardComponent {
   private readonly orderService = inject(OrderService);
+  readonly formatAmount = formatAmount;
   @Input() orderId: number | null = null;
   @Input() maxPayAmount = 0;
   @Input() paidAmount = 0;
