@@ -99,7 +99,7 @@ export class ProductFamilyComponent implements OnInit, OnDestroy {
     sortOrder: 'asc' | 'desc' | '' = '',
   ) {
     this.productFamilyService
-      .findAll({
+      .findAllPaginated({
         take: size,
         skip: page * size,
         order: sortBy
@@ -108,9 +108,9 @@ export class ProductFamilyComponent implements OnInit, OnDestroy {
             } as Record<string, 'ASC' | 'DESC'>)
           : undefined,
       })
-      .subscribe((families) => {
-        this.data.next(families);
-        this.totalRecords.next(families.length);
+      .subscribe((response) => {
+        this.data.next(response.data);
+        this.totalRecords.next(response.meta.itemCount);
       });
   }
 

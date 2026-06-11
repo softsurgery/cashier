@@ -5,3 +5,4 @@ export * from './product.family';
 export * from './product';
 export * from './order-product';
 export * from './storage';
+export type { PaginatedResponse, PaginatedMeta } from './electron.d';

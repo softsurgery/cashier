@@ -65,7 +65,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   loadOrders(page = 0, size = 10, search = '', sortBy = '', sortOrder: 'asc' | 'desc' | '' = '') {
     this.orderService
-      .findAll({
+      .findAllPaginated({
         take: size,
         skip: page * size,
         order: sortBy
@@ -75,9 +75,9 @@ export class OrderComponent implements OnInit, OnDestroy {
           : undefined,
         relations: ['table'],
       })
-      .subscribe((orders) => {
-        this.data.next(orders);
-        this.totalRecords.next(orders.length);
+      .subscribe((response) => {
+        this.data.next(response.data);
+        this.totalRecords.next(response.meta.itemCount);
       });
   }
 }

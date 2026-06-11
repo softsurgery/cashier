@@ -7,9 +7,12 @@ import { ProductFamilyEntity } from '@/modules/product-family/entities/product-f
 
 export function registerProductFamilyHandlers(): void {
   const service = new ProductFamilyService();
-  // Get all product-families
   ipcMain.handle('product-family:findAll', async (_event, query: FindManyOptions) => {
     return service.findAll(query);
+  });
+
+  ipcMain.handle('product-family:findAllPaginated', async (_event, query: FindManyOptions) => {
+    return service.findAllPaginated(query);
   });
 
   // Get a single product-family by id

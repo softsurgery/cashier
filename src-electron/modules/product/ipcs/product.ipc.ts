@@ -6,9 +6,12 @@ import { UpdateProductDto } from '../dtos/update-product.dto';
 
 export function registerProductHandlers(): void {
   const service = new ProductService();
-  // Get all products
   ipcMain.handle('product:findAll', async (_event, query: FindManyOptions) => {
     return service.findAll(query);
+  });
+
+  ipcMain.handle('product:findAllPaginated', async (_event, query: FindManyOptions) => {
+    return service.findAllPaginated(query);
   });
 
   // Get a single product by id

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { CreateOrderDto, OrderStatus, ResponseOrderDto, UpdateOrderDto } from '../../types';
 import type { FindManyOptions } from 'typeorm';
+import type { PaginatedResponse } from '../../types';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -12,6 +13,10 @@ export class OrderService {
 
   findAll(query: FindManyOptions<ResponseOrderDto>): Observable<ResponseOrderDto[]> {
     return from(window.electronAPI!.order.findAll(query));
+  }
+
+  findAllPaginated(query: FindManyOptions<ResponseOrderDto>): Observable<PaginatedResponse<ResponseOrderDto>> {
+    return from(window.electronAPI!.order.findAllPaginated(query));
   }
 
   findOneById(id: number): Observable<ResponseOrderDto | null> {

@@ -40,12 +40,11 @@
   </ng-template>
 </div>
 
-<div class="max-h-screen overflow-y-auto rounded-md border">
-  <!-- we defer the loading of the table, because tanstack manipulates the DOM with flexRender which can cause errors during SSR -->
+<div class="rounded-md border">
   @defer {
-    <div hlmTableContainer>
+    <div hlmTableContainer class="max-h-[70vh] overflow-y-auto">
       <table hlmTable>
-        <thead hlmTHead>
+        <thead hlmTHead class="sticky top-0 z-10 bg-background">
           @for (headerGroup of _table.getHeaderGroups(); track headerGroup.id) {
             <tr hlmTr>
               @for (header of headerGroup.headers; track header.id) {

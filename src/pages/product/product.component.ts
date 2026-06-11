@@ -89,7 +89,7 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   loadProducts(page = 0, size = 10, search = '', sortBy = '', sortOrder: 'asc' | 'desc' | '' = '') {
     this.productService
-      .findAll({
+      .findAllPaginated({
         take: size,
         skip: page * size,
         order: sortBy
@@ -99,9 +99,9 @@ export class ProductComponent implements OnInit, OnDestroy {
           : undefined,
         relations: ['productFamily'],
       })
-      .subscribe((products) => {
-        this.data.next(products);
-        this.totalRecords.next(products.length);
+      .subscribe((response) => {
+        this.data.next(response.data);
+        this.totalRecords.next(response.meta.itemCount);
       });
   }
 

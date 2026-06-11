@@ -92,7 +92,7 @@ export class TableZoneComponent implements OnInit, OnDestroy {
     sortOrder: 'asc' | 'desc' | '' = '',
   ) {
     this.tableZoneService
-      .findAll({
+      .findAllPaginated({
         relations: ['tables'],
         take: size,
         skip: page * size,
@@ -102,9 +102,9 @@ export class TableZoneComponent implements OnInit, OnDestroy {
             } as Record<string, 'ASC' | 'DESC'>)
           : undefined,
       })
-      .subscribe((zones) => {
-        this.data.next(zones);
-        this.totalRecords.next(zones.length);
+      .subscribe((response) => {
+        this.data.next(response.data);
+        this.totalRecords.next(response.meta.itemCount);
       });
   }
 

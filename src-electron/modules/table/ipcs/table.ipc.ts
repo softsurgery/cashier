@@ -7,9 +7,12 @@ import { UpdateTableDto } from '../dtos/table/update-table.dto';
 export function registerTableHandlers(): void {
   const service = new TableService();
 
-  // Get all tables
   ipcMain.handle('table:findAll', async (_event, query: FindManyOptions) => {
     return service.findAll(query);
+  });
+
+  ipcMain.handle('table:findAllPaginated', async (_event, query: FindManyOptions) => {
+    return service.findAllPaginated(query);
   });
 
   // Get a single table by id

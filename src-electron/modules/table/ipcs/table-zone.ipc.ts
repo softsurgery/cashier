@@ -7,9 +7,12 @@ import { UpdateTableZoneDto } from '../dtos/table-zone/update-table-zone.dto';
 export function registerTableZoneHandlers(): void {
   const service = new TableZoneService();
 
-  // Get all table zones
   ipcMain.handle('table-zone:findAll', async (_event, query: FindManyOptions) => {
     return service.findAll(query);
+  });
+
+  ipcMain.handle('table-zone:findAllPaginated', async (_event, query: FindManyOptions) => {
+    return service.findAllPaginated(query);
   });
 
   // Get a single table zone by id

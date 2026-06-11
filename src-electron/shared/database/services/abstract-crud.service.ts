@@ -34,6 +34,9 @@ export class AbstractCrudService<T extends ObjectLiteral> {
   }
 
   async findAllPaginated(query: FindManyOptions<T> = {}): Promise<PageDto<T>> {
+    const take = Number(query.take) || 10;
+    const skipVal = Number(query.skip) || 0;
+
     const count = await this.repository.getTotalCount({
       where: query.where,
     });
@@ -42,8 +45,8 @@ export class AbstractCrudService<T extends ObjectLiteral> {
 
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto: {
-        page: Number(query.skip),
-        take: Number(query.take),
+        page: Math.floor(skipVal / take) + 1,
+        take,
       },
       itemCount: count,
     });

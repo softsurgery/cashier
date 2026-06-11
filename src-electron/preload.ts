@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // ── Table CRUD ──────────────────────────────────────────────
   table: {
     findAll: (query?: any) => ipcRenderer.invoke('table:findAll', query),
+    findAllPaginated: (query?: any) => ipcRenderer.invoke('table:findAllPaginated', query),
     findOneById: (id: number) => ipcRenderer.invoke('table:findOneById', id),
     create: (data: { name: string; zoneId?: number; status?: string }) =>
       ipcRenderer.invoke('table:create', data),
@@ -32,6 +33,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // ── TableZone CRUD ──────────────────────────────────────────────
   tableZone: {
     findAll: (query?: any) => ipcRenderer.invoke('table-zone:findAll', query),
+    findAllPaginated: (query?: any) => ipcRenderer.invoke('table-zone:findAllPaginated', query),
     findOneById: (id: number) => ipcRenderer.invoke('table-zone:findOneById', id),
     create: (data: { name: string }) => ipcRenderer.invoke('table-zone:create', data),
     update: (id: number, data: Partial<{ name: string }>) =>
@@ -41,6 +43,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // ── Order CRUD ──────────────────────────────────────────────
   order: {
     findAll: (query: any) => ipcRenderer.invoke('order:findAll', query),
+    findAllPaginated: (query?: any) => ipcRenderer.invoke('order:findAllPaginated', query),
     findOneById: (id: number) => ipcRenderer.invoke('order:findOneById', id),
     create: (data: { tableId?: number }) => ipcRenderer.invoke('order:create', data),
     update: (id: number, data: Partial<{ tableId?: number; status: string }>) =>
@@ -51,6 +54,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // ── ProductFamily CRUD ─────────────────────────────────────
   productFamily: {
     findAll: (query: any) => ipcRenderer.invoke('product-family:findAll', query),
+    findAllPaginated: (query?: any) => ipcRenderer.invoke('product-family:findAllPaginated', query),
     findOneById: (id: number) => ipcRenderer.invoke('product-family:findOneById', id),
     create: (data: CreateProductFamilyDto) => ipcRenderer.invoke('product-family:create', data),
     update: (id: number, data: Partial<{ name: string; description: string }>) =>
@@ -60,6 +64,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // ── Product CRUD ─────────────────────────────────────
   product: {
     findAll: (query: any) => ipcRenderer.invoke('product:findAll', query),
+    findAllPaginated: (query?: any) => ipcRenderer.invoke('product:findAllPaginated', query),
     findOneById: (id: number) => ipcRenderer.invoke('product:findOneById', id),
     create: (data: CreateProductDto) => ipcRenderer.invoke('product:create', data),
     update: (id: number, data: Partial<UpdateProductDto>) =>

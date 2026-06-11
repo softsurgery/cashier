@@ -13,6 +13,10 @@ export function registerOrderHandlers(): void {
     return service.findAll(query);
   });
 
+  ipcMain.handle('order:findAllPaginated', async (_event, query: FindManyOptions<OrderEntity>) => {
+    return service.findAllPaginated(query);
+  });
+
   ipcMain.handle('order:findOneById', async (_event, id: number) => {
     return service.findOneById(id);
   });

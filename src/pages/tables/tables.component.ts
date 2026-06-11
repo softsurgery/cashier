@@ -92,7 +92,7 @@ export class TablesComponent implements OnInit, OnDestroy {
 
   loadTables(page = 0, size = 10, search = '', sortBy = '', sortOrder: 'asc' | 'desc' | '' = '') {
     this.tablesService
-      .findAll({
+      .findAllPaginated({
         take: size,
         skip: page * size,
         order: sortBy
@@ -102,9 +102,9 @@ export class TablesComponent implements OnInit, OnDestroy {
           : undefined,
         relations: ['zone'],
       })
-      .subscribe((tables) => {
-        this.data.next(tables);
-        this.totalRecords.next(tables.length);
+      .subscribe((response) => {
+        this.data.next(response.data);
+        this.totalRecords.next(response.meta.itemCount);
       });
   }
 

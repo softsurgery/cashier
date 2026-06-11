@@ -10,8 +10,23 @@ import { CreateTableDto, ResponseTableDto } from './table.types';
 import { ResponseTableZoneDto } from './table-zone.types';
 import { StorageFileData, StorageResponse } from '../services/storage.service';
 
+export interface PaginatedMeta {
+  page: number;
+  take: number;
+  itemCount: number;
+  pageCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: PaginatedMeta;
+}
+
 export interface TableAPI {
   findAll(query?: any): Promise<ResponseTableDto[]>;
+  findAllPaginated(query?: any): Promise<PaginatedResponse<ResponseTableDto>>;
   findOneById(id: number): Promise<ResponseTableDto | null>;
   create(data: CreateTableDto): Promise<ResponseTableDto>;
   update(
@@ -23,6 +38,7 @@ export interface TableAPI {
 
 export interface TableZoneAPI {
   findAll(query?: any): Promise<ResponseTableZoneDto[]>;
+  findAllPaginated(query?: any): Promise<PaginatedResponse<ResponseTableZoneDto>>;
   findOneById(id: number): Promise<ResponseTableZoneDto | null>;
   create(data: { name: string }): Promise<ResponseTableZoneDto>;
   update(id: number, data: Partial<{ name: string }>): Promise<ResponseTableZoneDto | null>;
@@ -31,6 +47,7 @@ export interface TableZoneAPI {
 
 export interface OrderAPI {
   findAll(query?: any): Promise<ResponseOrderDto[]>;
+  findAllPaginated(query?: any): Promise<PaginatedResponse<ResponseOrderDto>>;
   findOneById(id: number): Promise<ResponseOrderDto | null>;
   create(data: CreateOrderDto): Promise<ResponseOrderDto>;
   update(id: number, data: Partial<UpdateOrderDto>): Promise<ResponseOrderDto | null>;
@@ -40,6 +57,7 @@ export interface OrderAPI {
 
 export interface ProductFamilyAPI {
   findAll(query?: any): Promise<ResponseProductFamilyDto[]>;
+  findAllPaginated(query?: any): Promise<PaginatedResponse<ResponseProductFamilyDto>>;
   findOneById(id: number): Promise<ResponseProductFamilyDto | null>;
   create(data: CreateProductFamilyDto): Promise<ResponseProductFamilyDto>;
   update(
@@ -51,6 +69,7 @@ export interface ProductFamilyAPI {
 
 export interface ProductAPI {
   findAll(query?: any): Promise<ResponseProductDto[]>;
+  findAllPaginated(query?: any): Promise<PaginatedResponse<ResponseProductDto>>;
   findOneById(id: number): Promise<ResponseProductDto | null>;
   create(data: CreateProductDto): Promise<ResponseProductDto>;
   update(id: number, data: Partial<UpdateProductDto>): Promise<ResponseProductDto | null>;
