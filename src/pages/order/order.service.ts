@@ -40,7 +40,7 @@ export class OrderService {
         where: { tableId },
         status: [OrderStatus.UNPAID, OrderStatus.PARTIALLY_PAID],
         take: 1,
-        relactions: ['products', 'products.product'],
+        relations: ['products', 'products.product'],
       }),
     ).pipe(map((orders) => orders[0] || null));
   }
