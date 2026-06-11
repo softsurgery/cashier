@@ -25,6 +25,7 @@ export const getOrderDataTableObject = ({
     variant: DataTableVariant.COMMON,
     serverQuery,
     enableServerActions: true,
+    searchableFields: ['status'],
     createAction: {
       label: 'Create Order',
       action: () => router.navigate(['/new-client-order']),

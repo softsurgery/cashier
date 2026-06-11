@@ -1,17 +1,17 @@
 import { ipcMain } from 'electron';
 import { TableZoneService } from '../service/table-zone.service';
-import { FindManyOptions } from 'typeorm';
+import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
 import { CreateTableZoneDto } from '../dtos/table-zone/create-table-zone.dto';
 import { UpdateTableZoneDto } from '../dtos/table-zone/update-table-zone.dto';
 
 export function registerTableZoneHandlers(): void {
   const service = new TableZoneService();
 
-  ipcMain.handle('table-zone:findAll', async (_event, query: FindManyOptions) => {
+  ipcMain.handle('table-zone:findAll', async (_event, query: FindManyQueryDto) => {
     return service.findAll(query);
   });
 
-  ipcMain.handle('table-zone:findAllPaginated', async (_event, query: FindManyOptions) => {
+  ipcMain.handle('table-zone:findAllPaginated', async (_event, query: FindManyQueryDto) => {
     return service.findAllPaginated(query);
   });
 

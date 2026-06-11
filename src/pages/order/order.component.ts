@@ -12,6 +12,8 @@ import { getOrderDataTableObject } from './utils/order.data-table';
 import { LayoutService } from '@/components/layout/layout.service';
 import { Router } from '@angular/router';
 import { createServerQuery } from '@/components/datatable-builder/server-query';
+import { buildFindManyQuery } from '@/components/datatable-builder/find-many-query';
+import type { FindManyQueryDto } from '../../types';
 
 @Component({
   selector: 'app-order',
@@ -35,13 +37,9 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router) {
     effect(() => {
-      const page = this.serverQuery.page();
-      const size = this.serverQuery.pageSize();
-      const sortBy = this.serverQuery.sortBy();
-      const sortOrder = this.serverQuery.sortOrder();
-      const search = this.serverQuery.search();
-
-      this.loadOrders(page, size, search, sortBy, sortOrder);
+      this.loadOrders(
+        buildFindManyQuery(this.serverQuery, { relations: ['table'] }, this.dataTableObject),
+      );
     });
   }
 
@@ -63,19 +61,8 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.layoutService.clearBreadcrumbs();
   }
 
-  loadOrders(page = 0, size = 10, search = '', sortBy = '', sortOrder: 'asc' | 'desc' | '' = '') {
-    this.orderService
-      .findAllPaginated({
-        take: size,
-        skip: page * size,
-        order: sortBy
-          ? ({
-              [sortBy]: sortOrder.toUpperCase(),
-            } as Record<string, 'ASC' | 'DESC'>)
-          : undefined,
-        relations: ['table'],
-      })
-      .subscribe((response) => {
+  loadOrders(query: FindManyQueryDto = {}) {
+    this.orderService.findAllPaginated(query).subscribe((response) => {
         this.data.next(response.data);
         this.totalRecords.next(response.meta.itemCount);
       });

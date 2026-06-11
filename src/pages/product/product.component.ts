@@ -21,6 +21,8 @@ import { getProductCreateSheet } from './utils/product-create.sheet';
 import { ProductRepository } from '@/stores/product/product-state.repository';
 import { LayoutService } from '@/components/layout/layout.service';
 import { createServerQuery } from '@/components/datatable-builder/server-query';
+import { buildFindManyQuery } from '@/components/datatable-builder/find-many-query';
+import type { FindManyQueryDto } from '../../types';
 import { toast } from 'ngx-sonner';
 
 @Component({
@@ -58,13 +60,9 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      const page = this.serverQuery.page();
-      const size = this.serverQuery.pageSize();
-      const sortBy = this.serverQuery.sortBy();
-      const sortOrder = this.serverQuery.sortOrder();
-      const search = this.serverQuery.search();
-
-      this.loadProducts(page, size, search, sortBy, sortOrder);
+      this.loadProducts(
+        buildFindManyQuery(this.serverQuery, { relations: ['productFamily'] }, this.dataTableObject),
+      );
     });
   }
 
@@ -87,19 +85,8 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.layoutService.clearIntro();
   }
 
-  loadProducts(page = 0, size = 10, search = '', sortBy = '', sortOrder: 'asc' | 'desc' | '' = '') {
-    this.productService
-      .findAllPaginated({
-        take: size,
-        skip: page * size,
-        order: sortBy
-          ? ({
-              [sortBy]: sortOrder.toUpperCase(),
-            } as Record<string, 'ASC' | 'DESC'>)
-          : undefined,
-        relations: ['productFamily'],
-      })
-      .subscribe((response) => {
+  loadProducts(query: FindManyQueryDto = {}) {
+    this.productService.findAllPaginated(query).subscribe((response) => {
         this.data.next(response.data);
         this.totalRecords.next(response.meta.itemCount);
       });

@@ -30,6 +30,7 @@ export const getProductFamilyDataTableObject = ({
       ? { label: 'Create Product Family', action: onCreateAction }
       : undefined,
     enableServerActions: true,
+    searchableFields: ['name', 'description'],
     serverQuery,
     rowActions: {
       editAction: {

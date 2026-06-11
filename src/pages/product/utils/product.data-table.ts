@@ -28,6 +28,7 @@ export const getProductDataTableObject = ({
     variant: DataTableVariant.COMMON,
     createAction: onCreateAction ? { label: 'Create Product', action: onCreateAction } : undefined,
     enableServerActions: true,
+    searchableFields: ['name', 'description', 'price'],
     serverQuery,
     rowActions: {
       editAction: {

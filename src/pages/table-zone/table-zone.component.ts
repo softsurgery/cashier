@@ -18,6 +18,8 @@ import { getTableZoneCreateFormStructure } from './utils/table-zone-create.form-
 import { getTableZoneCreateSheet } from './utils/table-zone-create.sheet';
 import { LayoutService } from '@/components/layout/layout.service';
 import { createServerQuery } from '@/components/datatable-builder/server-query';
+import { buildFindManyQuery } from '@/components/datatable-builder/find-many-query';
+import type { FindManyQueryDto } from '../../types';
 import { toast } from 'ngx-sonner';
 import { TableZoneRepository } from '@/stores/table-zone-state /table-zone-state.repository';
 
@@ -55,13 +57,9 @@ export class TableZoneComponent implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      const page = this.serverQuery.page();
-      const size = this.serverQuery.pageSize();
-      const sortBy = this.serverQuery.sortBy();
-      const sortOrder = this.serverQuery.sortOrder();
-      const search = this.serverQuery.search();
-
-      this.loadTableZones(page, size, search, sortBy, sortOrder);
+      this.loadTableZones(
+        buildFindManyQuery(this.serverQuery, { relations: ['tables'] }, this.dataTableObject),
+      );
     });
   }
 
@@ -84,25 +82,8 @@ export class TableZoneComponent implements OnInit, OnDestroy {
     this.layoutService.clearIntro();
   }
 
-  loadTableZones(
-    page = 0,
-    size = 10,
-    search = '',
-    sortBy = '',
-    sortOrder: 'asc' | 'desc' | '' = '',
-  ) {
-    this.tableZoneService
-      .findAllPaginated({
-        relations: ['tables'],
-        take: size,
-        skip: page * size,
-        order: sortBy
-          ? ({
-              [sortBy]: sortOrder.toUpperCase(),
-            } as Record<string, 'ASC' | 'DESC'>)
-          : undefined,
-      })
-      .subscribe((response) => {
+  loadTableZones(query: FindManyQueryDto = {}) {
+    this.tableZoneService.findAllPaginated(query).subscribe((response) => {
         this.data.next(response.data);
         this.totalRecords.next(response.meta.itemCount);
       });

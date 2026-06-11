@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron';
-import { FindManyOptions, FindOneOptions } from 'typeorm';
+import { FindOneOptions } from 'typeorm';
+import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
 import { ProductFamilyService } from '../services/product-family.service';
 import { CreateProductFamilyDto } from '../dtos/create-product-family.dto';
 import { UpdateProductFamilyDto } from '../dtos/update-product-family.dto';
@@ -7,11 +8,11 @@ import { ProductFamilyEntity } from '@/modules/product-family/entities/product-f
 
 export function registerProductFamilyHandlers(): void {
   const service = new ProductFamilyService();
-  ipcMain.handle('product-family:findAll', async (_event, query: FindManyOptions) => {
+  ipcMain.handle('product-family:findAll', async (_event, query: FindManyQueryDto) => {
     return service.findAll(query);
   });
 
-  ipcMain.handle('product-family:findAllPaginated', async (_event, query: FindManyOptions) => {
+  ipcMain.handle('product-family:findAllPaginated', async (_event, query: FindManyQueryDto) => {
     return service.findAllPaginated(query);
   });
 

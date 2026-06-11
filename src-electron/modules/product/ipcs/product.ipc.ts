@@ -1,16 +1,16 @@
 import { ipcMain } from 'electron';
-import { FindManyOptions } from 'typeorm';
+import { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
 import { ProductService } from '../services/product.service';
 import { CreateProductDto } from '../dtos/create-product.dto';
 import { UpdateProductDto } from '../dtos/update-product.dto';
 
 export function registerProductHandlers(): void {
   const service = new ProductService();
-  ipcMain.handle('product:findAll', async (_event, query: FindManyOptions) => {
+  ipcMain.handle('product:findAll', async (_event, query: FindManyQueryDto) => {
     return service.findAll(query);
   });
 
-  ipcMain.handle('product:findAllPaginated', async (_event, query: FindManyOptions) => {
+  ipcMain.handle('product:findAllPaginated', async (_event, query: FindManyQueryDto) => {
     return service.findAllPaginated(query);
   });
 

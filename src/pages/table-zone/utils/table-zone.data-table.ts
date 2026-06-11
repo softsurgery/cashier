@@ -29,6 +29,7 @@ export const getTableZoneDataTableObject = ({
       ? { label: 'Create Table Zone', action: onCreateAction }
       : undefined,
     enableServerActions: true,
+    searchableFields: ['name'],
     serverQuery,
     rowActions: {
       editAction: {

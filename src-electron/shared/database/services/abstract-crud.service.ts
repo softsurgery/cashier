@@ -1,7 +1,9 @@
-import { DeepPartial, FindManyOptions, FindOneOptions, ObjectLiteral } from 'typeorm';
+import { DeepPartial, FindOneOptions, ObjectLiteral } from 'typeorm';
+import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
 import { DatabaseAbstractRepository } from '../repositories/database.repository';
 import { PageDto } from '../dtos/database.page.dto';
 import { PageMetaDto } from '../dtos/database.page-meta.dto';
+import { toFindManyOptions } from '../utils/find-many-query.builder';
 
 export class AbstractCrudService<T extends ObjectLiteral> {
   repository: DatabaseAbstractRepository<T>;
@@ -29,19 +31,20 @@ export class AbstractCrudService<T extends ObjectLiteral> {
     return entity;
   }
 
-  async findAll(query: FindManyOptions<T> = {}): Promise<T[]> {
-    return await this.repository.findAll(query);
+  async findAll(query: FindManyQueryDto = {}): Promise<T[]> {
+    return await this.repository.findAll(toFindManyOptions<T>(query));
   }
 
-  async findAllPaginated(query: FindManyOptions<T> = {}): Promise<PageDto<T>> {
-    const take = Number(query.take) || 10;
-    const skipVal = Number(query.skip) || 0;
+  async findAllPaginated(query: FindManyQueryDto = {}): Promise<PageDto<T>> {
+    const options = toFindManyOptions<T>(query);
+    const take = Number(options.take) || 10;
+    const skipVal = Number(options.skip) || 0;
 
     const count = await this.repository.getTotalCount({
-      where: query.where,
+      where: options.where,
     });
 
-    const entities = await this.repository.findAll(query);
+    const entities = await this.repository.findAll(options);
 
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto: {

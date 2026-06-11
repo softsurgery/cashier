@@ -1,17 +1,17 @@
 import { ipcMain } from 'electron';
 import { TableService } from '../service/table.service';
-import { FindManyOptions } from 'typeorm';
+import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
 import { CreateTableDto } from '../dtos/table/create-table.dto';
 import { UpdateTableDto } from '../dtos/table/update-table.dto';
 
 export function registerTableHandlers(): void {
   const service = new TableService();
 
-  ipcMain.handle('table:findAll', async (_event, query: FindManyOptions) => {
+  ipcMain.handle('table:findAll', async (_event, query: FindManyQueryDto) => {
     return service.findAll(query);
   });
 
-  ipcMain.handle('table:findAllPaginated', async (_event, query: FindManyOptions) => {
+  ipcMain.handle('table:findAllPaginated', async (_event, query: FindManyQueryDto) => {
     return service.findAllPaginated(query);
   });
 

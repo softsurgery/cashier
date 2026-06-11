@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import type { FindManyOptions } from 'typeorm';
+import type { FindManyQueryDto } from '../../types';
 import { CreateTableZoneDto, ResponseTableZoneDto } from '../../types';
 import type { PaginatedResponse } from '../../types';
 
@@ -10,11 +10,11 @@ import type { PaginatedResponse } from '../../types';
 export class TableZoneService {
   constructor() {}
 
-  findAll(query: FindManyOptions<ResponseTableZoneDto> = {}): Observable<ResponseTableZoneDto[]> {
+  findAll(query: FindManyQueryDto = {}): Observable<ResponseTableZoneDto[]> {
     return from(window.electronAPI!.tableZone.findAll(query));
   }
 
-  findAllPaginated(query: FindManyOptions<ResponseTableZoneDto>): Observable<PaginatedResponse<ResponseTableZoneDto>> {
+  findAllPaginated(query: FindManyQueryDto = {}): Observable<PaginatedResponse<ResponseTableZoneDto>> {
     return from(window.electronAPI!.tableZone.findAllPaginated(query));
   }
 

@@ -11,7 +11,6 @@
     "resolveJsonModule": true,
     "declaration": false,
     "outDir": "../dist-electron",
-    "rootDir": ".",
     "sourceMap": true,
     "baseUrl": ".",
     "experimentalDecorators": true,
@@ -20,5 +19,5 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["./**/*.ts"]
+  "include": ["./**/*.ts", "../src/types/find-many-query.types.ts"]
 }

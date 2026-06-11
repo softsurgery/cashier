@@ -1,19 +1,17 @@
-// order.handler.ts
 import { ipcMain } from 'electron';
-import { FindManyOptions } from 'typeorm';
+import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
 import { OrderService } from '../services/order.service';
-import { OrderEntity } from '../entities/order.entity';
 import { CreateOrderDto } from '../dtos/create-order.dto';
 import { UpdateOrderDto } from '../dtos/update-order.dto';
 
 export function registerOrderHandlers(): void {
   const service = new OrderService();
 
-  ipcMain.handle('order:findAll', async (_event, query: FindManyOptions<OrderEntity>) => {
+  ipcMain.handle('order:findAll', async (_event, query: FindManyQueryDto) => {
     return service.findAll(query);
   });
 
-  ipcMain.handle('order:findAllPaginated', async (_event, query: FindManyOptions<OrderEntity>) => {
+  ipcMain.handle('order:findAllPaginated', async (_event, query: FindManyQueryDto) => {
     return service.findAllPaginated(query);
   });
 

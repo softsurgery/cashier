@@ -24,6 +24,8 @@ import { getProductFamilyCreateFormStructure } from './utils/product-family-crea
 import { getProductFamilyCreateSheet } from './utils/product-family-create.sheet';
 import { LayoutService } from '@/components/layout/layout.service';
 import { createServerQuery } from '@/components/datatable-builder/server-query';
+import { buildFindManyQuery } from '@/components/datatable-builder/find-many-query';
+import type { FindManyQueryDto } from '../../types';
 import { toast } from 'ngx-sonner';
 import { getProductFamilyUpdateFormStructure } from './utils/product-family-update.form-structure';
 import { getProductFamilyUpdateSheet } from './utils/product-family-update.sheet';
@@ -62,13 +64,7 @@ export class ProductFamilyComponent implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      const page = this.serverQuery.page();
-      const size = this.serverQuery.pageSize();
-      const sortBy = this.serverQuery.sortBy();
-      const sortOrder = this.serverQuery.sortOrder();
-      const search = this.serverQuery.search();
-
-      this.loadProductFamilies(page, size, search, sortBy, sortOrder);
+      this.loadProductFamilies(buildFindManyQuery(this.serverQuery, {}, this.dataTableObject));
     });
   }
 
@@ -91,24 +87,8 @@ export class ProductFamilyComponent implements OnInit, OnDestroy {
     this.layoutService.clearIntro();
   }
 
-  loadProductFamilies(
-    page = 0,
-    size = 10,
-    search = '',
-    sortBy = '',
-    sortOrder: 'asc' | 'desc' | '' = '',
-  ) {
-    this.productFamilyService
-      .findAllPaginated({
-        take: size,
-        skip: page * size,
-        order: sortBy
-          ? ({
-              [sortBy]: sortOrder.toUpperCase(),
-            } as Record<string, 'ASC' | 'DESC'>)
-          : undefined,
-      })
-      .subscribe((response) => {
+  loadProductFamilies(query: FindManyQueryDto = {}) {
+    this.productFamilyService.findAllPaginated(query).subscribe((response) => {
         this.data.next(response.data);
         this.totalRecords.next(response.meta.itemCount);
       });

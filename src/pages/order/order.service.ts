@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { CreateOrderDto, OrderStatus, ResponseOrderDto, UpdateOrderDto } from '../../types';
-import type { FindManyOptions } from 'typeorm';
+import type { FindManyQueryDto } from '../../types';
 import type { PaginatedResponse } from '../../types';
 import { map } from 'rxjs/operators';
 
@@ -11,11 +11,11 @@ import { map } from 'rxjs/operators';
 export class OrderService {
   constructor() {}
 
-  findAll(query: FindManyOptions<ResponseOrderDto>): Observable<ResponseOrderDto[]> {
+  findAll(query: FindManyQueryDto = {}): Observable<ResponseOrderDto[]> {
     return from(window.electronAPI!.order.findAll(query));
   }
 
-  findAllPaginated(query: FindManyOptions<ResponseOrderDto>): Observable<PaginatedResponse<ResponseOrderDto>> {
+  findAllPaginated(query: FindManyQueryDto = {}): Observable<PaginatedResponse<ResponseOrderDto>> {
     return from(window.electronAPI!.order.findAllPaginated(query));
   }
 
@@ -42,8 +42,10 @@ export class OrderService {
   findAllByTable(tableId: number): Observable<ResponseOrderDto | null> {
     return from(
       window.electronAPI!.order.findAll({
-        where: { tableId },
-        status: [OrderStatus.UNPAID, OrderStatus.PARTIALLY_PAID],
+        where: {
+          tableId,
+          status: [OrderStatus.UNPAID, OrderStatus.PARTIALLY_PAID],
+        },
         take: 1,
         relations: ['products', 'products.product'],
       }),

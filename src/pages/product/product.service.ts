@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import type { FindManyOptions } from 'typeorm';
+import type { FindManyQueryDto } from '../../types';
 import { CreateProductDto, ResponseProductDto } from '../../types';
 import type { PaginatedResponse } from '../../types';
 
@@ -10,11 +10,11 @@ import type { PaginatedResponse } from '../../types';
 export class ProductService {
   constructor() {}
 
-  findAll(query: FindManyOptions<ResponseProductDto>): Observable<ResponseProductDto[]> {
+  findAll(query: FindManyQueryDto = {}): Observable<ResponseProductDto[]> {
     return from(window.electronAPI!.product.findAll(query));
   }
 
-  findAllPaginated(query: FindManyOptions<ResponseProductDto>): Observable<PaginatedResponse<ResponseProductDto>> {
+  findAllPaginated(query: FindManyQueryDto = {}): Observable<PaginatedResponse<ResponseProductDto>> {
     return from(window.electronAPI!.product.findAllPaginated(query));
   }
 

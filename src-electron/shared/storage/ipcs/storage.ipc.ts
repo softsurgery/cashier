@@ -1,6 +1,6 @@
 import { LocalStorageService } from '@/shared/storage/services/local-storage.service';
 import { ipcMain } from 'electron';
-import { FindManyOptions } from 'typeorm';
+import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
 
 export function registerStorageHandlers(): void {
   const service = new LocalStorageService();
@@ -29,7 +29,7 @@ export function registerStorageHandlers(): void {
     return service.duplicate(id);
   });
 
-  ipcMain.handle('storage:findAll', async (_event, query: FindManyOptions) => {
+  ipcMain.handle('storage:findAll', async (_event, query: FindManyQueryDto) => {
     return service.findAll(query);
   });
 
