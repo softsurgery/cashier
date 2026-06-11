@@ -7,7 +7,9 @@ import { registerTableZoneHandlers } from './modules/table/ipcs/table-zone.ipc';
 import { registerOrderHandlers } from './modules/order/ipcs/order.ipc';
 import { registerProductFamilyHandlers } from './modules/product-family/ipcs/product-family.ipc';
 import { registerProductHandlers } from './modules/product/ipcs/product.ipc';
+import { registerOrderProductHandlers } from './modules/order/ipcs/order-product.ipc';
 import { registerStorageHandlers } from './shared/storage/ipcs/storage.ipc';
+import { runDevSeed } from './scripts/dev-seed';
 
 // IPC Handlers
 ipcMain.handle('ping', () => 'pong');
@@ -35,11 +37,17 @@ function createWindow(): void {
 
 app.whenReady().then(async () => {
   await initializeDatabase();
+
+  if (!app.isPackaged) {
+    await runDevSeed();
+  }
+
   registerTableHandlers();
   registerTableZoneHandlers();
   registerOrderHandlers();
   registerProductFamilyHandlers();
   registerProductHandlers();
+  registerOrderProductHandlers();
   registerStorageHandlers();
   createWindow();
 });

@@ -6,12 +6,14 @@
     "ng": "ng",
     "start": "ng serve",
     "build:electron": "tsc -p src-electron/tsconfig.json && tsc-alias -p src-electron/tsconfig.json",
-    "electron": "npm run build:electron && ng build --base-href ./ && electron .",
+    "electron": "npm run build:electron && ng build --base-href ./ && electron . --no-sandbox",
     "electron:dev": "concurrently \"ng serve\" \"npm run electron:serve\"",
-    "electron:serve": "npm run build:electron && electron .",
+    "electron:serve": "npm run build:electron && electron . --no-sandbox",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "db:clear": "npm run build:electron && electron dist-electron/scripts/clear-db.js --no-sandbox",
+    "db:seed": "npm run build:electron && electron dist-electron/scripts/dev-seed.js --no-sandbox"
   },
   "private": true,
   "packageManager": "npm@10.9.4",
