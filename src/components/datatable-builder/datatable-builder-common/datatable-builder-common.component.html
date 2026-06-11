@@ -44,7 +44,7 @@
   @defer {
     <div hlmTableContainer class="max-h-[70vh] overflow-y-auto">
       <table hlmTable>
-        <thead hlmTHead class="sticky top-0 z-10 bg-background">
+        <thead hlmTHead class="sticky top-0 z-10 bg-card">
           @for (headerGroup of _table.getHeaderGroups(); track headerGroup.id) {
             <tr hlmTr>
               @for (header of headerGroup.headers; track header.id) {
@@ -57,7 +57,7 @@
                         let headerText
                       "
                     >
-                      <div [innerHTML]="headerText"></div>
+                      <div [innerHTML]="headerText" class="font-bold"></div>
                     </ng-container>
                   }
                 </th>
