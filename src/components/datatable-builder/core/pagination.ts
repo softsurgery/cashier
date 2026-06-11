@@ -33,7 +33,7 @@ import { Observable, of, Subscription } from 'rxjs';
           {{ selectedRowCount }} of {{ displayRowCount }} row(s) selected
         </div>
 
-        <div class="flex space-x-2">
+        <div class="flex items-center space-x-2">
           <button
             size="sm"
             variant="outline"
@@ -44,6 +44,10 @@ import { Observable, of, Subscription } from 'rxjs';
           >
             Previous
           </button>
+
+          <span class="text-muted-foreground min-w-28 text-center text-sm tabular-nums">
+            Page {{ currentPage }} of {{ totalPages }}
+          </span>
 
           <button
             size="sm"
@@ -91,6 +95,20 @@ export class DataTablePagination<T> implements OnDestroy {
     return this.serverQuery
       ? this.serverQuery.pageSize()
       : (this.table?.getState().pagination.pageSize ?? this.sizes?.[0] ?? 10);
+  }
+
+  get currentPage(): number {
+    if (this.serverQuery) {
+      return this.serverQuery.page() + 1;
+    }
+    return (this.table?.getState().pagination.pageIndex ?? 0) + 1;
+  }
+
+  get totalPages(): number {
+    if (this.serverQuery) {
+      return Math.max(1, Math.ceil(this._totalRecords / this.serverQuery.pageSize()));
+    }
+    return Math.max(1, this.table?.getPageCount() ?? 1);
   }
 
   get canPreviousPage(): boolean {
