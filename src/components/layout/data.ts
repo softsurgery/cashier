@@ -7,7 +7,7 @@ export const data = {
   navMain: [
     {
       title: 'Accueil',
-      url: '/accueil',
+      url: '/home',
       icon: 'lucideBot',
       isActive: true,
     },

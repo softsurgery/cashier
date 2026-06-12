@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { HomeComponent } from '../pages/home/home.component';
 import { OrderComponent } from '../pages/order/order.component';
 import { ProductFamilyComponent } from '../pages/product-family/product-family.component';
 import { ProductComponent } from '../pages/product/product.component';
@@ -15,6 +16,11 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'tables',
@@ -75,7 +81,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
 ];

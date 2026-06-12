@@ -35,7 +35,7 @@ export class LoginComponent {
             return;
           }
           this.authRepository.setState({ authenticated: true, user });
-          this.router.navigate(['/zone-tables']);
+          this.router.navigate(['/home']);
         },
         error: () => {
           this.errorMessage = 'Invalid username or password';
