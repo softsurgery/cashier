@@ -6,7 +6,7 @@ import {
   TextareaFieldProps,
   TextFieldProps,
 } from '@/components/form-builder/form-builder.types';
-import { PictureUploadComponent } from '@/components/picture-upload/picture-upload.component';
+import { PictureUploadComponent } from '@/components/form-builder/picture-upload/picture-upload.component';
 import { ProductFamilyRepository } from '@/stores/product-family-state/product-family-state.repository';
 
 interface ProductFamilyUpdateFormStructureProps {
