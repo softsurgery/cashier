@@ -1,5 +1,5 @@
 import { DeepPartial, FindOneOptions, ObjectLiteral } from 'typeorm';
-import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
+import type { FindManyQueryDto } from '@/types/find-many-query.types';
 import { DatabaseAbstractRepository } from '../repositories/database.repository';
 import { PageDto } from '../dtos/database.page.dto';
 import { PageMetaDto } from '../dtos/database.page-meta.dto';

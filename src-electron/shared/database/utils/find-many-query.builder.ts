@@ -1,5 +1,5 @@
 import { FindManyOptions, FindOptionsWhere, ILike, In, ObjectLiteral } from 'typeorm';
-import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
+import type { FindManyQueryDto } from '@/types/find-many-query.types';
 
 function normalizeWhere<T extends ObjectLiteral>(
   where: Record<string, unknown>,
