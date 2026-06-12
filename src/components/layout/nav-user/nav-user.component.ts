@@ -44,7 +44,7 @@ export class NavUserComponent {
   }>();
 
   logout(): void {
-    this.authPersistRepository.set('authenticated', false);
-    window.location.reload();
+    this.authPersistRepository.setState({ authenticated: false, user: null });
+    window.location.href = '/login';
   }
 }
