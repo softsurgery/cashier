@@ -1,9 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ProductEntity } from '@/modules/product/entities/product.entity';
+import { ProductEntity } from '../../product/entities/product.entity';
 import { OrderEntity } from './order.entity';
+import { EntityHelper } from '../../../shared/database/entities/entity-helper';
 
 @Entity('order_product')
-export class OrderProductEntity {
+export class OrderProductEntity extends EntityHelper {
   @PrimaryGeneratedColumn()
   id: number;
 

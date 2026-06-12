@@ -3,14 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   TableInheritance,
 } from 'typeorm';
 import { RoleEntity } from './role.entity';
 import { EntityHelper } from '@/shared/database/entities/entity-helper';
-import { LogEntity } from '@/shared/logger/entities/log.entity';
-import { NotificationEntity } from '@/shared/notifications/entities/notification.entity';
 
 @Entity('users')
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -42,7 +39,7 @@ export abstract class AbstractUserEntity extends EntityHelper {
   @Column({ unique: true })
   email: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   emailVerified?: Date;
 
   @Column({ nullable: true })
@@ -57,10 +54,4 @@ export abstract class AbstractUserEntity extends EntityHelper {
 
   @Column({})
   roleId: string;
-
-  @OneToMany(() => LogEntity, (log) => log.user)
-  logs?: LogEntity[];
-
-  @OneToMany(() => NotificationEntity, (notif) => notif.user)
-  notifications?: NotificationEntity[];
 }

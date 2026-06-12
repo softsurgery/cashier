@@ -10,6 +10,14 @@ import { CreateTableDto, ResponseTableDto } from './table.types';
 import { ResponseTableZoneDto } from './table-zone.types';
 import { StorageFileData, StorageResponse } from '../services/storage.service';
 import type { FindManyQueryDto } from './find-many-query.types';
+import type {
+  AuthUserDto,
+  CreateUserDto,
+  LoginCredentials,
+  ResponseUserDto,
+  UpdateUserDto,
+} from './user.types';
+import type { CreateRoleDto, ResponseRoleDto, UpdateRoleDto } from './role.types';
 
 export interface PaginatedMeta {
   page: number;
@@ -84,6 +92,28 @@ export interface StorageAPI {
   delete(id: number): Promise<StorageResponse>;
 }
 
+export interface AuthAPI {
+  login(credentials: LoginCredentials): Promise<AuthUserDto | null>;
+}
+
+export interface UserAPI {
+  findAll(query?: FindManyQueryDto): Promise<ResponseUserDto[]>;
+  findAllPaginated(query?: FindManyQueryDto): Promise<PaginatedResponse<ResponseUserDto>>;
+  findOneById(id: string): Promise<ResponseUserDto | null>;
+  create(data: CreateUserDto): Promise<ResponseUserDto>;
+  update(id: string, data: UpdateUserDto): Promise<ResponseUserDto | null>;
+  delete(id: string): Promise<ResponseUserDto>;
+}
+
+export interface RoleAPI {
+  findAll(query?: FindManyQueryDto): Promise<ResponseRoleDto[]>;
+  findAllPaginated(query?: FindManyQueryDto): Promise<PaginatedResponse<ResponseRoleDto>>;
+  findOneById(id: string): Promise<ResponseRoleDto | null>;
+  create(data: CreateRoleDto): Promise<ResponseRoleDto>;
+  update(id: string, data: UpdateRoleDto): Promise<ResponseRoleDto | null>;
+  delete(id: string): Promise<ResponseRoleDto>;
+}
+
 export interface ElectronAPI {
   /** Returns the OS platform (e.g., 'linux', 'win32', 'darwin') */
   getPlatform(): string;
@@ -107,6 +137,12 @@ export interface ElectronAPI {
   product: ProductAPI;
   /** Storage operations */
   storage: StorageAPI;
+  /** Authentication */
+  auth: AuthAPI;
+  /** User CRUD operations */
+  user: UserAPI;
+  /** Role CRUD operations */
+  role: RoleAPI;
 }
 
 declare global {

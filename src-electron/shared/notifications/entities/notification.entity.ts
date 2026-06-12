@@ -8,10 +8,14 @@ export class NotificationEntity extends EntityHelper {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'enum', enum: NotificationType, nullable: true })
+  @Column({
+    type: 'simple-enum',
+    enum: NotificationType,
+    nullable: true,
+  })
   type: NotificationType;
 
-  @ManyToOne(() => AbstractUserEntity, (user) => user.notifications, {
+  @ManyToOne(() => AbstractUserEntity, {
     nullable: true,
     eager: true,
   })

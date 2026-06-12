@@ -8,7 +8,7 @@ export class LogEntity extends EntityHelper {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'enum', enum: EventType, nullable: true })
+  @Column({ type: 'simple-enum', enum: EventType, nullable: true })
   event: EventType;
 
   @Column({ nullable: true })
@@ -17,7 +17,7 @@ export class LogEntity extends EntityHelper {
   @Column({ nullable: true })
   method?: string;
 
-  @ManyToOne(() => AbstractUserEntity, (user) => user.logs, {
+  @ManyToOne(() => AbstractUserEntity, {
     nullable: true,
     eager: true,
   })

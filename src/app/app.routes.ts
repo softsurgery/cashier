@@ -7,6 +7,8 @@ import { TableZoneComponent } from '@/pages/table-zone/table-zone.component';
 import { ZoneTablesComponent } from '@/pages/table-view/table-view.component';
 import { NewClientOrderComponent } from '@/pages/order/new-client-order/new-client-order.component';
 import { LoginComponent } from '@/pages/auth/login.component';
+import { UserComponent } from '@/pages/user/user.component';
+import { RoleComponent } from '@/pages/role/role.component';
 import { authGuard } from '@/guards/auth.guard';
 
 export const routes: Routes = [
@@ -59,6 +61,16 @@ export const routes: Routes = [
   {
     path: 'produits',
     component: ProductComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'users',
+    component: UserComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'roles',
+    component: RoleComponent,
     canActivate: [authGuard],
   },
   {

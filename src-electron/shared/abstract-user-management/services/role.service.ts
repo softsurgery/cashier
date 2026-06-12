@@ -10,11 +10,14 @@ import { AbstractCrudService } from '@/shared/database/services/abstract-crud.se
 
 @Injectable()
 export class RoleService extends AbstractCrudService<RoleEntity> {
-  constructor(
-    private readonly roleRepository: RoleRepository,
-    private readonly rolePermissionService: RolePermissionService,
-  ) {
+  private readonly roleRepository: RoleRepository;
+  private readonly rolePermissionService: RolePermissionService;
+
+  constructor() {
+    const roleRepository = new RoleRepository();
     super(roleRepository);
+    this.roleRepository = roleRepository;
+    this.rolePermissionService = new RolePermissionService();
   }
 
   async saveWithPermissions(createRoleDto: DeepPartial<RoleEntity>): Promise<RoleEntity> {

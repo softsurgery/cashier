@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import { TableZoneService } from '../service/table-zone.service';
-import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
+import type { FindManyQueryDto } from '@/types/find-many-query.types';
 import { CreateTableZoneDto } from '../dtos/table-zone/create-table-zone.dto';
 import { UpdateTableZoneDto } from '../dtos/table-zone/update-table-zone.dto';
 

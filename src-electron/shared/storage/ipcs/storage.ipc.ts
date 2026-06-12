@@ -1,6 +1,6 @@
 import { LocalStorageService } from '@/shared/storage/services/local-storage.service';
 import { ipcMain } from 'electron';
-import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
+import type { FindManyQueryDto } from '@/types/find-many-query.types';
 
 export function registerStorageHandlers(): void {
   const service = new LocalStorageService();

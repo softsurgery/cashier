@@ -5,7 +5,7 @@ import { AbstractCrudService } from '@/shared/database/services/abstract-crud.se
 
 @Injectable()
 export class RolePermissionService extends AbstractCrudService<RolePermissionEntity> {
-  constructor(private readonly rolePermissionRepository: RolePermissionRepository) {
-    super(rolePermissionRepository);
+  constructor() {
+    super(new RolePermissionRepository());
   }
 }

@@ -9,7 +9,11 @@ import { registerProductFamilyHandlers } from './modules/product-family/ipcs/pro
 import { registerProductHandlers } from './modules/product/ipcs/product.ipc';
 import { registerOrderProductHandlers } from './modules/order/ipcs/order-product.ipc';
 import { registerStorageHandlers } from './shared/storage/ipcs/storage.ipc';
+import { registerUserHandlers } from './modules/user/ipcs/user.ipc';
+import { registerRoleHandlers } from './modules/role/ipcs/role.ipc';
+import { registerAuthHandlers } from './modules/auth/ipcs/auth.ipc';
 import { runDevSeed } from './scripts/dev-seed';
+import { seedUsersAndRoles } from './scripts/seed-users';
 
 // IPC Handlers
 ipcMain.handle('ping', () => 'pong');
@@ -41,6 +45,7 @@ app.whenReady().then(async () => {
   if (!app.isPackaged) {
     await runDevSeed();
   }
+  await seedUsersAndRoles();
 
   registerTableHandlers();
   registerTableZoneHandlers();
@@ -49,6 +54,9 @@ app.whenReady().then(async () => {
   registerProductHandlers();
   registerOrderProductHandlers();
   registerStorageHandlers();
+  registerUserHandlers();
+  registerRoleHandlers();
+  registerAuthHandlers();
   createWindow();
 });
 

@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
+import type { FindManyQueryDto } from '@/types/find-many-query.types';
 import { ProductService } from '../services/product.service';
 import { CreateProductDto } from '../dtos/create-product.dto';
 import { UpdateProductDto } from '../dtos/update-product.dto';

@@ -8,6 +8,13 @@ import { ProductEntity } from '../../modules/product/entities/product.entity';
 import { OrderProductEntity } from '../../modules/order/entities/order-product.entity';
 import { TableZoneEntity } from '../../modules/table/entities/table-zone.entity';
 import { StorageEntity } from '../storage/entities/storage.entity';
+import { UserEntity } from '../../modules/user/entities/user.entity';
+import { RoleEntity } from '../abstract-user-management/entities/role.entity';
+import { PermissionEntity } from '../abstract-user-management/entities/permission.entity';
+import { RolePermissionEntity } from '../abstract-user-management/entities/role-permission.entity';
+import { AbstractUserEntity } from '../abstract-user-management/entities/abstract-user.entity';
+import { NotificationEntity } from '../notifications/entities/notification.entity';
+import { LogEntity } from '../logger/entities/log.entity';
 
 let dataSource: DataSource | null = null;
 
@@ -29,6 +36,13 @@ export async function initializeDatabase(): Promise<DataSource> {
       ProductFamilyEntity,
       ProductEntity,
       OrderProductEntity,
+      AbstractUserEntity,
+      UserEntity,
+      RoleEntity,
+      PermissionEntity,
+      RolePermissionEntity,
+      NotificationEntity,
+      LogEntity,
     ],
     synchronize: true,
     // logging: !app.isPackaged,

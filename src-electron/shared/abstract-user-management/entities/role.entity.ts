@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { AbstractUserEntity } from './abstract-user.entity';
+import { UserEntity } from '@/modules/user/entities/user.entity';
 import { RolePermissionEntity } from './role-permission.entity';
 import { EntityHelper } from '@/shared/database/entities/entity-helper';
 
@@ -17,6 +17,6 @@ export class RoleEntity extends EntityHelper {
   @OneToMany(() => RolePermissionEntity, (rolePermission) => rolePermission.role)
   permissions: RolePermissionEntity[];
 
-  @OneToMany(() => AbstractUserEntity, (user) => user.role)
-  users: AbstractUserEntity[];
+  @OneToMany(() => UserEntity, (user) => user.role)
+  users: UserEntity[];
 }

@@ -12,7 +12,7 @@
                 <app-nav-secondary class="mt-auto" [items]="data.navSecondary" />
             </hlm-sidebar-content>
             <hlm-sidebar-footer>
-                <app-nav-user [user]="data.user" />
+                <app-nav-user [user]="sidebarUser()" />
             </hlm-sidebar-footer>
         </hlm-sidebar>
         <ng-content />

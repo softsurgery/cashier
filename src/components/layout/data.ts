@@ -38,12 +38,6 @@ export const data = {
       isActive: false,
     },
     {
-      title: 'Utilisateurs',
-      url: '/utilisateurs',
-      icon: 'lucideUsers',
-      isActive: false,
-    },
-    {
       title: 'Statistique',
       url: '/statistique',
       icon: 'lucideBarChart',
@@ -62,24 +56,45 @@ export const data = {
       isActive: false,
     },
     {
-      title: 'Administrative Tools',
-      icon: 'lucideShield',
+      title: 'Content Management',
+      icon: 'lucideFileText',
       items: [
         {
           title: 'Table',
           url: '/tables',
+          icon: 'lucideGrid2X2Check',
         },
         {
           title: 'Table Zones',
           url: '/table-zone',
+          icon: 'lucideGrid',
         },
         {
           title: 'Produits',
           url: '/produits',
+          icon: 'lucideHamburger',
         },
         {
-          title: 'Familles',
+          title: 'Product Families',
           url: '/familles',
+          icon: 'lucidePackage',
+        },
+      ],
+    },
+    {
+      title: 'User Management',
+      url: '/user-management',
+      icon: 'lucideUsers',
+      items: [
+        {
+          title: 'Users',
+          url: '/users',
+          icon: 'lucideUsers',
+        },
+        {
+          title: 'Roles',
+          url: '/roles',
+          icon: 'lucideShield',
         },
       ],
     },

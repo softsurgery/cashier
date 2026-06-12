@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import { TableService } from '../service/table.service';
-import type { FindManyQueryDto } from '../../../../src/types/find-many-query.types';
+import type { FindManyQueryDto } from '@/types/find-many-query.types';
 import { CreateTableDto } from '../dtos/table/create-table.dto';
 import { UpdateTableDto } from '../dtos/table/update-table.dto';
 
